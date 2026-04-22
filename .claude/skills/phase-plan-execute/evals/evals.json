@@ -1,0 +1,12 @@
+{
+  "skill_name": "phase-plan-execute",
+  "evals": [
+    {
+      "id": 0,
+      "name": "tinytodo-p1-happy",
+      "prompt": "I have a rolling-wave plan at tinytodo-plan.md for a small CLI project. Please execute the current phase (P1) — implement the tasks, tick the checkboxes, and produce the implementation report.",
+      "expected_output": "A working CLI project (tinytodo/ package with code), all four P1 task checkboxes flipped to [x] in the plan file, and a phase-P1-report.md following the schema's report template. The end-to-end test should actually pass when run.",
+      "files": ["evals/tinytodo-plan.md"]
+    }
+  ]
+}

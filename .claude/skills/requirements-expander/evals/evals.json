@@ -1,0 +1,26 @@
+{
+  "skill_name": "requirements-expander",
+  "evals": [
+    {
+      "id": 0,
+      "name": "rich-spec-bookclub",
+      "prompt": "I have a project brief at sample_input_rich.md that defines the goal, scope, and user roles for a book-club companion app. Please expand it into a requirements document with user stories, user journeys, and features. Save the output as bookclub-requirements.md in the same directory.",
+      "expected_output": "A well-structured markdown requirements document with three roles (organizer, member, guest), user stories per role using As-a/I-want/So-that + acceptance criteria, journeys with phase tables including pain points/emotions, features that reference specific stories and journeys, and a traceability matrix.",
+      "files": ["evals/sample_input_rich.md"]
+    },
+    {
+      "id": 1,
+      "name": "thin-spec-clinicflow",
+      "prompt": "I have a very short brief at sample_input_thin.md for a clinic appointment tool. Please expand it into user stories, user journeys, and features. Save as clinicflow-requirements.md.",
+      "expected_output": "A requirements document that is appropriately short given the thin input, clearly flags assumptions and gaps under Open Questions rather than inventing details, and still produces at least a handful of stories and one journey per primary role.",
+      "files": ["evals/sample_input_thin.md"]
+    },
+    {
+      "id": 2,
+      "name": "ambiguous-spec-knowledgehub",
+      "prompt": "sample_input_ambiguous.md is an early-stage spec for an internal knowledge hub. It has unresolved design questions noted at the bottom. Expand it into a full requirements document (user stories, journeys, features). Save as knowledgehub-requirements.md.",
+      "expected_output": "A requirements document that acknowledges the flagged ambiguities (single-owner vs editable, reviewer criteria, refresh cadence) in its Open Questions section rather than silently picking an answer, and writes stories that are compatible with either resolution where possible.",
+      "files": ["evals/sample_input_ambiguous.md"]
+    }
+  ]
+}

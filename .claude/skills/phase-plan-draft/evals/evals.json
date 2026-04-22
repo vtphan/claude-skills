@@ -1,0 +1,26 @@
+{
+  "skill_name": "phase-plan-draft",
+  "evals": [
+    {
+      "id": 0,
+      "name": "bookclub-rich",
+      "prompt": "I have a requirements doc at bookclub-requirements.md for a book-club companion app. Please draft a rolling-wave implementation plan from it. Save the plan as bookclub-plan.md in the same directory.",
+      "expected_output": "A rolling-wave plan file with valid YAML frontmatter, 3-6 phases, P1 fully planned with tasks and acceptance criteria, future phases as sketches only (no task breakdowns), assumptions seeded from the requirements Open Questions, requirements coverage table, and an initial-draft change log entry. P1 should be a vertical slice, not horizontal scaffolding.",
+      "files": ["evals/bookclub-requirements.md"]
+    },
+    {
+      "id": 1,
+      "name": "clinicflow-thin",
+      "prompt": "I have a requirements doc at clinicflow-requirements.md for a small clinic's appointment tool. Please draft a rolling-wave implementation plan from it. Save as clinicflow-plan.md.",
+      "expected_output": "A plan that's appropriately sized given a thinner requirements doc — resists over-planning, flags thin areas via assumptions rather than inventing specificity. P1 should be a vertical slice exercising the core scheduling flow.",
+      "files": ["evals/clinicflow-requirements.md"]
+    },
+    {
+      "id": 2,
+      "name": "knowledgehub-ambiguous",
+      "prompt": "I have a requirements doc at knowledgehub-requirements.md for an internal knowledge hub. It has a number of Open Questions around ownership, reviewer criteria, and refresh cadence. Please draft a rolling-wave implementation plan. Save as knowledgehub-plan.md.",
+      "expected_output": "A plan whose assumptions register directly reflects the requirements' Open Questions (ownership model, reviewer criteria, refresh cadence), with those assumptions assigned to the phases where they first matter. P1 should sidestep the unresolved design choices where possible (e.g., pick the least-committing option) rather than locking in answers.",
+      "files": ["evals/knowledgehub-requirements.md"]
+    }
+  ]
+}
