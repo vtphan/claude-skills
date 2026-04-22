@@ -1,0 +1,19 @@
+{
+  "skill_name": "phase-plan-update",
+  "evals": [
+    {
+      "id": 0,
+      "name": "normal-update",
+      "prompt": "I have a plan at tinytodo-plan.md and a P1 implementation report at phase-P1-report-normal.md. Please update the plan: close out P1, update the registers, expand P2, and re-sketch P3. Save the updated plan back to tinytodo-plan.md (in place).",
+      "expected_output": "An in-place update to the plan: P1 closed out with a Delivered paragraph, A1 still tracked (marked untested or validated), P2 expanded with tasks and acceptance criteria, P3 still a sketch, new change log entry of type normal-update, frontmatter version incremented and current_phase advanced to P2.",
+      "files": ["evals/tinytodo-plan-before-update.md", "evals/phase-P1-report-normal.md"]
+    },
+    {
+      "id": 1,
+      "name": "substantial-replan",
+      "prompt": "I have a plan at tinytodo-plan.md and a P1 report at phase-P1-report-substantial.md. The report indicates significant learnings — A1 broken at scale, proposed storage pivot to SQLite, and a new data-migration concern. Please update the plan accordingly.",
+      "expected_output": "P1 closed out. A1 marked broken with a replacement assumption opened (new ID). New phase inserted or P2 substantially rewritten to incorporate the storage pivot. Scope changes (add SQLite migration, data-migration capability) reflected explicitly. Change log entry typed substantial-replan. Future phase sketches adjusted to assume SQLite.",
+      "files": ["evals/tinytodo-plan-before-update.md", "evals/phase-P1-report-substantial.md"]
+    }
+  ]
+}
