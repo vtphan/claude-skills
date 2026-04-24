@@ -69,7 +69,7 @@ This is where closeout and next-wave activation happen.
 
 ## Wave States
 
-Each wave has exactly one state.
+Each wave has exactly one state. During normal Build/Revise/Advance work, the wave doc should have exactly one active wave. Zero active waves is only a transitional state: before the first wave is framed, after the project is complete, while the human is reorganizing the doc, or during a deliberate pause. Never have more than one active wave.
 
 ### inactive
 

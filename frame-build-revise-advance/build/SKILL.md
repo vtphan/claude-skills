@@ -25,7 +25,7 @@ Build turns the active wave into working software while preserving human control
 
 ## Workflow
 
-1. Identify the single `Status: active` wave.
+1. Identify the single `Status: active` wave. If there is none or more than one, stop and ask the human to frame or advance the doc into a valid state.
 2. Read its must-have requirements, implementation notes, decision boundary, tasks, and verification section.
 3. Inspect the codebase enough to follow existing patterns.
 4. Build the must-have requirements. Nice-to-haves are optional and should only be done if cheap and low-risk.

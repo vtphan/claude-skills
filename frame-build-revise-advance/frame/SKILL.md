@@ -46,3 +46,4 @@ Verification should be practical: relevant existing tests, focused new tests for
 - Do not create separate execution or audit reports.
 - Do not overfill Decisions with guesses.
 - Do not make the wave doc longer than the project can justify.
+- Do not leave more than one active wave.

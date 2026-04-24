@@ -63,7 +63,7 @@ Each wave has exactly one state:
 - `active` - current build scope, detailed enough for execution.
 - `done` - completed summary.
 
-Only one wave should be `active`.
+Normal state: exactly one wave is `active`. Transitional states may briefly have zero active waves before the first wave is framed, after the project is complete, while the human is reorganizing the doc, or during a deliberate pause. Never have more than one active wave.
 
 ### Inactive Wave
 
@@ -161,7 +161,7 @@ Use for open questions, deferred ideas, and things that belong to the product vi
 
 ## Invariants
 
-1. Keep exactly one active wave.
+1. Keep exactly one active wave during normal Build/Revise/Advance work. Zero active waves is only a transitional state. Never have more than one active wave.
 2. Inactive waves stay concise.
 3. Active waves include must-have requirements and verification.
 4. Done waves summarize shipped capability and durable decisions.

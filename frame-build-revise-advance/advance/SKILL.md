@@ -25,10 +25,11 @@ Advance turns completed work into compact project memory and prepares the next a
   - One inactive wave becomes `active`, or a new active wave is created.
   - Remaining future waves stay `inactive`.
   - Decisions and Notes are updated.
+  - The final doc has exactly one active wave unless the project is complete or deliberately paused.
 
 ## Workflow
 
-1. Confirm the active wave is ready:
+1. Confirm there is exactly one active wave and that it is ready:
    - Must-have requirements are implemented or explicitly dropped.
    - Verification passed or gaps are accepted by the human.
    - Important decisions are recorded.
