@@ -51,6 +51,7 @@ Advance turns completed work into compact project memory and prepares the next a
    - Add tasks.
    - Add decisions needed.
    - Add verification.
+   - If the new wave implies a boundary-crossing decision that has not been approved (e.g., a new service, dependency, or auth change), list it under Decisions needed. Do not encode unapproved choices as must-have requirements.
 5. Keep other waves inactive and concise. Update their stories/features only if learning materially changed future direction.
 6. Increment `wave_doc_version`, update `last_updated`, and set `current_wave`.
 
@@ -69,6 +70,16 @@ If a must-have requirement is not done, do not silently close the wave. Either:
 - Drop it from scope with human agreement and record why.
 
 If verification did not run, record the gap and ask before advancing unless the user already accepted it.
+
+## Handoff
+
+After advance, send a short message with these slots:
+
+- **Closed**: W<N> delivered capability plus must-haves actually shipped.
+- **Deferred or dropped**: with a one-line reason each.
+- **Activated**: W<N+1> goal plus the first concrete next step.
+
+Be terse when things went as expected. Flag any unresolved must-have the human accepted as a gap.
 
 ## Do Not
 
