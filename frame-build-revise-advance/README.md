@@ -14,14 +14,15 @@ Frame -> Build -> Revise as needed -> Advance -> Build -> Revise as needed -> Ad
 
 ### frame
 
-Use `frame` to create or reshape the wave doc.
+Use `frame` to discover and finalize the project brief, then create or reshape the wave doc.
 
 Typical uses:
 
-- Start a project from a brief, brainstorm, or product idea.
-- Iterate on the list of inactive future waves.
-- Finalize the current direction.
-- Expand one inactive wave into a full active wave.
+- Start a project from a broad goal, partial stories, brainstorm, or product idea.
+- Iteratively consult with the human to complete a working brief.
+- Map concise must-haves to the waves that will address them.
+- Finalize the brief and translate it into a wave doc.
+- Expand the first wave into a full active wave.
 
 `frame` is for shaping the plan, not implementing code.
 

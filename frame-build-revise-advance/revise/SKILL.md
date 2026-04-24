@@ -21,7 +21,7 @@ Revise keeps the active wave honest when Build surfaces surprises, incomplete ve
 
 - Updated active-wave section if needed.
 - Updated Decisions or Notes if durable learning surfaced.
-- Concise summary of what changed in the plan and what remains.
+- Concise summary of what changed in the plan and what remains, using the same handoff slots as build (Changes, Verified, Not verified, Assumptions, Needs decision, Approved decisions) so the human reads the same shape across phases.
 
 ## Workflow
 

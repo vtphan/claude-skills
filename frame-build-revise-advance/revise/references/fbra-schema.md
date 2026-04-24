@@ -2,12 +2,14 @@
 
 This schema supports a one-human, one-smart-LLM workflow:
 
-- `frame` creates or reshapes the wave doc.
+- `frame` discovers and finalizes the brief, then creates or reshapes the wave doc.
 - `build` implements the active wave.
 - `revise` reviews what changed and updates the active wave if needed.
 - `advance` closes a done wave and activates the next one.
 
 The wave doc is a steering surface, not a compliance artifact. Keep it short enough that the human will actually read it.
+
+The working brief is the discovery artifact. The wave doc is the execution artifact derived from the finalized brief.
 
 ## File
 
@@ -30,6 +32,7 @@ status: active
 
 ## Goal
 ## Operating Rules
+## Must-Have Map
 ## Waves
 ## Decisions
 ## Notes
@@ -54,6 +57,23 @@ Default decision boundary:
 Default verification bar:
 
 > Verify every active-wave must-have requirement with the cheapest credible automated test, scripted check, or manual demo. Run relevant existing tests. Report anything not verified.
+
+## Must-Have Map
+
+A concise system-vision map showing where each must-have will be addressed. Keep this short enough to scan.
+
+```markdown
+| Must-have | Why it matters | Addressed in | Notes |
+|---|---|---|---|
+| ... | ... | W1 | ... |
+```
+
+Rules for the map:
+
+- Every must-have should map to at least one wave, be marked deferred, or be marked as an open decision.
+- W1 should include only the must-haves needed for a credible first slice.
+- Later waves may address must-haves at a high level until they become active.
+- If a wave does not address any must-have, question whether it belongs.
 
 ## Waves
 
@@ -163,7 +183,8 @@ Use for open questions, deferred ideas, and things that belong to the product vi
 
 1. Keep exactly one active wave during normal Build/Revise/Advance work. Zero active waves is only a transitional state. Never have more than one active wave.
 2. Inactive waves stay concise.
-3. Active waves include must-have requirements and verification.
-4. Done waves summarize shipped capability and durable decisions.
-5. The LLM asks before crossing the decision boundary.
-6. If verification was not run or did not pass, say so plainly.
+3. The Must-Have Map stays concise and maps each must-have to a wave, deferred status, or open decision.
+4. Active waves include must-have requirements and verification.
+5. Done waves summarize shipped capability and durable decisions.
+6. The LLM asks before crossing the decision boundary.
+7. If verification was not run or did not pass, say so plainly.
