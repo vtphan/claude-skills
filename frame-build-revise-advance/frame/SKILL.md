@@ -1,11 +1,11 @@
 ---
 name: frame
-description: Use this skill when the user wants to discover, frame, or reshape a project for a one-human, one-smart-LLM coding process. It starts from a broad goal, partial stories, notes, an existing brief, or a messy plan; iteratively consults with the human to complete a working brief; then translates the finalized brief into a concise Frame-Build-Revise-Advance wave doc with one expanded active first wave and concise inactive future waves. Trigger on requests like "frame this project", "discover the requirements", "create the working brief", "create the wave doc", "plan the first wave", "turn this idea into waves", "set up FBRA", or "reframe the plan". Do not use for actually building code; use build for implementation.
+description: Use this skill when the user wants to discover, frame, or reshape a project for a one-human, one-smart-LLM coding process. It starts from a broad goal, partial stories, notes, an existing brief, or a messy plan; iteratively consults with the human to complete a working brief; then translates the finalized brief into a concise Frame-Build-Revise-Advance wave doc with stable must-have IDs, one expanded active first wave, and concise inactive future waves. Trigger on requests like "frame this project", "discover the requirements", "create the working brief", "create the wave doc", "plan the first wave", "turn this idea into waves", "set up FBRA", or "reframe the plan". Do not use for actually building code; use build for implementation.
 ---
 
 # Frame
 
-Discover and frame the project with the human, then create or reshape the project's wave doc. Before writing the wave doc, read `references/fbra-schema.md`.
+Discover and frame the project with the human, then create or reshape the project's wave doc. Before writing the wave doc, read `references/fbra-schema.md`. If commits are permitted or the human asks for committed history, also read `references/commit-message-contract.md`.
 
 ## Purpose
 
@@ -21,6 +21,7 @@ Frame helps the human driver discover and finalize the project brief, then gives
 - A working brief, usually `docs/<project-slug>-brief.md`.
 - After human finalization, a wave doc, usually `docs/<project-slug>-waves.md`.
 - If paths are ambiguous, choose `docs/` when it exists; otherwise place the files beside the source brief.
+- If commits are permitted, a docs commit for material wave-doc creation or reshaping; otherwise ask whether the human wants the wave-doc change committed.
 
 ## Workflow
 
@@ -33,9 +34,10 @@ Frame helps the human driver discover and finalize the project brief, then gives
 7. Ask for explicit human approval before finalizing the brief and translating it into the wave doc.
 8. After approval, write the wave doc from the finalized brief. Choose the first active wave, defaulting W1 to a walking skeleton unless the human clearly needs a different first slice.
 9. Write inactive waves as concise future direction: must-have stories, must-have features, and notes only.
-10. Write the active wave with must-have requirements, optional nice-to-haves, implementation notes, tasks, decisions needed, and verification.
+10. Write the active wave with stable must-have IDs (`W<N>-MH<K>`), optional nice-to-have IDs when useful (`W<N>-NH<K>`), implementation notes, tasks, decisions needed, and verification.
 11. Seed a compact Decisions section only with durable choices approved by the human or already established by the codebase.
 12. Put deferred ideas and open questions in Notes.
+13. If commits are permitted, commit material brief or wave-doc changes using the commit-message contract. If commit permission is unclear, ask before the first commit.
 
 ## Working Brief
 
@@ -72,6 +74,8 @@ The must-have map is the system vision layer. Keep it concise, but make it compl
 
 Must-have requirements in the active wave should be testable and user-visible where possible. Avoid requirements that merely name components.
 
+Assign stable IDs only when requirements are concrete enough to execute or audit. Active-wave must-haves must have IDs. Future inactive waves may stay as unnumbered stories/features until they become active.
+
 Give the LLM freedom on local implementation details. Make it ask before changing product scope, data model, architecture, external services, auth/security behavior, pricing/billing behavior, or user-visible workflow assumptions.
 
 Verification should be practical: relevant existing tests, focused new tests for important logic, and a demo path for the main user value.
@@ -87,3 +91,4 @@ Do not commit to a tech stack, persistence technology, or architectural approach
 - Do not overfill Decisions with guesses.
 - Do not make the wave doc longer than the project can justify.
 - Do not leave more than one active wave.
+- Do not renumber existing requirement IDs.

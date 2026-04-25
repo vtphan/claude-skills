@@ -11,6 +11,8 @@ The wave doc is a steering surface, not a compliance artifact. Keep it short eno
 
 The working brief is the discovery artifact. The wave doc is the execution artifact derived from the finalized brief.
 
+When commits are permitted, the wave doc and commit messages together form an explainable implementation history. Stable requirement IDs let agents, humans, and later auditors trace work from intent to code to verification.
+
 ## File
 
 Use one markdown file per project, usually `docs/<project-slug>-waves.md`.
@@ -65,7 +67,7 @@ A concise system-vision map showing where each must-have will be addressed. Keep
 ```markdown
 | Must-have | Why it matters | Addressed in | Notes |
 |---|---|---|---|
-| ... | ... | W1 | ... |
+| W1-MH1: ... | ... | W1 | ... |
 ```
 
 Rules for the map:
@@ -74,6 +76,29 @@ Rules for the map:
 - W1 should include only the must-haves needed for a credible first slice.
 - Later waves may address must-haves at a high level until they become active.
 - If a wave does not address any must-have, question whether it belongs.
+
+## Stable IDs
+
+Use stable IDs for active-wave must-have requirements:
+
+```markdown
+- W<N>-MH<K>: <requirement>
+```
+
+Use optional IDs for nice-to-haves when they may be referenced by commits or handoffs:
+
+```markdown
+- W<N>-NH<K>: <nice-to-have>
+```
+
+Rules:
+
+- `frame` assigns IDs when a wave becomes active.
+- IDs are stable once assigned. Do not renumber after edits.
+- If a requirement is split, keep the old ID as superseded and create new IDs.
+- If a requirement is dropped or deferred, record that explicitly; do not delete it silently.
+- Commits, verification notes, revise findings, and done-wave summaries should reference IDs where practical.
+- Keep IDs focused on requirements and optionally nice-to-haves. Do not ID every task unless the project needs that level of tracking.
 
 ## Waves
 
@@ -112,10 +137,10 @@ Status: active
 Goal: One sentence.
 
 Must-have requirements:
-- ...
+- W<N>-MH1: ...
 
 Nice-to-have:
-- ...
+- W<N>-NH1: ...
 
 Implementation notes:
 - Existing patterns, constraints, or guidance the LLM should respect.
@@ -148,7 +173,7 @@ Status: done
 Completed: 2026-04-24
 
 Delivered:
-- ...
+- W<N>-MH1: ...
 
 Stories completed:
 - ...
@@ -179,6 +204,20 @@ Do not turn this into a full architecture decision record system unless the proj
 
 Use for open questions, deferred ideas, and things that belong to the product vision but are not yet waved.
 
+## Explainable Implementation History
+
+When commits are permitted, use `references/commit-message-contract.md`.
+
+The trace should be:
+
+```text
+Must-have ID -> task(s) -> commit(s) -> verification receipt -> done-wave summary
+```
+
+The wave doc is part of the implementation record. Material changes to it should be committed when commits are permitted, or the human should be asked whether to commit them. Material changes include requirement IDs/text, task completion, decisions, verification status, deferrals, drops, supersessions, and wave-state transitions.
+
+Git already records changed files; commit messages should emphasize intent, affected behavior, relevant surfaces, and verification receipts.
+
 ## Invariants
 
 1. Keep exactly one active wave during normal Build/Revise/Advance work. Zero active waves is only a transitional state. Never have more than one active wave.
@@ -188,3 +227,5 @@ Use for open questions, deferred ideas, and things that belong to the product vi
 5. Done waves summarize shipped capability and durable decisions.
 6. The LLM asks before crossing the decision boundary.
 7. If verification was not run or did not pass, say so plainly.
+8. Active-wave must-have requirements have stable IDs.
+9. Material wave-doc changes are committed when commits are permitted, or the human is asked whether to commit them.

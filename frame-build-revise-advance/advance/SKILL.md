@@ -1,11 +1,11 @@
 ---
 name: advance
-description: Use this skill when the active FBRA wave is ready to close and the user wants to move the project forward. It converts the active wave into a done summary, records shipped stories/features and durable decisions, chooses or creates the next active wave, and keeps remaining waves inactive and concise. Trigger on "advance the wave", "close W<N>", "mark this wave done", "move to the next wave", "activate W<N+1>", or "run advance". Do not use while must-have requirements are still unresolved unless the user explicitly accepts the gap.
+description: Use this skill when the active FBRA wave is ready to close and the user wants to move the project forward. It converts the active wave into a done summary that preserves stable must-have IDs, records shipped stories/features and durable decisions, chooses or creates the next active wave, and keeps remaining waves inactive and concise. It commits wave-state changes when commits are permitted. Trigger on "advance the wave", "close W<N>", "mark this wave done", "move to the next wave", "activate W<N+1>", or "run advance". Do not use while must-have requirements are still unresolved unless the user explicitly accepts the gap.
 ---
 
 # Advance
 
-Close the active wave and activate the next one. Before advancing, read `references/fbra-schema.md` and the wave doc.
+Close the active wave and activate the next one. Before advancing, read `references/fbra-schema.md` and the wave doc. If commits are permitted or the wave doc will be committed, also read `references/commit-message-contract.md`.
 
 ## Purpose
 
@@ -26,6 +26,7 @@ Advance turns completed work into compact project memory and prepares the next a
   - Remaining future waves stay `inactive`.
   - Decisions and Notes are updated.
   - The final doc has exactly one active wave unless the project is complete or deliberately paused.
+- A docs commit for the wave-state transition when commits are permitted, or a prompt asking whether to commit it.
 
 ## Workflow
 
@@ -35,8 +36,10 @@ Advance turns completed work into compact project memory and prepares the next a
    - Important decisions are recorded.
 2. Convert the active wave to `done`:
    - Summarize delivered capability.
+   - List must-have IDs actually delivered.
    - List stories completed.
    - List features completed.
+   - Include implementation commit references when useful and available.
    - Record decisions established.
    - Record follow-up notes.
    - Remove task-level detail unless it matters later.
@@ -45,7 +48,7 @@ Advance turns completed work into compact project memory and prepares the next a
    - Reorder only if learning made another wave more important.
    - Create a new wave only if needed.
 4. Expand exactly one next wave to `active`:
-   - Add must-have requirements.
+   - Add stable must-have IDs and requirements.
    - Add nice-to-haves if useful.
    - Add implementation notes.
    - Add tasks.
@@ -54,6 +57,7 @@ Advance turns completed work into compact project memory and prepares the next a
    - If the new wave implies a boundary-crossing decision that has not been approved (e.g., a new service, dependency, or auth change), list it under Decisions needed. Do not encode unapproved choices as must-have requirements.
 5. Keep other waves inactive and concise. Update their stories/features only if learning materially changed future direction.
 6. Increment `wave_doc_version`, update `last_updated`, and set `current_wave`.
+7. When commits are permitted, commit the wave-doc transition using the commit-message contract. If commit permission is unclear, ask before committing.
 
 ## Selecting The Next Wave
 
@@ -71,6 +75,10 @@ If a must-have requirement is not done, do not silently close the wave. Either:
 
 If verification did not run, record the gap and ask before advancing unless the user already accepted it.
 
+## Requirement Trace
+
+Done-wave summaries should preserve the audit chain. List delivered must-have IDs, note deferred/dropped/superseded IDs, and include implementation commit references when they help future auditors understand how the wave was built.
+
 ## Handoff
 
 After advance, send a short message with these slots:
@@ -78,6 +86,7 @@ After advance, send a short message with these slots:
 - **Closed**: W<N> delivered capability plus must-haves actually shipped.
 - **Deferred or dropped**: with a one-line reason each.
 - **Activated**: W<N+1> goal plus the first concrete next step.
+- **Committed**: wave-doc transition commit hash and subject, or `Not committed` with the reason.
 
 Be terse when things went as expected. Flag any unresolved must-have the human accepted as a gap.
 
@@ -87,3 +96,4 @@ Be terse when things went as expected. Flag any unresolved must-have the human a
 - Do not add detailed tasks to inactive waves.
 - Do not preserve noisy task history in done waves.
 - Do not hide unfinished must-have requirements in follow-up notes.
+- Do not renumber requirement IDs during closeout or next-wave activation.
