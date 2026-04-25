@@ -49,7 +49,7 @@ The LLM should:
 
 ### revise
 
-Use `revise` when the active wave needs adjustment before it can close.
+Use `revise` when the active wave needs review or adjustment before it can close.
 
 Typical uses:
 
@@ -60,7 +60,9 @@ Typical uses:
 - Lessons learned need to be recorded.
 - Human decisions are needed.
 
-`revise` keeps the current wave active. It does not close the wave or activate the next one.
+`revise` reviews the active wave against the current build, codebase, verification results, and human feedback. It identifies potential plan corrections, implementation gaps, and decisions needed; provides informed recommendations for material changes; iterates with the human when direction is unclear; and applies approved revisions while keeping the wave active.
+
+`revise` does not close the wave or activate the next one.
 
 When requirements change, `revise` preserves stable IDs, records superseded/deferred/dropped scope explicitly, and commits material wave-doc changes when commits are permitted.
 
@@ -75,12 +77,14 @@ Use `advance` when the active wave is ready to close.
 - Converts the active wave to `done`.
 - Summarizes delivered stories and features.
 - Records durable decisions and follow-up notes.
-- Chooses the next inactive wave.
+- Chooses or recommends the next active wave.
 - Expands exactly one next wave into `active`.
 
 This is where closeout and next-wave activation happen.
 
 When commits are permitted, `advance` commits the wave-state transition so the project history shows when one wave closed and the next became active.
+
+When closeout or next-wave activation is not mechanical, `advance` should recommend a path before applying material changes. This includes reordering waves, creating a new active wave, moving unfinished must-haves, dropping or deferring scope, or activating work with unresolved boundary-crossing decisions.
 
 When `advance` activates a wave with unresolved choices, it should frame those choices with options, tradeoffs, and a recommendation before encoding them as requirements.
 

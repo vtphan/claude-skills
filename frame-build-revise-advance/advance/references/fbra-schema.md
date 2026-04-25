@@ -4,8 +4,8 @@ This schema supports a one-human, one-smart-LLM workflow:
 
 - `frame` discovers and finalizes the brief, then creates or reshapes the wave doc.
 - `build` implements the active wave.
-- `revise` reviews what changed and updates the active wave if needed.
-- `advance` closes a done wave and activates the next one.
+- `revise` reviews the active wave against the build, codebase, verification, and human feedback; recommends material corrections; and applies approved revisions while the wave stays active.
+- `advance` closes a done wave, recommends material closeout or next-wave choices when needed, and activates exactly one next wave.
 
 The wave doc is a steering surface, not a compliance artifact. Keep it short enough that the human will actually read it.
 
