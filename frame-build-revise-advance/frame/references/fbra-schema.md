@@ -51,10 +51,15 @@ Short project-wide rules for the LLM:
 - Implementation freedom: what the LLM may decide independently.
 - Decision boundary: when the LLM must ask the human.
 - Verification bar: what must be tested or demonstrated before work is called done.
+- Decision guidance: how the LLM frames informed options and recommendations for the human.
 
 Default decision boundary:
 
 > The LLM may choose implementation details that are local, reversible, and consistent with existing patterns. Ask before changing product scope, data model, architecture, external services, auth/security behavior, pricing/billing behavior, or user-visible workflow assumptions.
+
+Default decision guidance:
+
+> When asking the human to decide, present 2-3 informed options with tradeoffs and a recommendation. For stack, architecture, persistence, auth/security, deployment, and integrations, evaluate convention density, LLM-buildability, reversibility, verification impact, dependency risk, security blast radius, operational burden, and fit to active-wave scope.
 
 Default verification bar:
 
@@ -149,7 +154,7 @@ Tasks:
 - [ ] ...
 
 Decisions needed:
-- None currently.
+- None currently, or use `references/decision-guidance-contract.md` to frame each decision.
 
 Verification:
 - Automated: ...
@@ -200,6 +205,12 @@ Use this as a compact decision log. Add only decisions that future work should r
 
 Do not turn this into a full architecture decision record system unless the project needs it.
 
+## Decision Guidance
+
+When a skill asks the human for a decision, use `references/decision-guidance-contract.md`.
+
+The human should receive informed choices, not an open-ended question. Recommendations should account for implementation by a smart LLM such as Claude Code or Codex. For important decisions, especially tech stack and architecture, discuss convention density, LLM-buildability, testability, reversibility, dependency risk, security blast radius, operational burden, and active-wave fit.
+
 ## Notes
 
 Use for open questions, deferred ideas, and things that belong to the product vision but are not yet waved.
@@ -229,3 +240,4 @@ Git already records changed files; commit messages should emphasize intent, affe
 7. If verification was not run or did not pass, say so plainly.
 8. Active-wave must-have requirements have stable IDs.
 9. Material wave-doc changes are committed when commits are permitted, or the human is asked whether to commit them.
+10. Human-facing decision asks include informed options, tradeoffs, and a recommendation.

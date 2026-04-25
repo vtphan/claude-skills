@@ -5,7 +5,7 @@ description: Use this skill after or during Build when the user wants to review 
 
 # Revise
 
-Review the active wave against reality and update the plan while the wave remains active. Before revising, read `references/fbra-schema.md` and the wave doc. If commits are permitted or material wave-doc history is involved, also read `references/commit-message-contract.md`.
+Review the active wave against reality and update the plan while the wave remains active. Before revising, read `references/fbra-schema.md`, `references/decision-guidance-contract.md`, and the wave doc. If commits are permitted or material wave-doc history is involved, also read `references/commit-message-contract.md`.
 
 ## Purpose
 
@@ -31,7 +31,7 @@ Revise keeps the active wave honest when Build surfaces surprises, incomplete ve
 3. Classify gaps:
    - Still required: keep or add a task.
    - No longer required: remove or move to Notes with a short rationale.
-   - Needs human decision: add to Decisions needed.
+   - Needs human decision: add to Decisions needed using informed options and a recommendation.
    - Nice-to-have: move out of must-have scope.
 4. Update implementation notes if the codebase taught the LLM something future work should respect.
 5. Add durable choices to Decisions.
@@ -50,6 +50,10 @@ Requirement IDs are audit handles. Preserve them even when the text changes, and
 
 Commit requirement-doc revisions separately from code corrections when practical. A `fix` commit should reference the original must-have ID and the verification failure or human feedback that caused the revision.
 
+## Decision Guidance
+
+When build findings reveal a decision, use the decision guidance contract. Explain why the original plan no longer fits, which must-have IDs or verification gaps are affected, what can proceed if the decision is deferred, and which option best fits implementation by a smart LLM in the current codebase.
+
 ## Readiness Check
 
 A wave is ready for Advance when:
@@ -66,3 +70,4 @@ A wave is ready for Advance when:
 - Do not create a separate report unless the user asks.
 - Do not bury an unmet must-have as a follow-up without human agreement.
 - Do not delete, reuse, or renumber requirement IDs to hide scope churn.
+- Do not turn a failed or ambiguous requirement into an open-ended human question without options and a recommendation.

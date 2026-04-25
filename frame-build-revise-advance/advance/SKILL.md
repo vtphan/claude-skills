@@ -5,7 +5,7 @@ description: Use this skill when the active FBRA wave is ready to close and the 
 
 # Advance
 
-Close the active wave and activate the next one. Before advancing, read `references/fbra-schema.md` and the wave doc. If commits are permitted or the wave doc will be committed, also read `references/commit-message-contract.md`.
+Close the active wave and activate the next one. Before advancing, read `references/fbra-schema.md`, `references/decision-guidance-contract.md`, and the wave doc. If commits are permitted or the wave doc will be committed, also read `references/commit-message-contract.md`.
 
 ## Purpose
 
@@ -54,7 +54,7 @@ Advance turns completed work into compact project memory and prepares the next a
    - Add tasks.
    - Add decisions needed.
    - Add verification.
-   - If the new wave implies a boundary-crossing decision that has not been approved (e.g., a new service, dependency, or auth change), list it under Decisions needed. Do not encode unapproved choices as must-have requirements.
+   - If the new wave implies a boundary-crossing decision that has not been approved (e.g., a new service, dependency, or auth change), list it under Decisions needed using informed options and a recommendation. Do not encode unapproved choices as must-have requirements.
 5. Keep other waves inactive and concise. Update their stories/features only if learning materially changed future direction.
 6. Increment `wave_doc_version`, update `last_updated`, and set `current_wave`.
 7. When commits are permitted, commit the wave-doc transition using the commit-message contract. If commit permission is unclear, ask before committing.
@@ -79,6 +79,10 @@ If verification did not run, record the gap and ask before advancing unless the 
 
 Done-wave summaries should preserve the audit chain. List delivered must-have IDs, note deferred/dropped/superseded IDs, and include implementation commit references when they help future auditors understand how the wave was built.
 
+## Decision Guidance
+
+When activating the next wave exposes unresolved choices, use the decision guidance contract. Recommend the path that best preserves momentum, implementation reliability by a smart LLM, reversibility, and verification clarity. If the decision can be deferred, say exactly what can proceed and what should remain blocked.
+
 ## Handoff
 
 After advance, send a short message with these slots:
@@ -97,3 +101,4 @@ Be terse when things went as expected. Flag any unresolved must-have the human a
 - Do not preserve noisy task history in done waves.
 - Do not hide unfinished must-have requirements in follow-up notes.
 - Do not renumber requirement IDs during closeout or next-wave activation.
+- Do not activate a wave with an unframed boundary-crossing decision.

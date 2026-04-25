@@ -5,7 +5,7 @@ description: Use this skill when the user wants to discover, frame, or reshape a
 
 # Frame
 
-Discover and frame the project with the human, then create or reshape the project's wave doc. Before writing the wave doc, read `references/fbra-schema.md`. If commits are permitted or the human asks for committed history, also read `references/commit-message-contract.md`.
+Discover and frame the project with the human, then create or reshape the project's wave doc. Before writing the wave doc, read `references/fbra-schema.md` and `references/decision-guidance-contract.md`. If commits are permitted or the human asks for committed history, also read `references/commit-message-contract.md`.
 
 ## Purpose
 
@@ -27,7 +27,7 @@ Frame helps the human driver discover and finalize the project brief, then gives
 
 1. Start with discovery. Derive an initial framing hypothesis from the user's input, but do not write the final wave doc yet.
 2. Create or update the working brief as discovery proceeds. Treat the brief as the current shared understanding, not as a private scratchpad.
-3. Ask focused questions in small rounds. Prefer 3-5 high-leverage questions that affect scope, architecture, implementation, verification, or the first wave.
+3. Ask focused questions in small rounds. Prefer 3-5 high-leverage questions that affect scope, architecture, implementation, verification, or the first wave. For boundary-crossing decisions, provide informed options and a recommendation.
 4. Consult the human on all material dimensions: intended users, user stories, must-have features, must-have requirements, non-goals, technical stack, data and persistence, auth and security, integrations, deployment and operations, UX workflow expectations, verification expectations, risks, and dependencies.
 5. Maintain a concise must-have map in the working brief. Each must-have should map to one or more candidate waves, or be marked deferred/open.
 6. Keep discovery centered on W1. The first wave must be buildable without guessing hard constraints; later waves need only enough detail to show where must-haves belong.
@@ -82,6 +82,12 @@ Verification should be practical: relevant existing tests, focused new tests for
 
 Do not commit to a tech stack, persistence technology, or architectural approach in the brief or wave doc without the human's approval. If discovery does not settle them, list them under Decisions needed on the first active wave; do not quietly assert a choice.
 
+## Decision Guidance
+
+When asking about product scope, user-visible workflow, tech stack, architecture, data model, persistence, auth/security, integrations, deployment, or verification expectations, use the decision guidance contract.
+
+For key technical choices, recommend the option most likely to be implemented reliably by a smart LLM in this repo. Favor convention density, local testability, reversibility, low dependency risk, clear security boundaries, manageable operations, and fit to W1 scope. Make assumptions explicit and say what becomes blocked if the decision is deferred.
+
 ## Do Not
 
 - Do not create detailed tasks for inactive waves.
@@ -92,3 +98,4 @@ Do not commit to a tech stack, persistence technology, or architectural approach
 - Do not make the wave doc longer than the project can justify.
 - Do not leave more than one active wave.
 - Do not renumber existing requirement IDs.
+- Do not ask open-ended questions when credible options and a recommendation can be framed.

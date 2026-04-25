@@ -5,7 +5,7 @@ description: Use this skill when an FBRA wave doc exists and the user wants the 
 
 # Build
 
-Implement the active wave. Before building, read `references/fbra-schema.md`, `references/commit-message-contract.md`, and the wave doc.
+Implement the active wave. Before building, read `references/fbra-schema.md`, `references/commit-message-contract.md`, `references/decision-guidance-contract.md`, and the wave doc.
 
 ## Purpose
 
@@ -97,7 +97,7 @@ Stop and request human approval before crossing. Do not proceed without explicit
 
 Rule of thumb: if removing the choice later would require a migration, a schema change, or a user-visible break, it is not local.
 
-When asking, present 2–3 options with tradeoffs and a recommendation. Do not pose open questions.
+When asking, use the decision guidance contract: present 2–3 informed options with tradeoffs and a recommendation. For important choices, evaluate convention density, LLM-buildability, reversibility, verification impact, dependency risk, security blast radius, operational burden, and fit to active-wave scope. Do not pose open questions.
 
 Existing precedent in the codebase or a prior entry in Decisions counts as approval — do not re-ask. If precedent is ambiguous (two patterns in use, or the codebase is empty), treat it as no precedent and ask.
 
@@ -110,3 +110,4 @@ When approval is granted, record it in Decisions: what was decided, alternatives
 - Do not claim verification that was not performed.
 - Do not let nice-to-haves delay or reshape the must-have work.
 - Do not create vague commits such as "implement wave" when smaller explainable boundaries are available.
+- Do not ask the human to make a boundary-crossing decision without informed options and a recommendation.
