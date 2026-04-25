@@ -82,6 +82,12 @@ Rules for the map:
 - Later waves may address must-haves at a high level until they become active.
 - If a wave does not address any must-have, question whether it belongs.
 
+## Wave Sizing
+
+Prefer the fewest waves that preserve clear scope, verification, and auditability. Add waves when a capability, risk boundary, dependency, or human review checkpoint would otherwise be buried inside an oversized wave.
+
+Avoid speculative roadmap detail. Later inactive waves may stay broad until they become active.
+
 ## Stable IDs
 
 Use stable IDs for active-wave must-have requirements:

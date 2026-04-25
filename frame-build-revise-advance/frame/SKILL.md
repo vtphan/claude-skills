@@ -68,7 +68,7 @@ The brief is ready to finalize when:
 
 ## Judgment
 
-Prefer fewer waves with clear intent over a long speculative roadmap. Three to five waves is usually enough.
+Prefer the fewest waves that preserve clear scope, verification, and auditability. Add waves when a capability, risk boundary, dependency, or human review checkpoint would otherwise be buried inside an oversized wave. Avoid speculative roadmap detail: later inactive waves may stay broad until they become active.
 
 The must-have map is the system vision layer. Keep it concise, but make it complete enough that the human and LLM can see what the system is becoming and which wave addresses each must-have.
 
