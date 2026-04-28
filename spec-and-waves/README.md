@@ -21,6 +21,37 @@ Starter Spec
 -> next wave
 ```
 
+## Method Assessment
+
+Spec and Waves is best for the broad middle of AI-assisted software work: projects bigger than a one-sitting fix, but smaller than a multi-team product program. It works when the human lead has strategic context and judgment, and the LLM can help draft, organize, implement, and report.
+
+The method is intentionally lightweight. Its strength is not exhaustive up-front specification; its strength is keeping just enough stable intent, traceable backlog, and rolling execution state for LLM-led work to stay aligned.
+
+It is a good fit for:
+
+- new features with uncertain edges
+- internal tools and workflow systems
+- prototypes that may become real products
+- data or content tools with evolving requirements
+- incremental builds where each wave should teach the next
+
+It is probably too heavy for:
+
+- one-sitting bug fixes
+- routine refactors
+- throwaway experiments
+- obvious implementation tasks with clear acceptance
+
+It may be too light for:
+
+- regulated or safety-critical systems
+- large multi-team programs
+- projects requiring formal approval gates
+- research-heavy products where methodology is itself a deliverable
+- infrastructure projects where user stories are the wrong organizing unit
+
+For those cases, keep the core loop but add only the artifacts the project earns: stronger approvals, privacy review, architecture notes, data-quality plans, research protocols, or dependency tracking.
+
 ## Artifacts
 
 By default, project artifacts live together in the project repo:
@@ -148,6 +179,42 @@ Templates live in `templates/`:
 - Current-wave tasks always have acceptance checks.
 - Every story and feature is covered or explicitly deferred.
 - Scope changes must be explicit.
+
+## Operational Advice
+
+Keep the Starter Spec stable. If it changes every wave, it is probably holding downstream detail that belongs in the Backlog or Wave Plan.
+
+Keep Key Journeys selective. They should expose non-obvious pain points or hidden scope. Generic flows make the spec look thoughtful while adding little signal.
+
+Do not let the Backlog become a PRD. It should organize stories and features, not freeze technical design.
+
+Treat Backlog Coverage as an audit surface. Every story and feature should be clearly mapped to `W1`, `W2`, `Future Wave`, or `Deferred`, with rationale.
+
+Protect the rolling-wave boundary. Future waves should not contain task lists. If they do, the plan is pretending to know too much.
+
+Make W1 prove something. A first wave that only does setup is a warning sign unless a technical foundation is genuinely unavoidable.
+
+Use reports as evidence, not ceremony. A useful Wave Report says what was built, what passed, what broke, what was learned, and what should change.
+
+Commit narrowly. Each skill should commit only its own durable output and reference stable IDs where possible. This keeps the Git history tied to the artifact trail.
+
+Watch for these failure modes:
+
+- LLM invents confident facts that the human lead never committed to.
+- Scope expansion hides inside "minor" features or plumbing tasks.
+- Acceptance checks become vague restatements of tasks.
+- Future waves get overplanned.
+- Reports summarize activity but omit evidence.
+- Human review becomes passive approval instead of judgment.
+- The process keeps running even when the project needs a pivot.
+
+When operationalizing with a team, make the handoff explicit:
+
+- The LLM proposes.
+- The human lead decides.
+- The artifact records the decision.
+- The commit records the change.
+- The next skill reads the artifact, not the conversation memory.
 
 ## When To Use
 
