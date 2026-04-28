@@ -1,6 +1,18 @@
 ---
 name: codesign-spec
-description: Use this skill when the user wants to create, revise, or tighten a Spec and Waves Starter Spec. This skill co-designs with a human leader to fill missing stable project-level elements in a concise spec document: idea, users, rough user stories, features, key journeys, scope, open questions, and notes. It may creatively suggest non-obvious pain-point journeys aligned with the current spec context for the human leader to assess. Use when the user says things like "fill out this spec", "tighten this starter spec", "help me draft the spec", "what is missing from this spec", or provides docs/spec-and-waves/starter-spec.md. Do NOT use for implementation plans, detailed requirements, architecture, task breakdowns, acceptance criteria expansion, or low-level specs that belong downstream in Backlog or Wave Plan skills.
+description: >-
+  Use this skill when the user wants to create, revise, or tighten a Spec and
+  Waves Starter Spec. This skill co-designs with a human leader to fill missing
+  stable project-level elements in a concise spec document: idea, users, rough
+  user stories, features, key journeys, scope, open questions, and notes. It may
+  creatively suggest non-obvious pain-point journeys aligned with the current
+  spec context for the human leader to assess. Use when the user says things
+  like "fill out this spec", "tighten this starter spec", "help me draft the
+  spec", "what is missing from this spec", or provides
+  docs/spec-and-waves/starter-spec.md. Do NOT use for implementation plans,
+  detailed requirements, architecture, task breakdowns, acceptance criteria
+  expansion, or low-level specs that belong downstream in Backlog or Wave Plan
+  skills.
 ---
 
 # Codesign Spec

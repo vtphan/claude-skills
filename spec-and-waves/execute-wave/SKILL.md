@@ -1,6 +1,15 @@
 ---
 name: execute-wave
-description: Use this skill when the user has an approved Spec and Waves Wave Plan and wants the current wave implemented. This skill reads the Wave Plan, executes only the current wave tasks, verifies task acceptance checks, updates task checkboxes, records acceptance evidence, and writes a Wave Report. Use when the user says things like "execute W1", "build the current wave", "implement this wave plan", "work through the wave tasks", "start the current wave", or provides docs/spec-and-waves/wave-plan.md and asks to build it. Do NOT use for drafting specs, drafting backlogs, drafting wave plans, updating completed wave plans from reports, or doing future-wave work.
+description: >-
+  Use this skill when the user has an approved Spec and Waves Wave Plan and
+  wants the current wave implemented. This skill reads the Wave Plan, executes
+  only the current wave tasks, verifies task acceptance checks, updates task
+  checkboxes, records acceptance evidence, and writes a Wave Report. Use when
+  the user says things like "execute W1", "build the current wave", "implement
+  this wave plan", "work through the wave tasks", "start the current wave", or
+  provides docs/spec-and-waves/wave-plan.md and asks to build it. Do NOT use for
+  drafting specs, drafting backlogs, drafting wave plans, updating completed wave
+  plans from reports, or doing future-wave work.
 ---
 
 # Execute Wave

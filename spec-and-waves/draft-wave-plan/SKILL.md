@@ -1,6 +1,16 @@
 ---
 name: draft-wave-plan
-description: Use this skill when the user has an approved Spec and Waves Backlog and wants a rolling Wave Plan drafted or revised. This skill maps every backlog story and feature to W1, W2, Future Wave, or Deferred; proposes wave sequencing based on value, risk, dependencies, and learning; fully details only the current wave; and keeps future waves as concise sketches. Use when the user says things like "draft the wave plan", "plan this in waves", "turn this backlog into a wave plan", "create the implementation waves", or provides docs/spec-and-waves/backlog.md and asks for planning. Do NOT use for code implementation, executing tasks, post-wave updates, or detailed requirements beyond current-wave task acceptance.
+description: >-
+  Use this skill when the user has an approved Spec and Waves Backlog and wants
+  a rolling Wave Plan drafted or revised. This skill maps every backlog story
+  and feature to W1, W2, Future Wave, or Deferred; proposes wave sequencing
+  based on value, risk, dependencies, and learning; fully details only the
+  current wave; and keeps future waves as concise sketches. Use when the user
+  says things like "draft the wave plan", "plan this in waves", "turn this
+  backlog into a wave plan", "create the implementation waves", or provides
+  docs/spec-and-waves/backlog.md and asks for planning. Do NOT use for code
+  implementation, executing tasks, post-wave updates, or detailed requirements
+  beyond current-wave task acceptance.
 ---
 
 # Draft Wave Plan

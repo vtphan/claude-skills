@@ -1,6 +1,16 @@
 ---
 name: update-wave-plan
-description: Use this skill when the user has a Spec and Waves Wave Plan plus a completed Wave Report and wants the plan reconciled. This skill closes or keeps open the current wave, updates assumptions and risks, updates backlog coverage if scope changed, expands only the next wave into executable tasks, keeps later waves as sketches, and writes the Wave Plan change log. Use when the user says things like "update the wave plan", "advance to W2", "close W1", "reconcile this wave report", or provides docs/spec-and-waves/wave-plan.md and docs/spec-and-waves/reports/wave-W<N>-report.md. Do NOT use for executing code, drafting the initial backlog, drafting the initial wave plan, or changing the Starter Spec/Backlog directly.
+description: >-
+  Use this skill when the user has a Spec and Waves Wave Plan plus a completed
+  Wave Report and wants the plan reconciled. This skill closes or keeps open the
+  current wave, updates assumptions and risks, updates backlog coverage if scope
+  changed, expands only the next wave into executable tasks, keeps later waves
+  as sketches, and writes the Wave Plan change log. Use when the user says
+  things like "update the wave plan", "advance to W2", "close W1", "reconcile
+  this wave report", or provides docs/spec-and-waves/wave-plan.md and
+  docs/spec-and-waves/reports/wave-W<N>-report.md. Do NOT use for executing
+  code, drafting the initial backlog, drafting the initial wave plan, or changing
+  the Starter Spec/Backlog directly.
 ---
 
 # Update Wave Plan
