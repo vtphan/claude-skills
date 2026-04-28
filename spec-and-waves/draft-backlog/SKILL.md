@@ -76,6 +76,34 @@ Use the Starter Spec as the source of truth:
 - Do not silently expand scope. Put attractive but uncommitted ideas in `Deferred` or `Open Questions`.
 - Prefer fewer, stronger stories over exhaustive coverage.
 
+## Traceability Rules
+
+Every story and feature should be traceable to the Starter Spec.
+
+For each important story or feature, make its origin clear through `Context`, `Notes`, or `Trace Notes`:
+
+- `Idea`: the central problem or opportunity it serves.
+- `Users`: the role it serves or affects.
+- `User Stories`: the rough story it normalizes.
+- `Features`: the capability it supports.
+- `Key Journeys`: the pain point or hidden friction it addresses.
+- `Scope`: why it is in or out.
+- `Open Questions`: what uncertainty it depends on.
+
+If you cannot trace a story or feature to the Starter Spec, do not quietly include it. Put it in `Deferred` or `Open Questions`.
+
+## Risk Inputs For Wave Planning
+
+The Backlog should not sequence waves, but it should preserve planning-relevant uncertainty.
+
+Use `Open Questions`, `Notes`, or `Decision Points` to flag:
+
+- high-uncertainty stories
+- stories implied by unvalidated Key Journeys
+- features likely to expand scope
+- trust, approval, recovery, integration, or adoption risks
+- priority decisions the human lead must settle before `draft-wave-plan`
+
 ## Story Guidance
 
 Stories should be durable user-value units:

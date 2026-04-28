@@ -39,14 +39,26 @@ Close or keep open the current wave. If advancing, expand only the next wave int
 
 1. Read the Wave Plan and Wave Report.
 2. Verify the report matches the current wave.
-3. Classify the update: normal, replan, or pivot.
-4. Decide whether the current wave can close.
-5. Update current wave state.
-6. Update assumptions and risks.
-7. Update Backlog Coverage only if the report justifies a scope or sequencing change.
-8. If advancing, expand the next wave into current-wave detail with tasks and acceptance checks.
-9. Keep later waves as sketches, revising only where discoveries require it.
-10. Increment frontmatter `plan_version`, update `last_updated`, update `current_wave`, and write the change-log entry.
+3. Check acceptance evidence against current-wave exit criteria.
+4. Classify the update: normal, replan, or pivot.
+5. Decide whether the current wave can close.
+6. Update current wave state.
+7. Update assumptions and risks.
+8. Reconsider sequencing using risk-first planning.
+9. Update Backlog Coverage only if the report justifies a scope or sequencing change.
+10. If advancing, expand the next wave into current-wave detail with tasks and acceptance checks.
+11. Keep later waves as sketches, revising only where discoveries require it.
+12. Increment frontmatter `plan_version`, update `last_updated`, update `current_wave`, and write the change-log entry.
+
+## Evidence Gate
+
+Do not close a wave from task status alone. Compare the report's acceptance evidence against:
+
+- current-wave task acceptance checks
+- current-wave exit criteria
+- assumptions and risks referenced by the wave
+
+If evidence is missing or weak, keep the wave open or record an explicit deferral/scope change.
 
 ## Update Types
 
@@ -113,6 +125,17 @@ Tasks must be executable by an implementation agent and small enough to verify. 
 
 Do not expand W<N+2> or later.
 
+## Risk-First Replanning
+
+Before expanding the next wave, ask:
+
+- Did the report validate or break the risk that W1 was meant to test?
+- Did a new risk become more urgent than the planned next wave?
+- Did a deferred risk become safe to keep deferred?
+- Does the next wave still reduce the most important uncertainty, or is it merely the next item in the old sequence?
+
+If risk priority changes, revise Backlog Coverage and future sketches explicitly. Record the rationale in the change log.
+
 ## Backlog Coverage
 
 Maintain coverage for every Backlog item. If the report proposes add/remove/defer changes:
@@ -145,6 +168,7 @@ Add a new top entry with:
 - Update type: `normal`, `replan`, or `pivot-signal`.
 - Whether the current wave closed.
 - Assumptions and risks changed.
+- Evidence used to justify closeout or continued work.
 - Coverage changes.
 - Next wave expanded, if any.
 - Future sketches revised, if any.

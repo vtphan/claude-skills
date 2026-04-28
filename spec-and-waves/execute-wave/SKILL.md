@@ -60,6 +60,27 @@ The current wave is the wave named by `current_wave` in frontmatter and marked `
 - Do not reorder waves.
 - Do not change future-wave sketches.
 
+## Acceptance Evidence Quality
+
+Evidence should be specific enough that the human lead or a later agent can understand why a task was marked done.
+
+Good evidence includes:
+
+- command names and pass/fail results
+- test names or manual check steps
+- screenshots or review notes when UI behavior matters
+- benchmark numbers when performance was an acceptance check
+- explicit notes for anything unverified
+
+Weak evidence includes:
+
+- "looks good"
+- "implemented"
+- "should work"
+- unstated manual testing
+
+If evidence is weak, do not mark the task done.
+
 ## When To Stop And Report
 
 Stop and write a report when:
@@ -116,6 +137,12 @@ Report facts separately from recommendations:
 - `Next-wave readiness`: prerequisites or warnings before the next wave starts.
 
 Omit a section only if it is truly empty.
+
+## Discovery Discipline
+
+Record discoveries that affect later waves, scope, assumptions, risks, Starter Spec, or Backlog. Do not bury them in code comments or commit messages only.
+
+Useful discoveries name the affected IDs when possible: `US-*`, `F-*`, `W*`, `T*`, `A*`, or `R*`.
 
 ## What Not To Do
 

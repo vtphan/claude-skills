@@ -33,7 +33,7 @@ Return three sections:
    - `Assumptions`
    - `Risks`
    - `Change Log`
-2. **Planning Rationale** — concise bullets explaining wave sequence, W1 choice, major deferrals, and risk-first decisions.
+2. **Planning Rationale** — concise bullets explaining wave sequence, W1 choice, major deferrals, and risk-first decisions. Include a `Risk-First Sequencing Notes` subsection.
 3. **Leader Decisions** — at most 5 decisions the human should make before execution. Omit if none.
 
 ## Core Rule
@@ -65,6 +65,21 @@ Choose waves in this order of priority:
 
 Avoid setup-only W1 unless the Backlog makes a technical foundation unavoidable. If W1 is mostly setup, explain why.
 
+## Risk-First Sequencing Notes
+
+Before finalizing the wave order, explicitly identify the uncertainty that should shape sequencing:
+
+```markdown
+## Risk-First Sequencing Notes
+
+- Highest uncertainty:
+- Why W1 tests or reduces it:
+- Risks intentionally deferred:
+- What would trigger replanning:
+```
+
+Use these notes to justify the `Backlog Coverage` table and W1 task choices. If W1 does not address a major risk, explain why value, dependency, or feasibility overrode risk-first ordering.
+
 ## Current Wave Detail
 
 For W1, include:
@@ -79,6 +94,8 @@ For W1, include:
 - Tasks with acceptance checks.
 
 Tasks should be small enough for an implementation agent to complete in one sitting. Every task needs a concrete acceptance check. Tasks may mention likely files/modules only if useful; do not over-specify implementation.
+
+At least one W1 task should reduce the wave's most important uncertainty when feasible. If no task does, call that out in `Planning Rationale`.
 
 ## Future Wave Sketches
 
@@ -131,6 +148,7 @@ A good Wave Plan:
 
 - Covers or defers every Backlog item.
 - Makes W1 executable.
+- Shows why W1 is the right first learning/risk/value slice.
 - Keeps W2 and later lightweight.
 - Explains sequencing tradeoffs.
 - Helps the human lead challenge hidden scope, risk, and priority.
