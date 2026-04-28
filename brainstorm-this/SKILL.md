@@ -1,6 +1,6 @@
 ---
 name: brainstorm-this
-description: Collaborate with the user on developing an idea through structured, iterative brainstorming captured in a shared markdown draft. Use this skill whenever the user invokes `/brainstorm-this` (with or without arguments), asks to "brainstorm this," "iterate on this idea," "do another round of brainstorming," "advance the draft," or references files named `draft_NN.md` in a brainstorming context. Also use it when the user shares a markdown file with sections titled "Idea," "Proposed Solution," "Rationale," and "Consider This." This is a brainstorming and ideation aid — the goal is to help the user develop better ideas through revision, critique, and dialogue, not to produce polished prose.
+description: 'Collaborate with the user on developing an idea through structured, iterative brainstorming captured in shared versioned markdown drafts. Use this skill whenever the user invokes `/brainstorm-this` (with or without arguments), asks to "brainstorm this," "iterate on this idea," "do another round of brainstorming," or "advance the draft," references similarly numbered draft files such as `draft_00.md` and `draft_01.md` in a brainstorming context, or shares a markdown draft that already uses this exact section structure: `Round Stance`, `Idea`, `Proposed Solution`, `Rationale`, `Consider This`, `Perspective I''m Contributing From`, and `Notes`. This is a brainstorming and ideation aid — the goal is to help the user develop better ideas through revision, critique, and dialogue, not to produce polished prose.'
 ---
 
 # Brainstorm This
@@ -20,17 +20,17 @@ The free text is the user's raw idea. Claude:
 2. Produces a first-pass Proposed Solution, Rationale, and an initial round stance.
 3. Saves the result as `draft_00.md` in the current working directory.
 
-**Mode 2 — Work on a specific draft:** `/brainstorm-this draft_NN.md`
+**Mode 2 — Work on a specific draft:** `/brainstorm-this draft_07.md`
 
-Claude reads the named file, reads up to 2 prior drafts if they exist for context, and produces `draft_{NN+1}.md`. If the next-numbered file already exists, refuse and surface the conflict — do not overwrite, do not skip ahead. Tell the user: "draft_{NN+1}.md already exists. Delete it first if you want to redo this round."
+Claude reads the named file, reads up to 2 prior drafts if they exist for context, and produces the next numbered draft. If the next-numbered file already exists, refuse and surface the conflict — do not overwrite, do not skip ahead. Tell the user: "`draft_<next>.md` already exists. Delete it first if you want to redo this round."
 
 **Mode 3 — Continue from the latest draft:** `/brainstorm-this`
 
-Claude finds the highest-numbered `draft_NN.md` in the working directory and proceeds as in Mode 2. If no draft files exist, refuse with: "No draft files found. To start a new brainstorm, run `/brainstorm-this {your idea}`. To work on an existing draft, name it: `/brainstorm-this draft_03.md`."
+Claude finds the highest-numbered `draft_<number>.md` in the working directory and proceeds as in Mode 2. If no draft files exist, refuse with: "No draft files found. To start a new brainstorm, run `/brainstorm-this {your idea}`. To work on an existing draft, name it: `/brainstorm-this draft_03.md`."
 
 ## File naming
 
-Drafts are named `draft_NN.md` with **two-digit zero-padded** numbering (`draft_00.md`, `draft_01.md`, ... `draft_99.md`). Zero-padding is required so files sort correctly in directory listings.
+Drafts are named `draft_<number>.md` with **at least two digits of zero padding** (`draft_00.md`, `draft_01.md`, ... `draft_99.md`, `draft_100.md`). Keep two digits for rounds 0-99 so files sort cleanly in directory listings. After round 99, continue with natural-width integers; do not wrap, truncate, or reset numbering.
 
 Each round produces a new file. Never overwrite a prior draft. The user may edit any draft between rounds.
 
@@ -40,7 +40,7 @@ Every draft has these sections, in this order:
 
 ```
 ## Round Stance
-[fenced block — Claude writes this each round]
+[short markdown block — Claude writes this each round]
 
 ## Idea
 [the user's idea — Claude must NOT modify this after round 0]
@@ -60,6 +60,8 @@ Every draft has these sections, in this order:
 ## Notes
 [free-form — either party, persistent commentary]
 ```
+
+If an existing draft is missing any of these sections, or the sections appear in a different order, refuse and tell the user exactly which sections are missing or misplaced. Do not silently normalize or rewrite a malformed existing draft.
 
 ## Round 0: seeding from free text
 
@@ -83,7 +85,7 @@ When invoked in Mode 1, the file does not yet exist. Build `draft_00.md` as foll
 
 When invoked in Mode 2 or Mode 3 on an existing draft:
 
-1. **Find the source draft.** In Mode 2, the user named it. In Mode 3, find the highest-numbered `draft_NN.md` in the working directory.
+1. **Find the source draft.** In Mode 2, the user named it. In Mode 3, find the highest-numbered `draft_<number>.md` in the working directory.
 
 2. **Read the source draft and 1-2 prior drafts** if they exist. Seeing trajectory matters — without it, you risk drifting from earlier intent or repeating moves you already made. Do not load more than the most recent 2 prior drafts; older history dilutes attention.
 
@@ -108,7 +110,7 @@ When invoked in Mode 2 or Mode 3 on an existing draft:
 
 ### Round Stance
 
-Write a fenced block at the top of the new draft. This is your one-paragraph declaration of what you did this round and why. Structure:
+Write a short markdown block at the top of the new draft. Use ordinary markdown text and bullets, not a code fence. This is your one-paragraph declaration of what you did this round and why. Structure:
 
 ```
 **Round N**
@@ -154,6 +156,8 @@ Free-form. You may add observations or meta-commentary here. Keep it sparse — 
 
 You can declare convergence and recommend stopping. The criterion is **two consecutive small-diff rounds**, where "small-diff" means you cannot articulate substantive changes — only phrasing, ordering, or polish.
 
+Only recommend `stop` if you can verify from the source draft and the prior drafts you loaded for context that at least one visible round adopted a genuinely skeptical or stress-testing perspective (`critique` or equivalent). If you cannot verify that from the drafts you read, do not recommend stopping on this pass; prefer `continue` or run a critique round instead.
+
 How this works in practice:
 
 - Round N: you make a small revision and write in your Round Stance: `Recommendation: small diff, consider stopping`.
@@ -166,7 +170,7 @@ The user can override your stop recommendation by editing the draft and asking f
 
 ## Failure modes to avoid
 
-- **Premature convergence.** Do not declare convergence before at least one round has adopted a critical perspective and looked for weaknesses. A solution that has only been refined, never stress-tested, is not converged — it is unexamined.
+- **Premature convergence.** Do not declare convergence unless the loaded draft history shows at least one round that adopted a critical perspective and looked for weaknesses. If you cannot verify that from the drafts you read, the work is not ready to stop.
 - **Cosmetic revision.** If your only changes are word choice and sentence order, the round is small-diff. Say so honestly in the Round Stance rather than dressing up a small edit as a substantive one.
 - **Editing the Idea.** Never (after round 0). Use `[Q from LLM]` in Consider This instead.
 - **Drift across rounds.** If you find yourself re-introducing an argument the user removed two rounds ago, or undoing a structural change from a prior round, stop and reconsider. Either the user's edit was wrong (in which case raise it via Consider This) or yours was — don't silently fight it across rounds.
