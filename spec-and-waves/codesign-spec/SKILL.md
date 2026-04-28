@@ -126,6 +126,48 @@ Use this format:
 
 Do not treat Key Journeys as validated facts. The human leader has hidden context and must decide which journeys are real, useful, or out of scope.
 
+## Creative Lenses
+
+Use these lenses internally to suggest non-obvious Key Journeys, stories, or features. Do not list the lenses in the output unless it helps the human leader review the proposal.
+
+System and architecture lenses:
+
+- **Exception path**: what happens when the happy path fails?
+- **Recovery and rollback**: how does the user recover from bad input, bad output, or a wrong action?
+- **Trust boundary**: where does the user need confidence before accepting system output?
+- **Human review**: when should a person approve, override, correct, or audit?
+- **Handoff**: where does work move between roles, systems, or time periods?
+- **State transition**: what meaningful states does the work move through?
+- **Data lifecycle**: what is created, imported, validated, edited, exported, deleted, or retained?
+- **Permissions and visibility**: who can see, change, approve, recover, or audit what?
+- **Integration failure**: what happens when an external service, file, API, or dependency is unavailable?
+- **Conflict and concurrency**: what if two people or processes touch the same thing?
+- **Operational ownership**: who monitors, fixes, supports, or maintains this?
+
+Product and UX lenses:
+
+- **Time pressure**: what changes when the user is rushed?
+- **High stakes**: where is the cost of being wrong high?
+- **First-time vs repeated use**: what changes after the user knows the tool?
+- **Novice vs expert**: do different skill levels need different support?
+- **Interruption and resumption**: what if the user leaves midway and comes back?
+- **Ambiguity resolution**: where does the user need help deciding what something means?
+- **Confidence building**: what makes the next action feel safe?
+- **Bulk action and review**: what changes when there are many items?
+
+Creative-thinking lenses:
+
+- **Inversion**: what would make this fail or frustrate users?
+- **Pre-mortem**: if this shipped and failed, why?
+- **Extreme user**: what does the most constrained, skeptical, rushed, or expert user need?
+- **Boundary case**: what happens at the edge of stated scope?
+- **Hidden stakeholder**: who is affected but not named as a primary user?
+- **Second-order effect**: what new behavior does this tool create?
+- **Substitution test**: what manual workaround or existing tool is this replacing?
+- **Misuse case**: how could someone use this incorrectly or adversarially?
+
+Use these lenses only to surface project-level insight. Do not turn the Starter Spec into architecture, threat modeling, detailed UX design, or implementation planning.
+
 ## Section Guidance
 
 **Idea**
