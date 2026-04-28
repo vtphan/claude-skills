@@ -4,7 +4,8 @@ description: >-
   Use this skill when the user wants to create, revise, or tighten a Spec and
   Waves Starter Spec. This skill co-designs with a human leader to fill missing
   stable project-level elements in a concise spec document: idea, users, rough
-  user stories, features, key journeys, scope, open questions, and notes. It may
+  user stories, features, technical stack, key journeys, scope, open questions,
+  and notes. It may
   creatively suggest non-obvious pain-point journeys aligned with the current
   spec context for the human leader to assess. Use when the user says things
   like "fill out this spec", "tighten this starter spec", "help me draft the
@@ -32,6 +33,7 @@ Return three sections:
    - `Users`
    - `User Stories`
    - `Features`
+   - `Technical Stack`
    - `Key Journeys`
    - `Scope`
    - `Open Questions`
@@ -49,6 +51,7 @@ Include stable project-level intent:
 - What problem or opportunity motivates it.
 - Rough user-facing stories.
 - Major capabilities the system probably needs.
+- Project-level technical stack choices, options, and constraints.
 - Non-obvious key journeys that expose pain points, hidden scope, or product risk.
 - Clear in-scope and out-of-scope boundaries.
 - Constraints or preferences that would steer downstream planning.
@@ -61,7 +64,7 @@ Treat human-provided facts as the strongest source. Treat your additions as prop
 Do not add:
 
 - Detailed implementation plans.
-- Architecture decisions unless the human already committed to them.
+- Architecture decisions below the project-level stack unless the human already committed to them.
 - Database schemas, API shapes, component names, file paths, or task lists.
 - Detailed acceptance criteria.
 - Performance targets unless they are a real project-level commitment.
@@ -76,7 +79,8 @@ When detail seems useful but premature, place a short note in `Open Questions` o
 Be generative but bounded:
 
 - Fill obvious gaps with reasonable proposals instead of asking the human to start from a blank page.
-- Creatively suggest Key Journeys that align with the current spec context, especially where the Idea, Users, User Stories, Features, Scope, Questions, or Notes imply pain points the human may want to accept, reject, or reshape.
+- Creatively suggest Key Journeys that align with the current spec context, especially where the Idea, Users, User Stories, Features, Technical Stack, Scope, Open Questions, or Notes imply pain points the human may want to accept, reject, or reshape.
+- Suggest realistic Technical Stack options when the stack is missing, unstable, or consequential. Compare tradeoffs so the human lead can decide.
 - Mark uncertain proposals as proposals, not facts.
 - Keep assumptions visible. Do not convert uncertainty into confident scope.
 - Preserve human wording when it sounds intentional.
@@ -98,6 +102,54 @@ Use this distinction:
 
 If a point is likely to change during Backlog or Wave Plan drafting, keep it out of the spec or put it in `Notes` as provisional.
 
+## Technical Stack Codesign
+
+Technical Stack is part of codesign when it materially shapes feasibility, speed, maintainability, deployment, integration, or team fit.
+
+Include:
+
+- **Committed choices**: stack decisions the human already made.
+- **Recommended default**: one practical option when the context supports it.
+- **Alternatives**: 1-2 realistic alternatives when the decision is meaningful.
+- **Tradeoffs**: concise pros/cons for each option.
+- **Unknowns**: questions that would change the recommendation.
+
+Consider these factors:
+
+- existing codebase or organizational standards
+- team familiarity
+- delivery speed
+- ecosystem maturity
+- hosting/deployment fit
+- data/storage needs
+- integration requirements
+- operational burden
+- security/compliance constraints
+- cost and vendor lock-in
+- AI-agent ergonomics: whether the stack is easy for coding agents to inspect, test, and modify reliably
+
+Keep stack analysis at project level. Good examples: language, framework, database class, hosting target, major external services, native vs web, local-first vs cloud. Bad examples: table schemas, endpoint shapes, component trees, package-by-package dependency plans, file layout, or low-level architecture.
+
+Use this format when helpful:
+
+```markdown
+## Technical Stack
+
+Committed:
+- <choice>, if any.
+
+Recommended default:
+- <stack option> — Pros: ... Cons: ...
+
+Alternatives:
+- <option> — Pros: ... Cons: ...
+
+Unknowns:
+- <decision that would change the stack>.
+```
+
+If the best answer is "use the existing stack", say that and explain why. Do not invent a new stack just to be creative.
+
 ## Key Journey Brainstorming
 
 Key Journeys are a deliberate place to use the LLM's broader pattern knowledge. They help the human leader notice hidden scope, non-obvious friction, and risks that may not be explicit in the starter document.
@@ -106,7 +158,7 @@ Generate Key Journeys only when they sharpen the spec. Avoid generic flows.
 
 Good Key Journeys:
 
-- Align with the current spec as a whole: `Idea`, `Users`, `User Stories`, `Features`, `Scope`, `Open Questions`, and `Notes`.
+- Align with the current spec as a whole: `Idea`, `Users`, `User Stories`, `Features`, `Technical Stack`, `Scope`, `Open Questions`, and `Notes`.
 - Name a user goal and a specific pain point.
 - Reveal hidden scope, operational friction, trust issues, exception handling, handoffs, review/approval pressure, recovery paths, or adoption barriers.
 - Are short enough to review quickly.
@@ -189,6 +241,10 @@ Stories can be incomplete. Keep them at the level of durable user value. Do not 
 **Features**
 
 List major capabilities implied by the idea and stories. Phrase them as capabilities, not tasks.
+
+**Technical Stack**
+
+List committed stack choices and concise stack recommendations. If stack choice is unresolved and consequential, compare 2-3 realistic options with pros/cons. Keep this at project level; do not design internals.
 
 **Key Journeys**
 

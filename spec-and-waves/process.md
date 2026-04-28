@@ -75,6 +75,11 @@ What are we trying to build, for whom, and why now?
 ## Features
 - Capability or behavior the system probably needs.
 
+## Technical Stack
+- Committed stack choices, if any.
+- Options the LLM should compare, with concise pros/cons for the human lead.
+- Unknowns that affect stack choice.
+
 ## Key Journeys
 - Optional. Non-obvious journey where a user is trying to <goal>, but <specific pain point, risk, or hidden friction> may shape what should be built.
 - LLM-suggested journeys are prompts for human assessment, not settled facts.
@@ -352,7 +357,7 @@ Time: 15-30 minutes.
 
 Gate:
 
-- The Starter Spec gives enough idea, users, rough stories, feature notes, key journeys, scope, and questions for the LLM to draft a plausible Backlog.
+- The Starter Spec gives enough idea, users, rough stories, feature notes, technical stack context, key journeys, scope, and questions for the LLM to draft a plausible Backlog.
 
 ### Stage 1: Backlog
 

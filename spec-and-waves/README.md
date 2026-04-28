@@ -86,6 +86,7 @@ A concise, human-readable spec that captures stable project intent:
 - users
 - rough user stories
 - features
+- technical stack
 - key journeys
 - scope
 - open questions
@@ -155,7 +156,7 @@ Skills should not commit unrelated working-tree changes.
 
 **codesign-spec**
 
-Co-designs the Starter Spec with the human lead. It fills missing stable project-level elements, proposes non-obvious Key Journeys, and avoids low-level implementation detail.
+Co-designs the Starter Spec with the human lead. It fills missing stable project-level elements, proposes technical stack tradeoffs and non-obvious Key Journeys, and avoids low-level implementation detail.
 
 **draft-backlog**
 

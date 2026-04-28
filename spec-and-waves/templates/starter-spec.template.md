@@ -17,6 +17,12 @@ What are we trying to build, for whom, and why now?
 
 - Capability or behavior the system probably needs.
 
+## Technical Stack
+
+- Committed stack choices, if any.
+- Options the LLM should compare, with concise pros/cons for the human lead.
+- Unknowns that affect stack choice.
+
 ## Key Journeys
 
 - Optional. Non-obvious journey where a user is trying to <goal>, but <specific pain point, risk, or hidden friction> may shape what should be built.

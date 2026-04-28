@@ -86,6 +86,7 @@ For each important story or feature, make its origin clear through `Context`, `N
 - `Users`: the role it serves or affects.
 - `User Stories`: the rough story it normalizes.
 - `Features`: the capability it supports.
+- `Technical Stack`: the technical constraint or preference it must respect.
 - `Key Journeys`: the pain point or hidden friction it addresses.
 - `Scope`: why it is in or out.
 - `Open Questions`: what uncertainty it depends on.
