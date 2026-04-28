@@ -21,6 +21,19 @@ Starter Spec
 -> next wave
 ```
 
+## Conceptual Foundations
+
+Spec and Waves combines several familiar software and project-management ideas:
+
+- **Progressive elaboration**: start with a lightweight spec and add detail only when it becomes useful.
+- **Rolling-wave planning**: fully plan the current wave; keep future waves as sketches.
+- **Traceability**: connect Starter Spec, Backlog, Wave Plan, Reports, and commits through stable IDs.
+- **Scope control**: make inclusions, exclusions, deferrals, and scope changes explicit.
+- **Risk-first sequencing**: pull uncertain or high-impact work earlier.
+- **Acceptance-based execution**: complete tasks only when their acceptance checks are verified.
+- **Evidence-based reporting**: reports record what passed, what failed, what was learned, and what should change.
+- **Human-led AI collaboration**: the LLM drafts and executes; the human lead decides.
+
 ## Method Assessment
 
 Spec and Waves is best for the broad middle of AI-assisted software work: projects bigger than a one-sitting fix, but smaller than a multi-team product program. It works when the human lead has strategic context and judgment, and the LLM can help draft, organize, implement, and report.
