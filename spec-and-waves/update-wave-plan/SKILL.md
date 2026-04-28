@@ -1,6 +1,6 @@
 ---
 name: update-wave-plan
-description: Use this skill when the user has a Spec and Waves Wave Plan plus a completed Wave Report and wants the plan reconciled. This skill closes or keeps open the current wave, updates assumptions and risks, updates backlog coverage if scope changed, expands only the next wave into executable tasks, keeps later waves as sketches, and writes the Wave Plan change log. Use when the user says things like "update the wave plan", "advance to W2", "close W1", "reconcile this wave report", or provides a <project>-wave-plan.md and wave-W<N>-report.md. Do NOT use for executing code, drafting the initial backlog, drafting the initial wave plan, or changing the Starter Spec/Backlog directly.
+description: Use this skill when the user has a Spec and Waves Wave Plan plus a completed Wave Report and wants the plan reconciled. This skill closes or keeps open the current wave, updates assumptions and risks, updates backlog coverage if scope changed, expands only the next wave into executable tasks, keeps later waves as sketches, and writes the Wave Plan change log. Use when the user says things like "update the wave plan", "advance to W2", "close W1", "reconcile this wave report", or provides docs/spec-and-waves/wave-plan.md and docs/spec-and-waves/reports/wave-W<N>-report.md. Do NOT use for executing code, drafting the initial backlog, drafting the initial wave plan, or changing the Starter Spec/Backlog directly.
 ---
 
 # Update Wave Plan
@@ -9,8 +9,8 @@ Reconcile a Wave Plan with a Wave Report. This is the interpretation step after 
 
 ## Inputs
 
-- Current `<project>-wave-plan.md`.
-- Wave Report for the current wave: `<project>-wave-plan.reports/wave-W<N>-report.md`.
+- Current `docs/spec-and-waves/wave-plan.md`.
+- Wave Report for the current wave: `docs/spec-and-waves/reports/wave-W<N>-report.md`.
 - Optional Backlog when coverage or scope changes are proposed.
 
 ## Output
@@ -79,7 +79,7 @@ Completed: YYYY-MM-DD
 Covers: US-..., F-...
 Delivered: What the wave actually produced.
 Assumptions resolved: A1 validated; A2 broken -> A4 opened
-Report: <project>-wave-plan.reports/wave-W<N>-report.md
+Report: docs/spec-and-waves/reports/wave-W<N>-report.md
 ```
 
 If a wave is not ready to close, leave it `in_progress`, keep incomplete tasks, update only what is safe, and write a change-log entry explaining why it stayed open.
@@ -160,3 +160,13 @@ Tell the user:
 - What wave is now current.
 - Any assumptions, risks, or scope changes they should review.
 - Whether Starter Spec or Backlog revision is needed before execution continues.
+
+## Commit
+
+When the Wave Plan update is complete, commit only the relevant Wave Plan file. If the update also records a generated report path, the report should already have been committed by `execute-wave`.
+
+Use concise messages that reference the wave boundary and notable IDs:
+
+- `Wave plan: close W1 and expand W2`
+- `Wave plan: keep W1 open for T1.3`
+- `Wave plan: mark A2 broken after W1`

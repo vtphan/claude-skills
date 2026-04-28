@@ -31,10 +31,23 @@ The process is calibrated for projects that take days to a few weeks, not months
 
 The default process uses four artifacts:
 
-1. `<project>-starter-spec.md`
-2. `<project>-backlog.md`
-3. `<project>-wave-plan.md`
-4. `<project>-wave-plan.reports/wave-W<N>-report.md`
+```text
+docs/spec-and-waves/
+  starter-spec.md
+  backlog.md
+  wave-plan.md
+  reports/
+    wave-W<N>-report.md
+```
+
+If a project already has a documentation convention, use the nearest equivalent directory, but keep the Spec and Waves artifacts together.
+
+The default process uses four artifact types:
+
+1. `starter-spec.md`
+2. `backlog.md`
+3. `wave-plan.md`
+4. `reports/wave-W<N>-report.md`
 
 Templates live in `templates/` and are intentionally minimal. Skills should preserve their structure unless the process doc changes first.
 
@@ -161,8 +174,8 @@ Use this structure:
 plan_version: 1
 created: YYYY-MM-DD
 last_updated: YYYY-MM-DD
-source_starter_spec: <project>-starter-spec.md
-source_backlog: <project>-backlog.md
+source_starter_spec: docs/spec-and-waves/starter-spec.md
+source_backlog: docs/spec-and-waves/backlog.md
 current_wave: W1
 status: in_progress
 ---
@@ -230,6 +243,37 @@ Guidelines:
 - Be specific with task IDs, story IDs, assumption IDs, and risk IDs.
 - Reports do not edit the Wave Plan.
 
+## Commit Discipline
+
+Each skill commits durable changes before handoff. Commits are part of the traceability system, not just version control hygiene.
+
+Default commit responsibilities:
+
+- `codesign-spec`: commits `docs/spec-and-waves/starter-spec.md`.
+- `draft-backlog`: commits `docs/spec-and-waves/backlog.md`.
+- `draft-wave-plan`: commits `docs/spec-and-waves/wave-plan.md`.
+- `execute-wave`: commits completed implementation slices, current-wave task checkbox updates, and `reports/wave-W<N>-report.md`.
+- `update-wave-plan`: commits `docs/spec-and-waves/wave-plan.md` updates.
+
+Commit rules:
+
+- Commit only files touched for the current skill handoff.
+- Do not include unrelated working-tree changes.
+- Use concise messages that reference artifact sections or stable IDs.
+- Prefer IDs over prose when possible: `US-*`, `F-*`, `W*`, `T*`, `A*`, `R*`.
+- During execution, commit coherent completed task groups rather than waiting for a large wave-end commit if the wave is substantial.
+
+Examples:
+
+```text
+Spec: clarify users and scope
+Backlog: draft US-ADMIN-1..US-USER-3
+Wave plan: map backlog to W1/W2/deferred
+Wave W1: complete T1.1 import validation
+Wave report: record W1 acceptance evidence
+Wave plan: close W1 and expand W2
+```
+
 ## Optional Artifacts
 
 ### Journey
@@ -284,11 +328,11 @@ Spec and Waves should define its own skills rather than reusing the predecessor 
 
 The process needs five default skills and two optional skills.
 
-**codesign-spec** co-designs `<project>-starter-spec.md` with the human leader. It fills missing stable project-level elements, proposes concise additions, and avoids implementation detail that belongs downstream.
+**codesign-spec** co-designs `docs/spec-and-waves/starter-spec.md` with the human leader. It fills missing stable project-level elements, proposes concise additions, and avoids implementation detail that belongs downstream.
 
-**draft-backlog** drafts or revises `<project>-backlog.md` from the Starter Spec. It normalizes rough user stories and feature notes into a planning-ready Backlog. It does not produce full technical requirements by default.
+**draft-backlog** drafts or revises `docs/spec-and-waves/backlog.md` from the Starter Spec. It normalizes rough user stories and feature notes into a planning-ready Backlog. It does not produce full technical requirements by default.
 
-**draft-wave-plan** drafts `<project>-wave-plan.md` from the Starter Spec and Backlog. It maps every Backlog item to a wave or deferral, fully plans W1, and sketches later waves.
+**draft-wave-plan** drafts `docs/spec-and-waves/wave-plan.md` from the Starter Spec and Backlog. It maps every Backlog item to a wave or deferral, fully plans W1, and sketches later waves.
 
 **execute-wave** executes the current wave only. It updates task checkboxes and writes the wave Report. If a story needs requirement detail before implementation, it drafts just enough detail for that current story and records it in the Report or current-wave notes.
 

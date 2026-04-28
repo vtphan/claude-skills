@@ -2,8 +2,8 @@
 plan_version: 1
 created: YYYY-MM-DD
 last_updated: YYYY-MM-DD
-source_starter_spec: <project>-starter-spec.md
-source_backlog: <project>-backlog.md
+source_starter_spec: docs/spec-and-waves/starter-spec.md
+source_backlog: docs/spec-and-waves/backlog.md
 current_wave: W1
 status: in_progress
 ---
@@ -83,4 +83,4 @@ Sketch: 2-4 sentences. No task list.
 
 Type: initial-draft
 
-- Drafted from `<project>-starter-spec.md` and `<project>-backlog.md`.
+- Drafted from `docs/spec-and-waves/starter-spec.md` and `docs/spec-and-waves/backlog.md`.

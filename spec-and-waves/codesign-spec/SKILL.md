@@ -1,6 +1,6 @@
 ---
 name: codesign-spec
-description: Use this skill when the user wants to create, revise, or tighten a Spec and Waves Starter Spec. This skill co-designs with a human leader to fill missing stable project-level elements in a concise spec document: idea, users, rough user stories, features, key journeys, scope, open questions, and notes. It may creatively suggest non-obvious pain-point journeys aligned with the current spec context for the human leader to assess. Use when the user says things like "fill out this spec", "tighten this starter spec", "help me draft the spec", "what is missing from this spec", or provides a <project>-starter-spec.md file. Do NOT use for implementation plans, detailed requirements, architecture, task breakdowns, acceptance criteria expansion, or low-level specs that belong downstream in Backlog or Wave Plan skills.
+description: Use this skill when the user wants to create, revise, or tighten a Spec and Waves Starter Spec. This skill co-designs with a human leader to fill missing stable project-level elements in a concise spec document: idea, users, rough user stories, features, key journeys, scope, open questions, and notes. It may creatively suggest non-obvious pain-point journeys aligned with the current spec context for the human leader to assess. Use when the user says things like "fill out this spec", "tighten this starter spec", "help me draft the spec", "what is missing from this spec", or provides docs/spec-and-waves/starter-spec.md. Do NOT use for implementation plans, detailed requirements, architecture, task breakdowns, acceptance criteria expansion, or low-level specs that belong downstream in Backlog or Wave Plan skills.
 ---
 
 # Codesign Spec
@@ -8,6 +8,8 @@ description: Use this skill when the user wants to create, revise, or tighten a 
 Co-design a concise Starter Spec with the human leader. Your job is to make the spec clearer, more complete, and more stable without turning it into implementation detail.
 
 Read `../templates/starter-spec.template.md` before producing a full revised spec. If it is unavailable, use the section order in this skill.
+
+Default artifact path: `docs/spec-and-waves/starter-spec.md`.
 
 ## Output Contract
 
@@ -160,3 +162,12 @@ A good Starter Spec is:
 - Light enough that downstream Backlog and Wave Plan work can still make decisions.
 
 A bad Starter Spec is either too vague to guide planning or too detailed to survive first contact with implementation.
+
+## Commit
+
+When the revised Starter Spec is accepted or written to disk, commit only the relevant spec file. Use a concise message that references the changed sections.
+
+Examples:
+
+- `Spec: clarify users and scope`
+- `Spec: add key journeys and questions`

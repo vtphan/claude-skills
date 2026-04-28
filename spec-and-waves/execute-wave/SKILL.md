@@ -1,6 +1,6 @@
 ---
 name: execute-wave
-description: Use this skill when the user has an approved Spec and Waves Wave Plan and wants the current wave implemented. This skill reads the Wave Plan, executes only the current wave tasks, verifies task acceptance checks, updates task checkboxes, records acceptance evidence, and writes a Wave Report. Use when the user says things like "execute W1", "build the current wave", "implement this wave plan", "work through the wave tasks", "start the current wave", or provides a <project>-wave-plan.md and asks to build it. Do NOT use for drafting specs, drafting backlogs, drafting wave plans, updating completed wave plans from reports, or doing future-wave work.
+description: Use this skill when the user has an approved Spec and Waves Wave Plan and wants the current wave implemented. This skill reads the Wave Plan, executes only the current wave tasks, verifies task acceptance checks, updates task checkboxes, records acceptance evidence, and writes a Wave Report. Use when the user says things like "execute W1", "build the current wave", "implement this wave plan", "work through the wave tasks", "start the current wave", or provides docs/spec-and-waves/wave-plan.md and asks to build it. Do NOT use for drafting specs, drafting backlogs, drafting wave plans, updating completed wave plans from reports, or doing future-wave work.
 ---
 
 # Execute Wave
@@ -11,7 +11,7 @@ Read `../templates/wave-report.template.md` before writing the report. If it is 
 
 ## Inputs
 
-- Approved `<project>-wave-plan.md`.
+- Approved `docs/spec-and-waves/wave-plan.md`.
 - The project repository or working directory.
 - Optional Starter Spec and Backlog when task context is unclear.
 
@@ -19,7 +19,7 @@ Read `../templates/wave-report.template.md` before writing the report. If it is 
 
 - Code or project changes required by the current wave.
 - Updated Wave Plan with only current-wave task checkboxes changed.
-- Wave Report at `<project>-wave-plan.reports/wave-W<N>-report.md`.
+- Wave Report at `docs/spec-and-waves/reports/wave-W<N>-report.md`.
 
 Do not update wave status, assumptions, risks, backlog coverage, future-wave sketches, or the change log. That belongs to `update-wave-plan`.
 
@@ -132,3 +132,18 @@ At completion, tell the user:
 - Any significant broken assumptions, risks, or proposed scope changes.
 
 The next process step is `update-wave-plan`.
+
+## Commit
+
+Commit at stable execution handoff points:
+
+- For small waves, one commit may include completed code changes, task checkbox updates, and the Wave Report.
+- For larger waves, commit coherent completed task groups during execution, then commit the final Wave Report separately if useful.
+
+Commit only files touched for current-wave work. Do not include unrelated working-tree changes.
+
+Use messages that reference wave and task IDs:
+
+- `Wave W1: complete T1.1 import validation`
+- `Wave W1: complete T1.2 preview flow`
+- `Wave report: record W1 acceptance evidence`

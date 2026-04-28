@@ -1,6 +1,6 @@
 ---
 name: draft-backlog
-description: Use this skill when the user has a finalized or mostly finalized Spec and Waves Starter Spec and wants a planning-ready Backlog drafted or revised. This skill translates the Starter Spec into concise user stories, features, priorities, guardrails, deferred items, decision points, and open questions. Use when the user says things like "draft the backlog", "turn this spec into backlog", "create stories and features from this starter spec", or provides a <project>-starter-spec.md and asks for the next step. Do NOT use for wave planning, wave sequencing, task breakdowns, detailed technical requirements, architecture, implementation plans, or code.
+description: Use this skill when the user has a finalized or mostly finalized Spec and Waves Starter Spec and wants a planning-ready Backlog drafted or revised. This skill translates the Starter Spec into concise user stories, features, priorities, guardrails, deferred items, decision points, and open questions. Use when the user says things like "draft the backlog", "turn this spec into backlog", "create stories and features from this starter spec", or provides docs/spec-and-waves/starter-spec.md and asks for the next step. Do NOT use for wave planning, wave sequencing, task breakdowns, detailed technical requirements, architecture, implementation plans, or code.
 ---
 
 # Draft Backlog
@@ -8,6 +8,8 @@ description: Use this skill when the user has a finalized or mostly finalized Sp
 Turn a finalized Starter Spec into a concise Backlog that is ready for rolling-wave planning. The Backlog is a translation layer: it organizes human intent into stories and features, but does not decide wave order or implementation detail.
 
 Read `../templates/backlog.template.md` before producing a full backlog. If it is unavailable, use the section order in this skill.
+
+Default artifact path: `docs/spec-and-waves/backlog.md`.
 
 ## Output Contract
 
@@ -131,3 +133,12 @@ A good Backlog is:
 - Small enough to plan in waves.
 - Specific enough that `draft-wave-plan` can assign stories/features to waves.
 - Free of implementation detail that will change downstream.
+
+## Commit
+
+When the Backlog is accepted or written to disk, commit only the relevant backlog file. Use concise messages that reference story or feature IDs when possible.
+
+Examples:
+
+- `Backlog: draft US-ADMIN-1..US-USER-3`
+- `Backlog: defer F-4 and F-5`

@@ -23,6 +23,17 @@ Starter Spec
 
 ## Artifacts
 
+By default, project artifacts live together in the project repo:
+
+```text
+docs/spec-and-waves/
+  starter-spec.md
+  backlog.md
+  wave-plan.md
+  reports/
+    wave-W1-report.md
+```
+
 **Starter Spec**
 
 A concise, human-readable spec that captures stable project intent:
@@ -73,6 +84,28 @@ The execution handoff after a wave:
 - next-wave readiness
 
 Reports do not update the Wave Plan. They provide evidence for `update-wave-plan`.
+
+## Commit Discipline
+
+Each skill commits durable changes at handoff:
+
+- `codesign-spec`: Starter Spec changes
+- `draft-backlog`: Backlog changes
+- `draft-wave-plan`: Wave Plan creation
+- `execute-wave`: completed implementation slices, task checkbox updates, and Wave Reports
+- `update-wave-plan`: Wave Plan reconciliation
+
+Commit messages should be concise and traceable, using artifact sections and stable IDs where possible:
+
+```text
+Spec: clarify users and scope
+Backlog: draft US-ADMIN-1..US-USER-3
+Wave plan: map backlog to W1/W2/deferred
+Wave W1: complete T1.1 import validation
+Wave plan: close W1 and expand W2
+```
+
+Skills should not commit unrelated working-tree changes.
 
 ## Skills
 

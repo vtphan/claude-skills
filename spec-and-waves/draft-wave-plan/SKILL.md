@@ -1,6 +1,6 @@
 ---
 name: draft-wave-plan
-description: Use this skill when the user has an approved Spec and Waves Backlog and wants a rolling Wave Plan drafted or revised. This skill maps every backlog story and feature to W1, W2, Future Wave, or Deferred; proposes wave sequencing based on value, risk, dependencies, and learning; fully details only the current wave; and keeps future waves as concise sketches. Use when the user says things like "draft the wave plan", "plan this in waves", "turn this backlog into a wave plan", "create the implementation waves", or provides a <project>-backlog.md and asks for planning. Do NOT use for code implementation, executing tasks, post-wave updates, or detailed requirements beyond current-wave task acceptance.
+description: Use this skill when the user has an approved Spec and Waves Backlog and wants a rolling Wave Plan drafted or revised. This skill maps every backlog story and feature to W1, W2, Future Wave, or Deferred; proposes wave sequencing based on value, risk, dependencies, and learning; fully details only the current wave; and keeps future waves as concise sketches. Use when the user says things like "draft the wave plan", "plan this in waves", "turn this backlog into a wave plan", "create the implementation waves", or provides docs/spec-and-waves/backlog.md and asks for planning. Do NOT use for code implementation, executing tasks, post-wave updates, or detailed requirements beyond current-wave task acceptance.
 ---
 
 # Draft Wave Plan
@@ -8,6 +8,8 @@ description: Use this skill when the user has an approved Spec and Waves Backlog
 Turn an approved Backlog into a rolling Wave Plan. The LLM proposes sequencing; the human lead reviews value, risk, scope, and first-wave detail.
 
 Read `../templates/wave-plan.template.md` before producing a full plan. If it is unavailable, use the section order in this skill.
+
+Default artifact path: `docs/spec-and-waves/wave-plan.md`.
 
 ## Output Contract
 
@@ -122,3 +124,12 @@ A good Wave Plan:
 - Keeps W2 and later lightweight.
 - Explains sequencing tradeoffs.
 - Helps the human lead challenge hidden scope, risk, and priority.
+
+## Commit
+
+When the Wave Plan is accepted or written to disk, commit only the relevant wave plan file. Use concise messages that reference coverage, waves, or IDs.
+
+Examples:
+
+- `Wave plan: map backlog to W1/W2/deferred`
+- `Wave plan: draft W1 tasks for US-ADMIN-1`
