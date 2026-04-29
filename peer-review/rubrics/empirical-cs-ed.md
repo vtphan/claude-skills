@@ -2,13 +2,24 @@
 
 Use this rubric for empirical studies whose primary contribution is evidence about teaching, learning, or student behavior in a computing context. Studies range from controlled experiments to classroom interventions to observational analyses to qualitative inquiry. The rubric covers concerns that recur across this range; not every item applies to every paper.
 
-This rubric supports the skill's reading; it is not a checklist to mechanically tick through. Use rubric themes lightly in Phases 1–2 to identify which items the paper engages with, where the paper may be under-specified, and which question candidates are worth surfacing. Apply the rubric in full in Phase 3.
+This rubric supports the skill's reading; it is not a checklist to mechanically tick through. Use it in Phase 1 to identify which items the paper engages with, where the paper may be under-specified, how claims map to evidence, and which question candidates are worth surfacing. In Phase 2, use its findings only through the venue-lens assessment.
 
 ## Research question and contribution
 
 - Is there a clear research question, or is the paper organized around a tool / intervention without a question? Tool-first papers are legitimate but should be reviewed against `rubrics/tools-systems.md` instead or in addition.
 - Does the question matter to CS Ed practitioners or researchers, and is the paper explicit about who should care?
 - Is the contribution claim calibrated to the evidence? Authors sometimes overclaim ("our intervention improves learning" when they measured satisfaction) or underclaim (a strong qualitative finding presented as preliminary).
+
+## Experience report mode
+
+Use this mode for SIGCSE/ITiCSE-style experience reports, curriculum reports, or classroom practice papers whose contribution is reflective practice, transferable design knowledge, or lessons learned rather than a generalizable empirical effect.
+
+- Review against the paper's own framing. If it claims an experience report, do not require the machinery of a controlled study. If it claims learning gains or causal impact, apply the empirical-evidence standards above.
+- Look for a concrete teaching context, clear learning or instructional problem, intervention details, implementation constraints, and honest account of what happened.
+- Value transferability over generalizability: can another instructor understand the context well enough to adapt the idea?
+- Evidence can include reflective observations, student artifacts, course outcomes, adoption data, instructor workload, or student feedback, but claims must stay calibrated to those evidence types.
+- Strong experience reports usually include failures, tradeoffs, design revisions, and conditions under which the approach may not work.
+- Weak experience reports read like success narratives without enough context, evidence, or reflection for others to learn from them.
 
 ## Study design
 

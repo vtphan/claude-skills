@@ -4,6 +4,8 @@ This file encodes durable character: what each venue prioritizes, what methodolo
 
 When characterizing a paper for a venue, treat these norms as defaults, not rules. Authors sometimes submit papers that fit a different venue's norms; that itself is reviewable information.
 
+Venue entries vary in depth. Thin entries are durable starting points, not complete reviewing standards. In Phase 2, if an entry is too thin for the paper at hand, state the gap, ask the user for venue-specific guidance if needed, and treat any added standard as provisional unless the user approves a durable update.
+
 ## SIGCSE Technical Symposium
 
 Practitioner-research hybrid, leaning practitioner. The audience is computing educators. Papers are evaluated on relevance to teaching practice, clarity, and the likelihood that other instructors can use what is reported. Methodological rigor matters but is calibrated to the venue: a single-section experience report with thoughtful reflection is acceptable if positioned that way; the same paper claiming generalizable causal effect would be reviewed harder. Replicability of the teaching intervention (can another instructor try this?) is often more important than statistical power. Multi-section, multi-institution work is welcome but not required.
@@ -64,8 +66,8 @@ Focused on learning at scale: MOOCs, large-enrollment courses, online platforms 
 
 If the venue is not in this file, ask the user once for: practitioner / research / hybrid orientation, methodological expectations (qualitative welcome? large-n expected?), and any venue-specific concerns. Use those for the review and offer the user a one-paragraph addition to this file at the end, limited to durable norms.
 
-## What to do with these norms in Phase 4
+## What to do with these norms in Phase 2
 
-Use these norms in Phase 4, after Phases 1–3 have established the paper's findings. The norms translate venue-independent findings into venue-relative strengths, weaknesses, severity, and recommendation.
+Use these norms in Phase 2, after Phase 1 has established the paper's findings. The norms translate venue-independent findings into venue-relative strengths, weaknesses, severity, publishability, recommendation, and venue-form responses.
 
-For example, "single-instructor, no comparison" may be a modest limitation at one venue and a major weakness at another. Phases 1–3 should identify the design and its evidentiary implications; Phase 4 decides how much that matters here.
+For example, "single-instructor, no comparison" may be a modest limitation at one venue and a major weakness at another. Phase 1 should identify the design and its evidentiary implications; Phase 2 decides how much that matters here.

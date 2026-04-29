@@ -2,7 +2,7 @@
 
 Use this rubric when the paper explicitly reproduces, replicates, or re-tests prior work.
 
-Use rubric themes lightly in Phases 1–2 if helpful for classification, literature-positioning, or question selection. Apply the rubric in full in Phase 3.
+Use this rubric in Phase 1 after classification. It should shape the paper assessment, claim/evidence verdicts, and question selection; it is not a checklist to walk mechanically. In Phase 2, use its findings only through the venue-lens assessment.
 
 ## Replication target
 
