@@ -8,6 +8,8 @@ Re-read the paper's abstract and introduction. The draft must be consistent with
 
 Run `workflows/calibration.md` after drafting but before handing the draft to the user. Calibration is a self-check, not a separate phase the user participates in.
 
+If the user supplied a review form or score fields, read `references/review-form-adapters.md` before drafting so the output can include a venue-ready structured version in addition to the narrative review.
+
 ## Draft structure
 
 In this order. Address the program committee throughout, not the authors. The "questions for authors" section is the one place where the audience is the authors directly, and those questions are framed as the reviewer's questions, not commands.
@@ -16,7 +18,7 @@ In this order. Address the program committee throughout, not the authors. The "q
 
 2. **Strengths with evidence.** Each strength is a claim plus a citation. Plain when the paper is good — do not hedge to seem balanced. If the user emphasized certain strengths during iteration, foreground those.
 
-3. **Weaknesses with evidence and severity.** Each weakness is a claim, a citation, and conditional severity reasoning naming what the severity depends on. Do not use fixed severity buckets (fatal / major / minor) as labels. Instead: "This is a significant concern if the venue weights generalizability heavily, since the single-section design (§3.1) cannot support the cross-institutional claims in §6. For a venue that reads single-section papers as experience reports, the same design is acceptable, but then the claims in §6 should be softened."
+3. **Weaknesses with evidence and severity.** Each weakness is a claim, a citation, and conditional severity reasoning naming what the severity depends on. Internally distinguish `underreported`, `unsupported`, and `overclaimed`, and let that sharpen the wording. Do not use fixed severity buckets (fatal / major / minor) as labels. Instead: "This is a significant concern if the venue weights generalizability heavily, since the single-section design (§3.1) cannot support the cross-institutional claims in §6. For a venue that reads single-section papers as experience reports, the same design is acceptable, but then the claims in §6 should be softened."
 
 4. **Specific suggestions for the authors.** Concrete and actionable. Prefer "the authors should report inter-rater reliability for the qualitative coding in §4.2" over "the qualitative analysis could be strengthened."
 
@@ -27,6 +29,8 @@ In this order. Address the program committee throughout, not the authors. The "q
 7. **Minority report.** The strongest case for the opposite recommendation. This is not a defensive section — it is a genuine steelman that could change the recommendation on re-read. Write it as if a reviewer who reached the opposite conclusion were making their best argument. If after writing the minority report it seems stronger than the chosen recommendation, say so to the user and offer to reconsider.
 
 8. **Questions for authors.** Genuine questions whose answers would change something in the review. Not rhetorical questions or veiled criticisms.
+
+9. **Structured form fields, if needed.** If the venue requires numeric scores or fielded responses, provide them after the narrative draft using the venue's exact schema.
 
 ## Citation discipline
 

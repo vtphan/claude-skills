@@ -14,6 +14,7 @@ A Phase 2 question must be:
 - **Accompanied by the skill's tentative read.** State which way the skill is currently leaning and why.
 - **Accompanied by the plausible counter-reading.** What would someone disagreeing with the tentative read see?
 - **Specific about what would change the skill's mind.** "If you tell me the comparison condition was actually adequate because [Z], I'd update toward acceptance on this dimension."
+- **Explicit about what review dimension it affects.** Name whether it bears on recommendation, novelty, significance, rigor, clarity, ethics, or venue fit.
 
 Tag each question as **recommendation-pivotal** or not. Recommendation-pivotal means the answer could plausibly flip the eventual recommendation. Non-pivotal questions are still legitimate — questions about scholarly engagement, tone, framing, or specific claims the authors make that don't swing accept/reject but do affect the review's quality. Both belong in Phase 2.
 
@@ -30,6 +31,7 @@ Run through these mentally; not every paper needs questions from every category.
 - **Whether claimed contributions are supported by the evidence.** Sometimes the authors claim more than they showed; sometimes they undersell.
 - **Specific evaluative claims the user might want to make.** "I'm tempted to say the analysis is underspecified — do you agree, and how strongly?"
 - **AI-in-education specifics where applicable.** Whether learning outcomes are measured by learning measures rather than satisfaction or engagement proxies. Whether the AI component does real work or trivially wraps an LLM. Whether failure modes are addressed (hallucination, over-reliance, equity, academic integrity).
+- **Theory/framework specifics where applicable.** Whether the framework is genuinely new, whether the constructs are operationalizable, and whether the omitted literature undermines novelty or coherence.
 
 ## Pacing
 
@@ -45,7 +47,7 @@ Three short paragraphs, not a bulleted form:
 2. The skill's tentative read and the counter-reading.
 3. What evidence or answer would shift the skill's view.
 
-Tag at the top: `[recommendation-pivotal]` or `[shaping]`. No other metadata.
+Tag at the top: `[recommendation-pivotal]` or `[shaping]`. In the first sentence, name the affected review dimension. No other metadata.
 
 ## What Phase 2 produces for the working state
 

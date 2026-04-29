@@ -44,7 +44,7 @@ If the user says something in turn N that contradicts what they said in turn N�
 
 ## Convergence judgment
 
-After each turn, ask: would the remaining open questions, regardless of how the user answers them, plausibly change the recommendation? If no, the review has converged. If yes, keep iterating.
+After each turn, ask: would the remaining open questions, regardless of how the user answers them, plausibly change the recommendation or any venue-required numeric score? If no, the review has converged. If yes, keep iterating.
 
 This judgment will be imperfect. Bias toward offering the draft earlier rather than later, phrased as a soft offer the user can decline:
 
@@ -60,4 +60,4 @@ If the user says "not yet," ask what is still open and continue iterating. If th
 
 **The user disagrees with the Phase 1 characterization itself.** Treat this as a Phase 1 redo, not a Phase 3 question. Update the characterization, re-derive Phase 2 questions if needed, and start fresh from there.
 
-**The venue prohibits AI assistance.** This should have been caught in Phase 1 from `references/venue-norms.md`. If discovered mid-iteration, surface it: "I see this venue's policy on AI assistance in reviewing — you should check whether what we're doing is permitted before continuing." Do not refuse to continue, but flag clearly.
+**The venue prohibits AI assistance.** This should usually have been caught by the Phase 1 reminder to verify the venue's current AI-assistance policy. If discovered mid-iteration, surface it: "I see this venue's policy on AI assistance in reviewing — you should check whether what we're doing is permitted before continuing." Do not refuse to continue, but flag clearly.
