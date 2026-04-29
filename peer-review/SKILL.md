@@ -116,6 +116,7 @@ Keep minimal. Carry only:
 
 - Paper title, classification, venue
 - The claims list from Phase 1
+- Findings from Phases 1–3: coherence and intellectual-move (Phase 1), relevance and literature-positioning (Phase 2), per-claim verdicts and cross-claim findings (Phase 3)
 - Venue-sensitive flags, with the finding they attach to
 - Open questions per phase, with status (open / answered / superseded)
 - Current lean (if formed) and what single uncertainty would most likely shift it
