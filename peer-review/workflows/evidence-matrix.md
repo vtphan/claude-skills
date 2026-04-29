@@ -14,6 +14,8 @@ Build a compact internal table with one row per important evaluative point. Each
 - `venue-sensitivity`: whether this matters more for research-heavy, practitioner-heavy, or methods-heavy venues
 - `status`: `supported`, `underreported`, `unsupported`, `overclaimed`, or `open-question`
 
+Keep the matrix compact: default to 6-10 rows total, sorted by how likely each row is to affect the recommendation, score, or venue fit. Minor issues do not belong here unless the venue makes them unusually important.
+
 ## How to build it
 
 1. Extract the authors' central contribution claims from abstract, introduction, and conclusion.
@@ -25,6 +27,7 @@ Build a compact internal table with one row per important evaluative point. Each
    - `overclaimed`: the paper presents a stronger contribution than the evidence justifies
 5. For theory or framework papers, treat conceptual architecture, engagement with prior theory, and explanatory usefulness as evidence.
 6. For tools or AIED papers, include both the artifact claim and the educational-evaluation claim if both are present.
+7. Identify the single row whose uncertainty is most recommendation-relevant; this becomes the current `recommendation volatility` note in working state.
 
 ## What belongs in Phase 2
 

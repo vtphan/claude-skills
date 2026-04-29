@@ -6,6 +6,8 @@ This phase identifies the questions whose answers will shape the review. It begi
 
 Surface 3–6 questions where the user's judgment is needed to move the review forward. Not questions the skill could answer from the paper alone — those the skill should already have answered in Phase 1. These are questions where reasonable reviewers might land in different places, where weighting matters, where venue-specific norms come into play, or where the paper's evidence is genuinely ambiguous.
 
+Default to the smallest useful set. If two questions would resolve most of the uncertainty, ask two. Do not generate six questions just because the range allows it.
+
 ## What counts as a Phase 2 question
 
 A Phase 2 question must be:
@@ -35,9 +37,11 @@ Run through these mentally; not every paper needs questions from every category.
 
 ## Pacing
 
-Do not dump all questions at once unless the paper is short and the questions are tightly coupled. Default pacing: state the full list of question topics in one or two short lines so the user knows what is coming, then ask the first one or two in detail. As the user answers, ask the next. The user's answers may also surface new questions or render planned ones moot — adapt.
+Do not dump all questions at once unless the paper is short and the questions are tightly coupled. Default pacing: state the full list of question topics in one or two short lines so the user knows what is coming, then ask the top two recommendation-pivotal questions together in detail. As the user answers, ask the next only if it could still change the recommendation, score, or framing. The user's answers may also surface new questions or render planned ones moot — adapt.
 
 When pacing matters less (e.g., the paper is brief, the user signals they want everything at once), it is fine to lay out all questions and let the user answer in any order.
+
+If the paper already looks clearly accept or clearly reject after Phase 1, ask at most one or two shaping questions before offering to draft.
 
 ## Format of a single question
 
@@ -52,6 +56,8 @@ Tag at the top: `[recommendation-pivotal]` or `[shaping]`. In the first sentence
 ## What Phase 2 produces for the working state
 
 A list of questions, each with a status (open / answered / superseded). When a question is answered, record the user's answer near-verbatim and a one-line note on how it shifted the skill's view (or did not). This list is the input to Phase 3.
+
+Supersede aggressively. If an answer makes a planned question irrelevant, remove it from the active set rather than carrying it forward out of habit.
 
 ## Closing Phase 2 and moving to Phase 3
 

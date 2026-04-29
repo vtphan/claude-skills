@@ -58,6 +58,7 @@ Maintain (internally — do not dump verbatim every turn) a structured working s
 - Open questions from Phase 2, each tagged as recommendation-pivotal or not.
 - Resolved questions and the user's answers verbatim or near-verbatim.
 - Current lean: lean-accept / lean-reject / genuinely-borderline, with the reasoning.
+- Recommendation volatility: what single uncertainty or re-read would be most likely to change the recommendation or score.
 - Reasoning trail: what changed the lean and when. The convergence-and-drafting workflow logs this so the conversation's logic is recoverable, not just the final draft.
 - Weakness tags: `underreported`, `unsupported`, `overclaimed`. Use them internally to sharpen later drafting.
 
@@ -114,4 +115,5 @@ If the user wants a fast review, do this instead of the full dialogue:
 1. Read the paper and build the evidence matrix.
 2. Use `checklists/triage.md` plus the relevant rubric(s).
 3. Return four short sections: likely venue fit, top two strengths, top two risks, and what would most likely flip the recommendation.
-4. If the user wants to continue, promote the triage read into the full Phase 1 characterization rather than re-reading from scratch.
+4. If the paper looks clearly accept or clearly reject, stop there unless the user wants more.
+5. If the paper looks borderline or the user wants to continue, promote the triage read into the full Phase 1 characterization rather than re-reading from scratch.

@@ -10,6 +10,14 @@ Run `workflows/calibration.md` after drafting but before handing the draft to th
 
 If the user supplied a review form or score fields, read `references/review-form-adapters.md` before drafting so the output can include a venue-ready structured version in addition to the narrative review.
 
+Before writing, decide the output mode:
+
+- `chair-ready`: concise, auditable, recommendation-forward
+- `author-facing`: fuller developmental feedback while still written as a review
+- `notes-only`: compressed reviewer notes, useful before the final polish
+
+If the user did not specify, default to `chair-ready`.
+
 ## Draft structure
 
 In this order. Address the program committee throughout, not the authors. The "questions for authors" section is the one place where the audience is the authors directly, and those questions are framed as the reviewer's questions, not commands.
@@ -25,6 +33,7 @@ In this order. Address the program committee throughout, not the authors. The "q
 5. **Minor issues.** Typos, figure legibility, citation errors. Brief.
 
 6. **Recommendation with reasoning.** State the recommendation and explain it in terms the program committee can audit. The reasoning should reflect the conversation's accumulated weight of evidence as logged in the reasoning trail. If the lean shifted during iteration, briefly note what shifted it (without retelling the whole conversation).
+   Include recommendation volatility when useful: the one unresolved issue or re-read most likely to change the outcome.
 
 7. **Minority report.** The strongest case for the opposite recommendation. This is not a defensive section — it is a genuine steelman that could change the recommendation on re-read. Write it as if a reviewer who reached the opposite conclusion were making their best argument. If after writing the minority report it seems stronger than the chosen recommendation, say so to the user and offer to reconsider.
 
@@ -41,6 +50,12 @@ If a claim cannot be cited to the paper, it does not belong in the draft. The sk
 ## Format
 
 Plain prose with section headers. No bullet points within sections unless the content is genuinely list-like (minor issues, questions for authors). Strengths and weaknesses are paragraphs, not bullets, because the conditional severity reasoning needs prose.
+
+Mode-specific compression:
+
+- In `chair-ready`, keep each section tight and foreground recommendation logic.
+- In `author-facing`, keep the same structure but allow slightly fuller suggestions.
+- In `notes-only`, compress to short paragraphs or compact bullets and omit polish.
 
 ## Handing over
 

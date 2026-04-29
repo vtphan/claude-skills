@@ -11,6 +11,8 @@ Return four short sections:
 3. top two risks
 4. what would most likely flip the recommendation
 
+If the paper looks clearly strong or clearly weak after this pass, stop unless the user asks for a full review.
+
 ## Fast-pass questions
 
 - What is the paper's real contribution type?
@@ -19,3 +21,8 @@ Return four short sections:
 - What is the largest unsupported or overclaimed point?
 - Is the literature grounding adequate for the venue?
 - Would a deeper review likely change the recommendation, or only refine wording?
+
+## Canonical triage prompt shape
+
+Use an internal framing like:
+"Read this for venue fit and review volatility only. Give me the strongest evidence, the biggest risk, and the one uncertainty most likely to flip the recommendation."

@@ -18,6 +18,7 @@ Each turn in Phase 3 has the same shape:
    - Judge that the review has converged and offer to draft.
 
 5. **Report current lean with reasoning.** End the turn with the lean and a one-sentence reason. Lean values: lean-accept, lean-reject, genuinely-borderline. Use "genuinely-borderline" sparingly â€” it should mean the evidence really is balanced, not that the skill is hedging.
+   Also keep track internally of recommendation volatility: what unresolved issue would be most likely to change the outcome if revisited.
 
 ## When the user's answer contradicts the skill's read
 
@@ -45,6 +46,8 @@ If the user says something in turn N that contradicts what they said in turn Nâˆ
 ## Convergence judgment
 
 After each turn, ask: would the remaining open questions, regardless of how the user answers them, plausibly change the recommendation or any venue-required numeric score? If no, the review has converged. If yes, keep iterating.
+
+If the remaining open items affect only wording, minor issues, or questions for authors, stop iterating and draft now.
 
 This judgment will be imperfect. Bias toward offering the draft earlier rather than later, phrased as a soft offer the user can decline:
 
