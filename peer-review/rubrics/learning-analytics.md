@@ -2,6 +2,8 @@
 
 Use this rubric for papers whose main contribution is analytic methodology, modeling, dataset-based insight, or data-driven intervention design.
 
+Use rubric themes lightly in Phases 1–2 if helpful for classification, literature-positioning, or question selection. Apply the rubric in full in Phase 3.
+
 ## Contribution type
 
 - Is the paper's main contribution methodological, empirical, theoretical, or operational?

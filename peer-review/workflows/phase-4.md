@@ -16,19 +16,26 @@ Open `references/venue-norms.md`.
 
 Read the stored entry and review it actively before surfacing. Check:
 
-- **Currency.** Anything that may be outdated — chair priorities, methodological emphases that have shifted, AI-assistance policy, artifact requirements.
-- **Gaps relative to this paper.** An AIED submission may push on policy the older entry does not address.
+- **Currency.** Anything that may be outdated — chair priorities, methodological emphases that have shifted, artifact requirements.
+- **Gaps relative to this paper.** An AIED submission may raise expectations the older entry does not address.
 - **Internal inconsistencies.** Contradictory or vague guidance.
+- **Reviewer form schema.** If the entry includes a reviewer form, surface it alongside the durable character. Remind the user to verify the current question set against the journal's reviewer instructions before submitting — forms change. The form is what the draft answers in 4d.
 
 Surface the stored standard and the LLM's concerns together. For each concern give specific reasoning ("this paper raises [X], the stored standard does not address it, recommended addition is [Y]"). Do not rubber-stamp.
 
-The user adjudicates each concern. If the user updates the standard, write the edits back to `references/venue-norms.md` after approval, in the file's existing entry format.
+Remind the user once to verify the venue's current reviewer AI-assistance policy directly. Do not infer it, and do not write it into `references/venue-norms.md`.
+
+The user adjudicates each concern. If the user updates the durable standard, write the edits back to `references/venue-norms.md` after approval, in the file's existing entry format.
 
 ### If the venue is not on file
 
-Propose a draft entry based on general knowledge of similar venues. State explicitly: this is the LLM's best read, not authoritative — the user must sanity-check against the current CFP, reviewer instructions, and any chair guidance. Cover at minimum: orientation (practitioner / research / hybrid), methodological expectations, literature-engagement expectations, AI-assistance policy, common red-line issues.
+Propose a draft entry based on general knowledge of similar venues. State explicitly: this is the LLM's best read, not authoritative — the user must sanity-check against the current CFP, reviewer instructions, and any chair guidance. Cover at minimum: orientation (practitioner / research / hybrid), methodological expectations, literature-engagement expectations, common red-line issues.
 
-After the user edits and approves, append the new entry to `references/venue-norms.md` matching the file's format.
+Ask the user whether the venue uses a structured reviewer form (a fixed set of questions reviewers must answer). If so, capture the questions verbatim under a `### Reviewer form` subsection in the entry. The form drives 4d's draft structure.
+
+Remind the user once to verify the venue's current reviewer AI-assistance policy directly. Do not infer it, and do not write it into `references/venue-norms.md`.
+
+After the user edits and approves, append the durable new entry to `references/venue-norms.md` matching the file's format.
 
 ### Hold
 
@@ -83,20 +90,29 @@ Once 4c is settled, write the draft to `review-<short-title>.md` in the working 
 
 ### Structure
 
-In this order:
+The draft has two layers when the venue uses a reviewer form: a **decision-support layer** (helps the user judge accept/reject) and a **form-response layer** (what gets submitted). When the venue has no form on file, only the decision-support layer and the closing sections apply.
+
+**Decision-support layer**, always present, in this order:
 
 1. **Summary of contribution.** Two to four sentences, neutral, drawn from Phase 1 — the kind of summary the authors would recognize as fair.
 2. **Strengths.** Each a claim with paper citation and, where it sharpens the case, the venue-norm justification.
 3. **Weaknesses.** Each a paragraph: what the weakness is, why it matters under the venue standard, what it implies for the paper, paper citations. No nit-picks. If a candidate weakness's substance and consequence cannot be stated, it does not appear here.
 4. **Recommendation with reasoning.** From 4c. The reasoning chain auditable.
-5. **Questions for authors.** Genuine questions whose answers would change something. Not rhetorical or veiled criticisms. The one section addressed to the authors directly.
-6. **Minor issues.** Typos, figure legibility, citation formatting. Brief.
-7. **Structured form fields**, if the venue requires them. Use the venue's exact schema as captured in the 4a standard.
+
+**Form-response layer**, only when the venue has a reviewer form in `references/venue-norms.md`:
+
+5. **Reviewer form responses.** Answer each question verbatim from the venue's form, in the venue's order. Draw on the decision-support layer; do not re-derive findings already covered above. For "If applicable" questions where the paper does not engage that dimension, say so explicitly and move on. Read each question literally — questions of the form "have the authors emphasized strengths" or "have the authors stated limitations" are asking about the manuscript's *self-presentation*, not the reviewer's own assessment of strengths and limits, and should be answered at that meta level.
+
+**Closing sections**, always:
+
+6. **Questions for authors.** Genuine questions whose answers would change something. Not rhetorical or veiled criticisms. The one section addressed to the authors directly.
+7. **Minor issues.** Typos, figure legibility, citation formatting. Brief.
 
 ### Discipline
 
 - Address the program committee throughout, except in Questions for Authors.
 - Every evaluative claim cites paper evidence.
+- Severity is committed, not conditional — 4a/4b have already resolved the venue-weighting question. The one exception is findings 4b flagged as norm-silent gaps, where the draft may note conditional severity and surface the gap for the PC.
 - No confidence labels.
 - Plain prose with section headers. Bullets only for genuinely list-like content (questions for authors, minor issues).
 

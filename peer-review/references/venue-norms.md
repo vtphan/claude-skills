@@ -22,6 +22,20 @@ The most research-oriented of the major CS Ed venues. Methodological rigor is ex
 
 Open-access journal, broader than CS Ed — includes educational technology generally. Empirical work is the main currency. Journal-length: papers are expected to be more thorough than conference papers, with more developed literature reviews, methods, and discussions. Multi-study papers are common.
 
+### Reviewer form
+
+Reviewers are asked the following questions. Verify the current set against the journal's reviewer instructions before submitting; forms change.
+
+1. Are the objectives and the rationale of the study clearly stated? Please provide suggestions to the author(s) on how to improve the clarity of the objectives and rationale of the study.
+2. If applicable, is the application/theory/method/study reported in sufficient detail to allow for its replicability and/or reproducibility?
+3. If applicable, are statistical analyses, controls, sampling mechanism, and statistical reporting appropriate and well described?
+4. Could the manuscript benefit from additional tables or figures, or from improving or removing (some of the) existing ones?
+5. If applicable, are the interpretation of results and study conclusions supported by the data?
+6. Have the authors clearly emphasized the strengths of their study/theory/methods/argument?
+7. Have the authors clearly stated the limitations of their study/theory/methods/argument?
+8. Does the manuscript structure, flow or writing need improving?
+9. Could the manuscript benefit from language editing?
+
 ## Koli Calling
 
 Smaller, specialized CS Ed conference with a strong research orientation, similar in character to ICER but with more tolerance for in-progress and exploratory work. Discussion at the venue is part of the review experience — papers that open productive conversations are valued.
@@ -48,8 +62,10 @@ Focused on learning at scale: MOOCs, large-enrollment courses, online platforms 
 
 ## Generic CS Ed reviewing norms (when venue is not on file)
 
-If the venue is not in this file, ask the user once for: practitioner / research / hybrid orientation, methodological expectations (qualitative welcome? large-n expected?), policy on AI assistance for reviewers, and any venue-specific concerns. Use those for the review and offer the user a one-paragraph addition to this file at the end.
+If the venue is not in this file, ask the user once for: practitioner / research / hybrid orientation, methodological expectations (qualitative welcome? large-n expected?), and any venue-specific concerns. Use those for the review and offer the user a one-paragraph addition to this file at the end, limited to durable norms.
 
-## What to do with these norms in Phase 1
+## What to do with these norms in Phase 4
 
-Read the venue's entry before writing the characterization. The entry should shape the "likely impact" paragraph and inform which weaknesses are foregrounded as conditional on the venue. For example, "single-instructor, no comparison" reads differently for SIGCSE than for ICER; the characterization should reflect that.
+Use these norms in Phase 4, after Phases 1–3 have established the paper's findings. The norms translate venue-independent findings into venue-relative strengths, weaknesses, severity, and recommendation.
+
+For example, "single-instructor, no comparison" may be a modest limitation at one venue and a major weakness at another. Phases 1–3 should identify the design and its evidentiary implications; Phase 4 decides how much that matters here.

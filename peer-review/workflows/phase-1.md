@@ -4,6 +4,8 @@ The deepest phase. Loaded when Phase 1 begins. Output is dense and citation-rich
 
 Phase 1 produces *findings*, not strengths or weaknesses. Strength/weakness is a venue-relative judgment assigned in Phase 4b.
 
+Use paper-type rubric themes lightly in this phase if helpful for classification or for spotting likely conceptual or design pressure points. Do not run a full rubric walkthrough here; full rubric application is reserved for Phase 3.
+
 ## Reading the paper
 
 Read end to end before producing output. If only metadata is available (title or abstract pasted), say so and ask for the full paper — Phase 1 cannot proceed from an abstract.
@@ -89,4 +91,5 @@ If the user stops, end the session without a draft. If they skip to Phase 4, car
 - Paper classification (and the rubric(s) Phase 3 will load).
 - The confirmed claims list.
 - Phase 1 findings: the intellectual-move read and the coherence verdict, both citation-grounded.
+- Any venue-sensitive flags surfaced in Phase 1, attached to the finding they qualify.
 - Open Phase 1 questions, tagged pivotal or shaping.

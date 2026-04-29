@@ -15,7 +15,9 @@ Address the program committee in the eventual draft, not the authors.
 
 Required: the paper (PDF attached, or a path/link) and the venue.
 
-Venue is not used until Phase 4. Phases 1–3 are venue-agnostic — a paper either is or isn't conceptually sound, relevant, and evidentially supported, regardless of venue. Venue norms calibrate the recommendation in Phase 4.
+Venue is used primarily in Phase 4. Phases 1–3 are venue-independent in judgment: they identify what the paper is, what it claims, whether it matters to the field, and whether the evidence supports those claims, without yet translating findings into venue-relative strengths, weaknesses, or recommendations.
+
+Phases 1–3 may still note **venue-sensitive flags** when a methodological or evaluative call reasonably depends on venue standards rather than on a universal defect. These flags are carried forward unresolved and are adjudicated in Phase 4 under the approved venue standard.
 
 Conflicts of interest are the user's responsibility. Do not ask.
 
@@ -43,7 +45,7 @@ Phase 1 ends with 1–3 questions where the user's judgment is needed, then the 
 
 ## Phase 2 — Relevance to the field
 
-Medium depth. Load `workflows/phase-2.md` when Phase 2 begins.
+Medium depth. Load `workflows/phase-2.md` when Phase 2 begins. The paper-type classification from Phase 1 may inform the reading here, and relevant rubric themes may be used lightly to surface literature-positioning or significance questions. Do not apply rubrics mechanically in this phase.
 
 Taking the claims at face value, would this matter? Who should care; what conversation it joins; whether it advances that conversation or only adds to it. Literature positioning is heavier here: is the paper situated correctly in its sub-field, are adjacent or competing traditions missing.
 
@@ -53,7 +55,7 @@ Phase 2 ends with questions about significance weighting (the user typically kno
 
 ## Phase 3 — Evidence and claim verification
 
-Medium depth, citation-heavy. Load `workflows/phase-3.md` when Phase 3 begins, plus the rubric from `rubrics/` matching Phase 1's classification (one or two rubrics maximum).
+Medium depth, citation-heavy. Load `workflows/phase-3.md` when Phase 3 begins, plus the rubric from `rubrics/` matching Phase 1's classification (one or two rubrics maximum). This is the phase where rubric(s) are loaded and applied in full.
 
 For each claim from Phase 1, ask whether the evidence supports it. Methodological soundness, measurement validity, threats to validity, overclaim or underclaim. The output should make the claim/evidence boundary visible: which claims are well-supported, which are underreported, which are unsupported, which are overclaimed.
 
@@ -67,20 +69,24 @@ Load `workflows/phase-4.md` and `references/venue-norms.md` when Phase 4 begins.
 
 Check `references/venue-norms.md`.
 
+Remind the user once to verify the venue's current reviewer AI-assistance policy directly. Do not infer it, and do not write it into `references/venue-norms.md`.
+
 - **If the venue is on file:** before surfacing the stored standard, review it actively. Compare it against general knowledge of the venue's current direction and against the paper at hand. Raise concerns explicitly with reasoning:
-  - Anything in the stored standard that may be outdated (chair priorities, methodological emphasis, AI-assistance policy).
-  - Gaps the standard does not cover that this paper raises (e.g., AI-assistance policy for an AIED submission, when the stored standard predates the issue).
+  - Anything in the stored standard that may be outdated (chair priorities, methodological emphasis, artifact expectations).
+  - Gaps the standard does not cover that this paper raises.
   - Internal inconsistencies.
 
-  Do not rubber-stamp. Surface the stored standard *and* the LLM's concerns together, and explain why. The user adjudicates each concern. If the user updates the standard, write the edit back to `references/venue-norms.md` after their approval.
+  Do not rubber-stamp. Surface the stored standard *and* the LLM's concerns together, and explain why. The user adjudicates each concern. If the user updates the durable venue standard, write the edit back to `references/venue-norms.md` after their approval.
 
-- **If the venue is not on file:** propose a draft standard based on general knowledge of similar venues. Be explicit that this is the LLM's best read, not authoritative, and that the user should sanity-check it against the current CFP and reviewer instructions. After the user edits and approves, append the new standard to `references/venue-norms.md`.
+- **If the venue is not on file:** propose a draft durable standard based on general knowledge of similar venues. Be explicit that this is the LLM's best read, not authoritative, and that the user should sanity-check it against the current CFP and reviewer instructions. After the user edits and approves, append the durable standard to `references/venue-norms.md`.
 
 Do not move to 4b until the venue standard is approved.
 
 ### 4b — Venue-lens assessment
 
-Phases 1–3 produce *findings*, not strengths and weaknesses: Phase 1's coherence verdicts, Phase 2's relevance verdicts, and Phase 3's claim-by-claim evidence verdicts (supported, underreported, unsupported, overclaimed). These are neutral. Strength/weakness is a venue-relative judgment, made here.
+Phases 1–3 produce *findings*, not strengths and weaknesses: Phase 1's coherence findings, Phase 2's relevance findings, and Phase 3's claim-by-claim evidence verdicts (supported, underreported, unsupported, overclaimed). These are venue-independent assessments. Strength, weakness, severity, and recommendation are venue-relative judgments made only in Phase 4.
+
+If a finding depends on a venue-specific methodological norm, record it as a venue-sensitive flag rather than resolving it early.
 
 Batch the findings by category (methodology, conceptual merit, evidence, impact, literature engagement, reporting). For each batch, propose how each finding maps under the venue standard: does it become a strength, does it become a weakness, at what severity?
 
@@ -100,6 +106,8 @@ Once the recommendation is settled, write the draft to `review-<short-title>.md`
 
 Each weakness is written with its context and justification: what the weakness is, why it matters under the venue standard, what it implies for the paper, and the relevant paper citations. Weaknesses without substance do not appear in the weaknesses section. Minor items (typos, figure legibility, citation formatting) go in a separate minor-issues section.
 
+If the venue has a reviewer form on file in `references/venue-norms.md`, the draft has two layers: the decision-support layer (summary, strengths, weaknesses, recommendation) the user uses to decide accept/reject, and the form-response layer that answers each form question verbatim, drawing on the decision-support layer rather than re-deriving findings.
+
 No confidence labels.
 
 ## State across turns
@@ -108,6 +116,7 @@ Keep minimal. Carry only:
 
 - Paper title, classification, venue
 - The claims list from Phase 1
+- Venue-sensitive flags, with the finding they attach to
 - Open questions per phase, with status (open / answered / superseded)
 - Current lean (if formed) and what single uncertainty would most likely shift it
 
@@ -128,7 +137,9 @@ Do not push back on matters of taste, weighting, or where reasonable reviewers d
 
 Substantive, specific, professional. Concrete over vague. Every evaluative claim in the draft cites paper evidence — section, figure, page, or table. If a claim cannot be cited to the paper, it does not belong in the draft.
 
-Use conditional severity in the draft, not fixed buckets: "this is a significant concern if the venue weights generalizability heavily, since the single-section design (§3.1) cannot support the cross-institutional claims in §6; for a venue that reads single-section papers as experience reports, the same design is acceptable, but the claims in §6 should be softened."
+State severity as 4b adjudicated it. Where citing the venue norm sharpens the case, cite it ("under [venue]'s expectation of [X], this finding…"). Do not hedge with "if the venue weights…" — 4a settled the standard and 4b applied it; the draft commits.
+
+The one exception: findings that 4b surfaced as **norm-silent gaps** (the venue standard does not address them). For those, the draft may note that severity depends on how the PC weights the unaddressed dimension, and flag it as an open question for the committee.
 
 Do not produce confidence labels (high/medium/low) in the draft.
 

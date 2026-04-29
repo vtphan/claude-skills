@@ -2,6 +2,8 @@
 
 Use this rubric when the paper's main contribution is conceptual rather than empirical: a framework, model, taxonomy, theory integration, conceptual lens, or explanatory architecture.
 
+Use rubric themes lightly in Phases 1–2 if helpful for classification, literature-positioning, or question selection. Apply the rubric in full in Phase 3.
+
 ## Core constructs
 
 - Are the key constructs defined clearly and consistently?

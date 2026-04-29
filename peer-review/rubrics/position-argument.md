@@ -2,6 +2,8 @@
 
 Use this rubric when the paper's contribution is primarily an argument, agenda, or normative claim rather than a new framework or new empirical evidence.
 
+Use rubric themes lightly in Phases 1–2 if helpful for classification, literature-positioning, or question selection. Apply the rubric in full in Phase 3.
+
 ## Central thesis
 
 - Is the main claim clear, contestable, and worth arguing about?

@@ -2,6 +2,8 @@
 
 Use this rubric when the paper explicitly reproduces, replicates, or re-tests prior work.
 
+Use rubric themes lightly in Phases 1–2 if helpful for classification, literature-positioning, or question selection. Apply the rubric in full in Phase 3.
+
 ## Replication target
 
 - Is the original study or claim clearly identified?

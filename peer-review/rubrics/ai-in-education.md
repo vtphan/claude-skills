@@ -2,6 +2,8 @@
 
 Use this rubric for papers where an AI component is central to the contribution. Pair it with an empirical, tools/systems, or theoretical rubric as needed.
 
+Use rubric themes lightly in Phases 1–2 if helpful for classification, literature-positioning, or question selection. Apply the rubric in full in Phase 3.
+
 ## Educational problem and theory of change
 
 - What educational problem is the AI supposed to improve?

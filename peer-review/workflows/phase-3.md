@@ -6,7 +6,7 @@ Phase 3 consumes the claims list confirmed at the end of Phase 1 and renders, fo
 
 ## Loading rubrics
 
-Phase 1 named the classification and which rubric(s) apply. Load them now. Rubrics shape which threats to validity matter for this paper type; they are not checklists to walk mechanically.
+Phase 1 named the classification and which rubric(s) apply. Load them now. This is the phase where the relevant rubric(s) are applied in full. Rubrics shape which threats to validity matter for this paper type; they are not checklists to walk mechanically.
 
 For mixed papers, load both rubrics (e.g., `tools-systems.md` and `empirical-cs-ed.md` for a tool with a classroom evaluation). Apply each to the claims it bears on.
 
@@ -32,7 +32,7 @@ Walk the claims list in the order Phase 1 confirmed. For each claim, produce:
 
 The distinction between *unsupported* and *overclaimed* matters: they imply different revisions. Be precise.
 
-4. **Venue-weighting flag, if any.** If the verdict depends on a methodological convention where reasonable methodologists disagree (e.g., n=23 is sufficient or not depending on venue standards; single-instructor design is fatal or acceptable depending on paper type), mark it for Phase 4. Do not resolve in Phase 3.
+4. **Venue-sensitive flag, if any.** If the verdict itself is clear, state it. If the severity or interpretation of the issue reasonably depends on venue standards or sub-field convention (for example, whether a single-instructor design is fatal, acceptable, or merely limiting), record that dependency explicitly and carry it to Phase 4. Do not convert it into a strength, weakness, or recommendation in Phase 3.
 
 ## Cross-claim findings
 
@@ -59,5 +59,5 @@ Phase 4 is the only remaining phase, so skipping is not a meaningful option.
 
 - Per-claim verdicts: each Phase 1 claim paired with evidence citation, strongest threat, and verdict (supported / underreported / unsupported / overclaimed).
 - Cross-claim methodological findings, citation-grounded.
-- Venue-weighting flags, marked for Phase 4 to resolve.
+- Venue-sensitive flags, marked for Phase 4 to resolve.
 - Open Phase 3 questions, tagged pivotal or shaping.

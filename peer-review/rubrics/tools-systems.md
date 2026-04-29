@@ -2,6 +2,8 @@
 
 Use this rubric when the paper's main contribution is a tool, system, platform, workflow, or infrastructure artifact. Many papers in this category also include an empirical evaluation; if so, pair this rubric with an empirical or AI-in-education rubric.
 
+Use rubric themes lightly in Phases 1–2 if helpful for classification, literature-positioning, or question selection. Apply the rubric in full in Phase 3.
+
 ## Problem and user need
 
 - Is the educational or research problem concrete and worth solving?

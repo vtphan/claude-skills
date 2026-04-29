@@ -2,7 +2,7 @@
 
 Use this rubric for empirical studies whose primary contribution is evidence about teaching, learning, or student behavior in a computing context. Studies range from controlled experiments to classroom interventions to observational analyses to qualitative inquiry. The rubric covers concerns that recur across this range; not every item applies to every paper.
 
-This rubric supports the skill's reading; it is not a checklist to mechanically tick through. In Phase 1, scan the rubric to identify which items the paper engages with and where the paper might fall short. In Phase 2, the items most worth raising as questions are those where the paper's choice is defensible-or-not depending on framing.
+This rubric supports the skill's reading; it is not a checklist to mechanically tick through. Use rubric themes lightly in Phases 1–2 to identify which items the paper engages with, where the paper may be under-specified, and which question candidates are worth surfacing. Apply the rubric in full in Phase 3.
 
 ## Research question and contribution
 
@@ -47,7 +47,7 @@ The paper should discuss its own threats. The skill should also identify ones th
 
 ## Engagement with prior work
 
-- Are foundational CS Ed citations present where they should be? See `references/foundational-citations.md` for common ones.
+- Are foundational CS Ed citations present where they should be? See `references/literature-grounding-checks.md` for prompts about older conversations the paper may need to engage.
 - Does the paper engage with the relevant sub-literature, or only with the most recent / most fashionable adjacent work? In AI-in-education, this is a recurring concern: papers cite recent LLM work and skip the educational technology and learning sciences literature that should ground them.
 - Are competing or contradictory findings in the literature acknowledged, or only supportive ones?
 
@@ -63,7 +63,3 @@ The paper should discuss its own threats. The skill should also identify ones th
 - Are the results clearly distinguished from the discussion?
 - Are tables and figures legible and necessary?
 - Threats and limitations integrated thoughtfully or relegated to a perfunctory section?
-
-## What to do with this rubric in Phase 2
-
-For each question candidate, ask: is this a defensible-or-not depending on framing? Those are the ones that belong in Phase 2 — they need the user's judgment. Items that the paper either clearly addresses or clearly fails are not Phase 2 material; they go directly into the eventual draft as strengths or weaknesses with citations.

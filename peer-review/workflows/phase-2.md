@@ -4,6 +4,8 @@ Medium depth. Loaded when Phase 2 begins. Takes the claims confirmed in Phase 1 
 
 Phase 2 produces relevance findings, not strengths or weaknesses. It is venue-agnostic. Strength/weakness is assigned in Phase 4b under venue norms.
 
+The paper-type classification from Phase 1 may inform the reading here. Relevant rubric themes may be used lightly to surface literature-positioning or significance questions, but this is not a full rubric pass.
+
 ## Pacing
 
 One turn by default. Two only if literature engagement is heavy or the LLM hits a knowledge limit mid-phase that needs the user's input before continuing.
@@ -48,4 +50,5 @@ If the user stops, end the session without a draft. If they skip to Phase 4, car
 
 - Relevance findings across the three dimensions (audience, conversation, advancement vs. addition), each citation-grounded where possible.
 - Literature-positioning findings: what is engaged well, what is missing or under-engaged.
+- Any venue-sensitive flags surfaced in Phase 2, attached to the finding they qualify.
 - Open Phase 2 questions, tagged pivotal or shaping.
