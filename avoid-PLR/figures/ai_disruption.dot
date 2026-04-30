@@ -1,0 +1,134 @@
+digraph ai_disruption {
+  graph [
+    rankdir=LR,
+    bgcolor="white",
+    pad="0.35",
+    nodesep="0.55",
+    ranksep="0.65",
+    splines=true,
+    outputorder=edgesfirst,
+    fontname="Helvetica",
+    label="Figure 1. AI Breaks the Link Between Comfort and Competence",
+    labelloc=t,
+    fontsize=22
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=13,
+    margin="0.16,0.10",
+    color="#3f4a56",
+    penwidth=1.2
+  ];
+
+  edge [
+    fontname="Helvetica",
+    fontsize=12,
+    color="#4b5563",
+    arrowsize=0.8,
+    penwidth=1.4
+  ];
+
+  subgraph cluster_traditional {
+    label="Traditional Learning Arc";
+    labelloc=t;
+    fontsize=16;
+    fontname="Helvetica-Bold";
+    color="#b8c2cc";
+    penwidth=1.4;
+    style="rounded";
+    margin=18;
+
+    t_frustration [
+      label="Frustration Zone\ncannot do yet",
+      fillcolor="#f8d7da"
+    ];
+    t_learning [
+      label="Learning Zone\ncan do with support",
+      fillcolor="#fff3cd"
+    ];
+    t_comfort [
+      label="Comfort Zone\ncan do independently",
+      fillcolor="#d4edda"
+    ];
+
+    t_frustration -> t_learning [
+      label="scaffolding"
+    ];
+    t_learning -> t_comfort [
+      label="support fades"
+    ];
+  }
+
+  subgraph cluster_ai {
+    label="AI Disruption";
+    labelloc=t;
+    fontsize=16;
+    fontname="Helvetica-Bold";
+    color="#b8c2cc";
+    penwidth=1.4;
+    style="rounded";
+    margin=18;
+
+    a_start [
+      label="Frustration or\nLearning Zone",
+      fillcolor="#fde2b8"
+    ];
+    ai_substitute [
+      label="AI as Substitute\nperforms target thinking",
+      fillcolor="#dbeafe",
+      color="#2563eb"
+    ];
+    borrowed [
+      label="Borrowed Comfort\nfeels capable through dependence",
+      fillcolor="#e9d5ff",
+      color="#7c3aed"
+    ];
+    performative [
+      label="Performative Competence\ncompetent-looking work\nwithout reliable evidence\nof independent mastery",
+      fillcolor="#f3e8ff",
+      color="#7c3aed"
+    ];
+    earned [
+      label="Earned Comfort\nindependent competence",
+      fillcolor="#d4edda",
+      color="#237a3b"
+    ];
+
+    a_start -> ai_substitute [
+      label="shortcut"
+    ];
+    ai_substitute -> borrowed;
+    borrowed -> performative [
+      label="looks like mastery"
+    ];
+    a_start -> earned [
+      label="missing movement through\nproductive struggle",
+      style=dashed,
+      color="#9ca3af",
+      fontcolor="#6b7280"
+    ];
+  }
+
+  note [
+    label="Pathwise Pedagogy restores the distinction:\nAI may scaffold learning, but should not make dependence look like independence.",
+    shape=note,
+    fillcolor="#f8fafc",
+    color="#64748b",
+    fontsize=13,
+    margin="0.18,0.12"
+  ];
+
+  performative -> note [
+    style=dotted,
+    arrowhead=none,
+    color="#94a3b8"
+  ];
+  earned -> note [
+    style=dotted,
+    arrowhead=none,
+    color="#94a3b8"
+  ];
+}
