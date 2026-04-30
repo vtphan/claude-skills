@@ -173,135 +173,63 @@ Or, more formally:
 
 ## 2. Pedagogical Model
 
-The conceptual framework identifies the problem: AI can make dependence look like competence. The pedagogical model describes the instructional response.
+The pedagogical model is simple: make the intended learning path more accessible, and make the AI bypass less sufficient.
 
-Pathwise Pedagogy asks instructors to design learning paths, not just assignments. A learning path specifies what competence is being developed, what support is available, how AI may be used, what evidence of thinking is required, and how students are moved from supported performance toward independent performance.
+Pathwise Pedagogy does not try to remove AI from the learning environment. It designs the path of least resistance so that successful completion remains coupled to competence. The instructor works on two paths at once: the green path toward earned comfort, and the AI-bypass path toward borrowed comfort.
 
-The model has seven design principles.
+### 2.1 Support the Intended Learning Path
 
-### 2.1 Declare the Target Competence
+The first move is traditional scaffolding. The instructor lowers effective challenge enough to move students from the Frustration Zone into the Learning Zone. This does not mean removing the intellectual work. It means removing or reducing the barriers that prevent students from beginning the work.
 
-Every assignment should begin with a clear statement of the competence students are meant to develop. The competence should name the kind of disciplinary thinking the student must eventually be able to perform independently.
+On the intended path, scaffolding should:
 
-Examples include:
+- reduce extraneous load,
+- make the task reachable,
+- preserve the target thinking,
+- create conditions for productive struggle,
+- fade as competence increases.
 
-- constructing an algorithm,
-- proving correctness,
-- analyzing running time,
-- interpreting a source,
-- designing an experiment,
-- critiquing an argument,
-- specifying requirements,
-- verifying an AI-generated solution.
+This is the green path in Figure 1. Students begin with an unaided target task that is too challenging. Scaffolding brings the task into the Learning Zone. Productive struggle begins. Support is gradually released. The endpoint is earned comfort: the student can perform the target competence with increasing independence.
 
-This matters because AI can assist with many surface products. Unless the instructor names the target competence, it is easy to mistake a polished product for learning.
+This path may include AI. AI functions as scaffold when it helps students stay in the Learning Zone while leaving the target thinking to the student.
 
-The central question is:
+### 2.2 Protect Against the AI Bypass
 
-> What should the student be able to do without AI by the end of this learning sequence?
+The second move is path-shaping friction. AI can create a bypass route: the student can produce a competent-looking answer without developing the competence the assignment is meant to build. This is borrowed comfort.
 
-Not every assignment must aim at AI-free performance. Some assignments may legitimately target AI-mediated competence, such as specification, critique, verification, or comparison of outputs. But even then, the target competence must be explicit. The student should know whether AI is being used as a scaffold for some later independence, or as a tool within the competence itself.
+Path-shaping friction makes the bypass route less attractive, less reliable, or less sufficient. It does not add difficulty for its own sake. It changes the assignment so that completion without thinking is harder than completion through the intended learning path.
 
-### 2.2 Locate the Learning Zone
+Path-shaping friction may include:
 
-Once the target competence is declared, the instructor estimates where the task sits relative to students' current independent competence.
+- student-specific inputs,
+- required traces or intermediate reasoning,
+- evidence-bound verification,
+- critique of AI output against concrete evidence,
+- in-class extensions or oral checks,
+- transfer to a nearby but non-identical problem.
 
-The task should not live entirely in the Comfort Zone. If students can already do it independently, the assignment may confirm competence but will not develop much new competence. The task also should not live mostly in the Frustration Zone. If students cannot make meaningful progress with available support, they are likely to disengage, imitate, or outsource.
+The goal is not surveillance. The goal is to make competence visible. If AI is used, the student should still have to specify, evaluate, verify, adapt, or explain in ways that require disciplinary understanding.
 
-The instructional target is the Learning Zone: difficult enough to require new thinking, but reachable with support.
+### 2.3 Preserve Productive Struggle
 
-This is where cognitive load matters. The instructor should ask:
+Scaffolding and path-shaping friction work together. Scaffolding lowers effective challenge on the intended path; path-shaping friction prevents the bypass path from becoming easier than learning.
 
-- Is the task demand appropriate for students' current schemas?
-- Which parts of the task create intrinsic load?
-- Which parts create extraneous load that should be removed?
-- Which parts create germane load that should be preserved?
+Between those two moves sits productive struggle. Productive struggle is the learner's effortful engagement with a reachable challenge. It is not confusion, busywork, or punishment. It is the cognitive work that moves a student from supported performance toward independent competence.
 
-The goal is not to reduce all difficulty. The goal is to place the difficulty where learning happens.
+Productive resistance is the design choice that preserves this struggle. The instructor withholds just enough completion support to keep the student reasoning, while still providing enough scaffold to keep the task inside the Learning Zone.
 
-### 2.3 Distinguish AI as Scaffold from AI as Substitute
+### 2.4 Design Cycle
 
-AI use should be evaluated by function, not by mere presence.
+The model can be used as a compact design cycle:
 
-AI functions as scaffold when it helps students operate in the Learning Zone while leaving the target thinking to the student. It can ask guiding questions, explain a concept, clarify an error message, suggest a test, or help the student compare alternatives. In these cases, AI reduces unproductive burden or provides temporary support while the student remains responsible for the disciplinary move.
+1. **Name the target competence.** What should students become able to do?
+2. **Place the task in the Learning Zone.** What scaffold is needed to make productive struggle possible?
+3. **Preserve the target thinking.** What support would accidentally do the work for the student?
+4. **Identify the AI bypass.** How could AI produce completion without competence?
+5. **Add path-shaping friction.** What evidence or task structure keeps completion tied to understanding?
+6. **Fade support.** What can be removed as students move toward earned comfort?
 
-AI functions as substitute when it performs the target competence for the student. It writes the argument, constructs the solution, performs the analysis, or produces the critique in a way that lets the student complete the assignment without developing the intended competence.
-
-This distinction should be reflected in the assignment itself. The instructions should make clear which uses of AI are scaffold-like and which uses would replace the intended learning.
-
-The design question is:
-
-> What forms of AI help keep the student in the Learning Zone, and what forms let the student bypass it?
-
-### 2.4 Shape the Path of Least Resistance
-
-Students tend to follow the path that feels cheapest relative to the visible goal. If the visible goal is simply "submit a correct answer," then AI may create a cheaper path that bypasses learning. Pathwise Pedagogy therefore designs the visible goal, support structure, and required evidence so that the easiest successful path includes the intended thinking.
-
-This does not require making every non-preferred path impossible. It requires making the preferred path more coherent, more supported, and more reliably successful than bypassing the learning.
-
-The instructor has several design moves:
-
-- reduce extraneous load on the intended path,
-- preserve germane load on the intended path,
-- provide scaffolds that help students begin,
-- require evidence that is difficult to produce without understanding,
-- make unsupported AI substitution unreliable or incomplete,
-- align grading with reasoning, process, verification, and transfer.
-
-The path of least resistance should not be the path of least thinking. It should be the path where thinking is most clearly supported and most clearly required.
-
-### 2.5 Use Productive Resistance and Path-Shaping Friction
-
-Pathwise Pedagogy uses friction carefully. The purpose is not to make learning unpleasant or to punish AI use. The purpose is to preserve the relationship between effort, thinking, and competence.
-
-**Productive resistance** belongs on the intended learning path. It is the deliberate withholding of just enough completion support to keep students reasoning. An instructor may provide a code skeleton while withholding the key algorithmic idea, give a worked example of a related problem but not the assigned one, or offer hints that point students toward a structure without giving away the structure.
-
-**Path-shaping friction** belongs on bypass paths. It prevents students from completing the task through AI substitution without engaging the target competence. This may include student-specific data, required traces, oral checks, in-class extensions, version histories, counterexamples, or verification tasks tied to the student's own work.
-
-The two forms of friction should not be confused. Productive resistance sustains learning on the intended path. Path-shaping friction protects the assignment from routes that produce performance without competence.
-
-A useful test is:
-
-> Does this friction create disciplinary thinking, or merely inconvenience?
-
-If the answer is merely inconvenience, the design should be reconsidered.
-
-### 2.6 Require Evidence of Competence
-
-In AI-accessible settings, the final answer is insufficient evidence. The assignment must require evidence that shows how the student is thinking and whether the student can transfer, explain, verify, or adapt the result.
-
-Evidence should be tied to the target competence. If the goal is synthesis, evidence might include intermediate designs, failed attempts, traces, invariants, or explanations of why alternatives fail. If the goal is verification, evidence might include tests, counterexamples, empirical checks, or critique of AI output against student-generated evidence. If the goal is interpretation, evidence might include annotations, comparisons, or application to a new case.
-
-The strongest evidence is evidence-bound: it depends on details specific to the student's task, data, reasoning, or decisions. Evidence-bound work is harder to outsource wholesale because it requires the student to connect general claims to particular artifacts.
-
-The goal is not to monitor every keystroke. The goal is to make competence visible.
-
-### 2.7 Fade Support Toward Earned Comfort
-
-The endpoint of the model is earned comfort: students become comfortable because they can perform the work independently, not because AI can perform it for them.
-
-This requires fading. Early assignments may provide more scaffolding, more examples, more structured prompts, more feedback, and more explicit checkpoints. Later assignments should remove some of that support, combine skills, ask for transfer, or require students to decide which tools and strategies are appropriate.
-
-Fading is also how the instructor distinguishes scaffold from substitute. A scaffold can be gradually removed while competence remains. A substitute cannot be removed without performance collapsing.
-
-The pedagogical question is:
-
-> What support can be faded, and what competence remains when it is gone?
-
-### 2.8 The Pedagogical Cycle
-
-The model can be used as a repeatable design cycle:
-
-1. **Name the target competence.**
-2. **Estimate the Learning Zone.**
-3. **Decide the intended role of AI.**
-4. **Shape the path of least resistance.**
-5. **Add productive resistance on the intended path.**
-6. **Add path-shaping friction against bypass paths.**
-7. **Require evidence of competence.**
-8. **Fade support toward independence.**
-
-The cycle is not anti-AI. It is anti-illusion. AI is welcome when it helps students move through the Learning Zone toward earned comfort. It is pedagogically dangerous when it lets borrowed comfort masquerade as independent competence.
+The cycle is not anti-AI. It is anti-illusion. AI is welcome when it functions as scaffold. It is dangerous when it turns dependence into the appearance of independence.
 
 ## 3. Application to Algorithms
 
