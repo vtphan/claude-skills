@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -15,9 +17,9 @@ def main():
     points = {
         "A1": (3.0, 6.0),  # unaided target
         "A2": (3.0, 3.7),  # productive struggle begins
-        "A3": (4.45, 4.55),  # support begins to fade
-        "A4": (6.5, 5.15),  # near-independent performance
-        "A5": (8.5, 5.85),  # earned comfort
+        "A3": (4.6, 4.75),  # support begins to fade
+        "A4": (6.4, 5.5),  # near-independent performance
+        "A5": (8.0, 6.0),  # earned comfort
         "B": (3.0, 0.8),  # borrowed comfort through AI substitution
     }
 
@@ -32,24 +34,24 @@ def main():
         frustration_boundary,
         y_max,
         where=frustration_boundary < y_max,
-        color="#f8d7da",
-        alpha=0.95,
+        color="#fee2e2",
+        alpha=0.55,
         label="Frustration Zone",
     )
     ax.fill_between(
         x,
         comfort_boundary,
         frustration_boundary,
-        color="#fff3cd",
-        alpha=0.95,
+        color="#fef3c7",
+        alpha=0.55,
         label="Learning Zone",
     )
     ax.fill_between(
         x,
         y_min,
         comfort_boundary,
-        color="#d4edda",
-        alpha=0.95,
+        color="#dcfce7",
+        alpha=0.55,
         label="Comfort Zone",
     )
 
@@ -63,21 +65,13 @@ def main():
         x_min + 0.25,
         x_max - 0.25,
         colors="#4b5563",
-        linestyles=(0, (6, 5)),
-        linewidth=2,
+        linestyles=(0, (1, 4)),
+        linewidth=1.6,
+        alpha=0.85,
     )
-    ax.text(
-        0.43,
-        task_y + 0.12,
-        "unaided target challenge",
-        fontsize=11,
-        color="#374151",
-        va="bottom",
-    )
-
-    start_color = "#f97316"
-    learning_color = "#237a3b"
-    bypass_color = start_color
+    start_color = "#4b5563"
+    learning_color = "#0f766e"
+    bypass_color = "#f97316"
 
     arrow = dict(arrowstyle="->", mutation_scale=18, linewidth=2)
     ax.annotate(
@@ -150,34 +144,95 @@ def main():
         )
         ax.text(px, py, display_labels[label], color="white", ha="center", va="center", fontsize=14, fontweight="bold", zorder=6)
 
-    ax.text(3.1, 6.3, "Unaided target", fontsize=12, fontweight="bold", ha="left")
+    ax.text(
+        3.1,
+        6.25,
+        "Unscaffolded target\nchallenge",
+        fontsize=12,
+        fontweight="bold",
+        ha="left",
+        linespacing=1.15,
+    )
     # ax.text(2.36, 6.28, "too hard unaided", fontsize=10, ha="center", color="#374151")
 
-    ax.text(3.15, 3.35, "Productive struggle begins", fontsize=12, fontweight="bold", color=learning_color, ha="left")
+    ax.text(
+        3.15,
+        3.2,
+        "Scaffolded entry\ninto the Learning Zone",
+        fontsize=12,
+        fontweight="bold",
+        color=learning_color,
+        ha="left",
+        linespacing=1.15,
+    )
     # ax.text(1.7, 3.98, "same student,\nlower effective load", fontsize=10, ha="center", va="top", color="#374151")
 
-    ax.text(3.15, 0.45, "Borrowed comfort", fontsize=12, fontweight="bold", color=bypass_color, ha="left")
+    ax.text(
+        3.15,
+        0.32,
+        "Borrowed comfort\nthrough substitution",
+        fontsize=12,
+        fontweight="bold",
+        color=bypass_color,
+        ha="left",
+        linespacing=1.15,
+    )
     # ax.text(1.7, 0.95, "completion feels easy\nwithout skill growth", fontsize=10, ha="center", va="top", color="#374151")
 
-    ax.text(5.3, 4.1, "Support begins to fade", fontsize=12, fontweight="bold", color=learning_color, ha="center")
-    ax.text(7.7, 4.7, "Near-independent performance", fontsize=12, fontweight="bold", color=learning_color, ha="center")
-    ax.text(8.4, 5.4, "Earned comfort", fontsize=12, fontweight="bold", color=learning_color, ha="left")
+    ax.text(
+        4.5,
+        4.1,
+        "Guided practice with\nemerging competence",
+        fontsize=12,
+        fontweight="bold",
+        color=learning_color,
+        ha="left",
+        linespacing=1.15,
+    )
+    ax.text(
+        6.3,
+        4.8,
+        "Gradual release\ntoward independence",
+        fontsize=12,
+        fontweight="bold",
+        color=learning_color,
+        ha="left",
+        linespacing=1.15,
+    )
+    ax.text(
+        7.9,
+        5.35,
+        "Earned comfort\nthrough competence",
+        fontsize=12,
+        fontweight="bold",
+        color=learning_color,
+        ha="left",
+        linespacing=1.15,
+    )
     # ax.text(8.0, 6.28, "same task,\nhigher competence", fontsize=10, ha="center", va="top", color="#374151")
 
-    ax.text(2.9, 2.55, "AI bypass", ha="right", fontsize=11, fontweight="bold", color=bypass_color)
+    ax.text(
+        2.9,
+        2.55,
+        "AI substitution path",
+        ha="right",
+        fontsize=11,
+        fontweight="bold",
+        color=bypass_color,
+    )
     # ax.text(5.35, 4.6, "moves learner right", fontsize=10, color="#374151", ha="center")
 
     ax.text(3, 8, "Frustration Zone", fontsize=18, fontweight="bold", ha="center")
-    ax.text(3, 7.7, "too much load for current competence", fontsize=11, ha="center", color="#374151")
+    ax.text(3, 7.7, "challenge exceeds current competence", fontsize=11, ha="center", color="#374151")
 
     ax.text(7.1, 7.0, "Learning Zone", fontsize=18, fontweight="bold", ha="center")
-    ax.text(7.1, 6.7, "challenging but reachable with support", fontsize=11, ha="center", color="#374151")
+    ax.text(7.1, 6.7, "reachable with support, not yet independent", fontsize=11, ha="center", color="#374151")
 
     ax.text(7, 2, "Comfort Zone", fontsize=18, fontweight="bold", ha="center")
-    ax.text(7, 1.7, "can do independently", fontsize=11, ha="center", color="#374151")
+    ax.text(7, 1.7, "manageable through independent competence", fontsize=11, ha="center", color="#374151")
 
     ax.set_title(
-        "Figure 1. Competence and Challenge Define the Learning Zone",
+        "Figure 1. Scaffolded Learning vs. AI Substitution",
         fontsize=19,
         fontweight="bold",
         pad=18,
@@ -202,7 +257,8 @@ def main():
     # )
 
     fig.tight_layout()
-    fig.savefig("figures/skill_load_model.svg", format="svg", bbox_inches="tight")
+    output_path = Path(__file__).resolve().parent / "skill_load_model.svg"
+    fig.savefig(output_path, format="svg", bbox_inches="tight")
 
 
 if __name__ == "__main__":
