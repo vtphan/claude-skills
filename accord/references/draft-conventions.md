@@ -87,7 +87,3 @@ The user manages the lifecycle of `[from user]` items. The agent may delete its 
 On approval, promote the approved draft into the canonical artifact. The canonical artifact should be cleaner and downstream-oriented; it does not need to preserve draft scaffolding.
 
 Record the source draft in `accord-state.md` and the commit body. Do not add canonical change logs by default.
-
-## Attribution
-
-The codesign discipline above is adapted from the standalone `brainstorm-this` skill. ACCORD inlines what it needs so that the framework remains a self-contained five-skill set; this file is the canonical reference, not a pointer to an external dependency.

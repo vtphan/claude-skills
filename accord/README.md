@@ -4,7 +4,7 @@ ACCORD is a lightweight process for a human lead and a capable LLM to develop a 
 
 ## Principles
 
-1. **Five ACCORD skills.** The framework comprises exactly five skills: `intent`, `design`, `plan`, `execute`, `review-update`. ACCORD itself does not grow additional skills. Users remain free to invoke unrelated tools (e.g., a sibling `layered-review` skill for whole-framework critique) outside the ACCORD loop; the principle bounds ACCORD's surface, not the user's toolkit.
+1. **Five ACCORD skills.** The framework comprises exactly five skills: `intent`, `design`, `plan`, `execute`, `review-update`. ACCORD itself does not grow additional skills, and depends on nothing outside this directory. Users remain free to invoke unrelated tools alongside ACCORD; the principle bounds ACCORD's surface, not the user's toolkit.
 2. **Codesign discipline.** `intent` and `design` use a strict codesign discipline: numbered drafts, round stances, immutable core after round 0, required critique pass before convergence, strict non-overwrite. The discipline protects against premature consensus and sycophantic refinement; it is fully described in `references/draft-conventions.md`.
 3. **Greenfield only.** ACCORD assumes the project starts under ACCORD. There is no brownfield adoption path.
 4. **Auto-git.** Approved phase boundaries become commits and lightweight tags. Git history is the framework's durable state.
