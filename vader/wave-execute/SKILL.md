@@ -56,7 +56,7 @@ This skill's job is to hold the line against all of those.
 - The wave schema (if not already this session).
 - The wave plan in full. Look at: `current_wave`, the section for the current wave (including its `Expected touched modules` declaration), the assumptions/risks registers, the Decision Log references, the most recent change-log entry.
 - The vision doc (Goal, Non-goals) for sanity-checking scope.
-- The architecture doc and the Decision Log entries cited by the current wave's tasks.
+- The architecture doc and the Decision Log entries cited by the current wave's tasks. **If the architecture doc has a Project Commands subsection (Section 6), read it now** — it's the canonical source for the install/run/test/typecheck/build/repro commands you'll need for the Verification matrix in step 5. If absent, fall back to manifest files (`package.json` scripts, `Makefile`, etc.).
 - The repo state — where does prior-wave code live, what's the test setup, what conventions exist. For W1 specifically, if the project has pre-existing code (brownfield adoption of VADER), inventory the existing structure before building W1's walking-skeleton tasks: which modules from the architecture's Section 2 already exist, which need to be created, and what conventions (test framework, build system, lint config) the existing code establishes.
 
 ### 2. Pre-flight: capture start ref and check working tree state
@@ -91,7 +91,7 @@ If a task blocks — you hit a stop-and-report trigger — leave its checkbox `[
 Once tasks are done:
 
 1. Run the wave's repro path. It must pass. If it doesn't, that's a stop-and-report situation: the wave's exit criteria aren't actually met.
-2. Run the other verification checks the wave warrants — unit tests, integration tests, typecheck, build, manual/browser check if the wave touched UI. Calibrate to risk per principle 7; don't over-verify trivial changes, don't under-verify load-bearing ones.
+2. Run the other verification checks the wave warrants — unit tests, integration tests, typecheck, build, manual/browser check if the wave touched UI. Use the architecture's Project Commands subsection (Section 6) as the command source if present; fall back to manifest files. Calibrate to risk per principle 7; don't over-verify trivial changes, don't under-verify load-bearing ones.
 3. Record each check's outcome for the Verification matrix in step 6: `pass`, `fail`, `skipped (<reason>)`, or `n/a (<reason>)`. Capture the actual command run and the headline result so the matrix's Evidence column is concrete.
 
 ### 6. Write the execution report (still uncommitted)

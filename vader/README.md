@@ -118,6 +118,19 @@ When `vision pivot` revises the vision, the next `wave-update` produces a `visio
 
 No skill auto-invokes the next. Each transition is yours.
 
+## Engineering safeguards
+
+Beyond process discipline, VADER's skills enforce concrete engineering practices that mid-execution agents commonly skip:
+
+- **Verification matrix.** Each execution report lists every check considered (unit, integration, typecheck, build, repro, manual) with `pass | fail | skipped (reason) | n/a (reason)` and concrete command-level evidence. The review subagent spot-checks pass-marked rows.
+- **Clean working tree before review.** `wave-update`'s preflight blocks if the tree has any uncommitted changes — the audit subagent re-runs the repro, and dirty code would pollute verification.
+- **Dirty-state preflight at execution.** `wave-execute` checks for uncommitted user work before starting and asks before mixing it with the wave's commit. `git add` lists explicit paths only, never `-A`.
+- **Expected touched modules.** Each wave declares its blast radius at module granularity. The audit flags drift outward (touched but undeclared) and inward (declared but untouched, possibly an unmet exit criterion).
+- **Brownfield orientation.** `vision`, `architect`, and W1 execution detect existing source code and orient against it before drafting. Modules with `W1: deferred (W<N>)` skip the walking-skeleton check.
+- **Optional CI awareness.** When CI is configured, the review subagent treats CI status as supplemental evidence; CI failures on locally-passing repros are themselves findings.
+- **Code-quality lens, condition-triggered.** Non-trivial logic in load-bearing modules triggers a five-lens pass during review (coupling, error handling, edge cases, test quality, accepted debt). Skipped only with an explicit reason.
+- **Accepted technical debt, named.** Compromises taken knowingly during execution have their own report section, distinct from Discoveries. Optional project-level Debt register if items accumulate.
+
 ## How to use
 
 ### Starting a new project

@@ -353,7 +353,8 @@ For each ADR cited by this wave, did the implementation respect it?
 ## Discoveries
 Things learned during execution that affect future waves or challenge plan assumptions.
 
-If the executor accepted *technical debt* during the wave — visible compromises taken knowingly to stay in scope — list them as labeled bullets:
+## Accepted technical debt
+Compromises the executor took knowingly during the wave — *not* observations about the environment or future-wave shape (those go in Discoveries). One labeled bullet per item:
 
 ```
 - D<N>: <description>. Accepted because: <reason>. Owner: <wave when this should be revisited, or "watch" if no firm owner yet>.
@@ -361,7 +362,7 @@ If the executor accepted *technical debt* during the wave — visible compromise
 
 Examples: "D1: pickle for serialization — accepted because public API isn't W2's scope; revisit before W4 (when external clients integrate)." "D2: magic-string config in T2.3 — accepted because the value set isn't stable yet; watch."
 
-`wave-update`'s review subagent surfaces these as a category-9 finding (code-quality lens, sub-lens "accepted debt") when applying that lens. If accepted debt accumulates across waves, the wave plan can grow an optional **Debt register** parallel to Assumptions/Risks (same flat-list shape: ID, description, reason accepted, owner wave or `watch`, status `open` | `paid (W<N>)` | `accepted-permanent`). Skip the register while debt count stays low; promote when the change-log starts repeatedly citing the same debt items.
+`wave-update`'s review subagent reads this section directly and may surface additional debt items the executor took silently (sub-lens "accepted debt" of finding category 9). If accepted debt accumulates across waves, the wave plan can grow an optional **Debt register** parallel to Assumptions/Risks (same flat-list shape: ID, description, reason accepted, owner wave or `watch`, status `open` | `paid (W<N>)` | `accepted-permanent`). Skip the register while debt count stays low; promote when the change-log starts repeatedly citing the same debt items.
 
 ## Proposed scope changes
 Explicit, bulleted — each with one-line rationale.
