@@ -2,10 +2,10 @@
 
 The vision doc is the upstream artifact in the **VADER** loop. It is the answer to "why are we building this, for whom, and what would success look like" — written before requirements are expanded, before architecture is committed, and before any wave is planned.
 
-This schema is the contract between two skills:
+This schema is the contract for the `vision` skill, which has two modes:
 
-- `vision-shaper` — produces the initial vision doc through a sounding-board conversation.
-- `vision-pivot` — revises the vision doc when learning from later waves invalidates a core part of it.
+- `vision draft` — produces the initial vision doc through a sounding-board conversation.
+- `vision pivot` — revises the vision doc when learning from later waves invalidates a core part of it.
 
 Other VADER skills *read* the vision doc but do not write to it.
 
@@ -23,21 +23,21 @@ Other VADER skills *read* the vision doc but do not write to it.
 
 ## 1. Philosophy
 
-The vision doc captures **intent**, not specification. It is short on purpose. A vision doc longer than two pages is almost always over-reaching into requirements territory; the right place for that detail is the wave doc.
+The vision doc captures **intent**, not specification. It is short on purpose. A vision doc longer than two pages is almost always over-reaching into requirements territory; the right place for that detail is the wave plan.
 
 Three things make a vision doc useful downstream:
 
-**It is opinionated about scope.** The doc names what is in scope and, with equal weight, what is deliberately out. The wave doc's "themes not yet waved" section depends on this: a theme is in scope but not yet waved; an out-of-scope idea is rejected on principle. Without a clear vision, that distinction collapses.
+**It is opinionated about scope.** The doc names what is in scope and, with equal weight, what is deliberately out. The wave plan's "themes not yet waved" section depends on this: a theme is in scope but not yet waved; an out-of-scope idea is rejected on principle. Without a clear vision, that distinction collapses.
 
 **It is opinionated about the user.** A role here is a person trying to do a thing, not a job title. Get the roles right and downstream artifacts inherit clarity. Get them wrong and every wave's stories will smell off.
 
-**It is honest about what we don't know.** The vision doc has an Open questions section, and that section is meant to be substantial in a freshly drafted vision. It is the seed for the assumptions register in the wave doc.
+**It is honest about what we don't know.** The vision doc has an Open questions section, and that section is meant to be substantial in a freshly drafted vision. It is the seed for the assumptions register in the wave plan.
 
-The vision doc is normally stable. It is revised only by `vision-pivot`, only when a later-wave learning invalidates a core part of it, and only with an explicit change-log entry. Body edits without a change-log entry are forbidden.
+The vision doc is normally stable. It is revised only by `vision pivot`, only when a later-wave learning invalidates a core part of it, and only with an explicit change-log entry. Body edits without a change-log entry are forbidden.
 
 ## 2. File format and location
 
-One markdown file per project, named `<project-slug>-vision.md`. The file lives in the project's `docs/` directory alongside the architecture doc and the wave doc.
+One markdown file per project, named `<project-slug>-vision.md`. The file lives in the project's `docs/` directory alongside the architecture doc and the wave plan.
 
 YAML frontmatter holds machine-parseable state. Markdown body holds the doc.
 
@@ -52,7 +52,7 @@ status: active                          # active | pivoted
 
 `status` values:
 - `active` — the vision is the current statement of intent.
-- `pivoted` — the most recent change was a pivot (set by `vision-pivot`); cleared back to `active` only when a subsequent wave-redraft cycle has fully reconciled downstream artifacts to the new vision.
+- `pivoted` — the most recent change was a pivot (set by `vision pivot` mode); cleared back to `active` only when a subsequent `wave-update` cycle has fully reconciled downstream artifacts to the new vision.
 
 ## 3. Required sections
 
@@ -95,15 +95,15 @@ If you have more than four or five roles in a vision doc, the project is probabl
 
 One paragraph in the form: "If we build X for Y, they will Z, because of W." This is the testable claim the project rests on. The vision is right or wrong as a function of this claim being right or wrong.
 
-The value hypothesis is referenced by the wave doc's success metrics and by the audit's verdict criteria. A vague value hypothesis will produce vague success metrics, which will produce un-auditable waves. Tighten this section until the claim is falsifiable.
+The value hypothesis is referenced by the wave plan's success metrics and by `wave-update`'s review verdict criteria. A vague value hypothesis will produce vague success metrics, which will produce un-reviewable waves. Tighten this section until the claim is falsifiable.
 
 ### 4. In scope
 
-A bulleted list of capabilities the system must provide to deliver value. Capabilities, not features — the wave doc breaks capabilities down into features per wave. Aim for 5-12 bullets at this level.
+A bulleted list of capabilities the system must provide to deliver value. Capabilities, not features — the wave plan breaks capabilities down into features per wave. Aim for 5-12 bullets at this level.
 
 ### 5. Non-goals
 
-A bulleted list of things the system deliberately does *not* do, paired with one-line reasons. Non-goals are load-bearing: every wave-redraft cycle uses them to reject scope creep. Without explicit non-goals, the audit step has nothing to compare proposed scope changes against.
+A bulleted list of things the system deliberately does *not* do, paired with one-line reasons. Non-goals are load-bearing: every `wave-update` cycle uses them to reject scope creep. Without explicit non-goals, the review subagent has nothing to compare proposed scope changes against.
 
 ### 6. Success metrics
 
@@ -122,13 +122,13 @@ Two or three paragraphs naming what already exists in this space, what's been tr
 
 ### 9. Open questions
 
-A bulleted list of things the vision can't yet answer. Each open question is a candidate for the wave doc's assumptions register and gets revisited by every redraft cycle. Be specific — not "monetization unclear" but "do we charge per-user or per-team, and at what point in the funnel does pricing surface?"
+A bulleted list of things the vision can't yet answer. Each open question is a candidate for the wave plan's assumptions register and gets revisited by every wave-update cycle. Be specific — not "monetization unclear" but "do we charge per-user or per-team, and at what point in the funnel does pricing surface?"
 
 A freshly drafted vision usually has 5-15 open questions. A vision with zero open questions is suspicious — either the author is overconfident or the doc has been over-edited and the honest gaps have been laundered out.
 
 ### 10. Core journeys (optional)
 
-For product-heavy projects where users navigate flows that span multiple modules, include 1-3 *core journeys* — short end-to-end walkthroughs that name what a role actually does to get value. The journeys inform `architect-draft`'s module decomposition and key interfaces, and they inform `wave-draft`'s choice of W1 walking-skeleton path.
+For product-heavy projects where users navigate flows that span multiple modules, include 1-3 *core journeys* — short end-to-end walkthroughs that name what a role actually does to get value. The journeys inform `architect` (draft mode)'s module decomposition and key interfaces, and they inform `wave-plan`'s choice of W1 walking-skeleton path.
 
 For each journey, use this lightweight format:
 
@@ -148,7 +148,7 @@ Three guidelines:
 
 - **Keep journeys short.** 4-7 steps. If a journey is sprawling, it's actually two journeys; split.
 - **Name friction.** The "Friction now" line is load-bearing — it is what tells the architect *why* a particular module or interface matters. A journey with no friction line is decoration, not signal.
-- **Don't enumerate every variant.** The journeys here are *core* — the 1-3 paths that, if the system supports them well, demonstrate the value hypothesis. Edge cases and minor flows belong in the wave doc as stories.
+- **Don't enumerate every variant.** The journeys here are *core* — the 1-3 paths that, if the system supports them well, demonstrate the value hypothesis. Edge cases and minor flows belong in the wave plan as stories.
 
 Skip this section when:
 - The product is primarily an infra/tech tool (CLI, build tool, library) where users don't navigate a flow.
@@ -158,14 +158,14 @@ Skip this section when:
 
 A pivot is a revision of the vision doc that changes the value hypothesis, the in-scope set, the non-goals, the target users, or the success metrics in a way that invalidates downstream artifacts. Adding a new open question is not a pivot. Tightening a success metric numerically is usually not a pivot. Realizing the wrong roles were named is a pivot.
 
-`vision-pivot` is the only skill allowed to edit the vision body. When it does:
+The `vision pivot` mode is the only mechanism allowed to edit the vision body. When invoked, it:
 
 1. Edit the affected sections in place.
 2. Frontmatter `vision_version` is incremented; `last_updated` is set to today; `status` is set to `pivoted`.
 3. A change-log entry is appended (Section 5 of the doc) describing what changed and why.
-4. Out-of-band: `vision-pivot` triggers a cascading reconciliation in the wave doc and architecture doc — but it does not edit those artifacts itself. Reconciliation is the next `wave-redraft` cycle's job.
+4. Out-of-band: `vision pivot` triggers a cascading reconciliation in the wave plan and architecture doc — but it does not edit those artifacts itself. Reconciliation is the next `wave-update` cycle's job.
 
-Status returns to `active` only after a wave-redraft cycle has produced a reconciled wave doc that is consistent with the new vision. This is the only mechanism for clearing pivoted status.
+Status returns to `active` only when a wave-update cycle has produced a reconciled wave plan that is consistent with the new vision. The wave-update skill performs the flip itself (frontmatter-only edit; see Section 6 invariant 3). This is the only mechanism for clearing pivoted status.
 
 ## 5. Change log
 
@@ -181,7 +181,7 @@ Type: pivot
 - Section 4 (In scope): added "co-ownership and handoff of clubs"; removed "single-organizer onboarding wizard".
 - Section 5 (Non-goals): added "We do not support nested sub-clubs" to forestall a recurring scope-creep request.
 - Section 6 (Success metrics): metric M2 ("weekly active users") replaced with M4 ("weekly active clubs with ≥ 2 active organizers"); old text preserved as M2 (retired).
-- Triggers downstream reconciliation. Vision status: pivoted until next wave-redraft.
+- Triggers downstream reconciliation. Vision status: pivoted until next wave-update.
 ```
 
 The change log is append-only. Old metric names, old role names, and old non-goals are preserved as superseded entries with new IDs (e.g., M2-retired, M4-new). The doc carries its own history of what was once true.
@@ -190,12 +190,12 @@ The change log is append-only. Old metric names, old role names, and old non-goa
 
 Rules every reader and writer must honor.
 
-1. **The vision doc is short by design.** Pressure to grow it past two pages of body content is a symptom; the symptom is usually that someone is trying to specify in the vision rather than in the wave doc. Push back.
-2. **The vision doc captures intent, not implementation.** Architecture commitments belong in the architecture doc, not here. Wave plans belong in the wave doc, not here.
-3. **Only `vision-pivot` writes to the body.** `vision-shaper` writes the initial draft; nothing else writes after that.
+1. **The vision doc is short by design.** Pressure to grow it past two pages of body content is a symptom; the symptom is usually that someone is trying to specify in the vision rather than in the wave plan. Push back.
+2. **The vision doc captures intent, not implementation.** Architecture commitments belong in the architecture doc, not here. Wave plans belong in the wave plan, not here.
+3. **Only `vision pivot` mode writes to the body after the initial draft.** `vision draft` writes the initial draft; nothing else writes to the body after that. **Narrow exception:** `wave-update` may flip the frontmatter `status` field from `pivoted` back to `active` when a vision-pivot-update completes a clean reconciliation of downstream artifacts. This is a metadata-only edit; body sections remain untouchable except via `vision pivot`.
 4. **Every body change carries a change-log entry.** Silent edits violate the contract.
-5. **Pivoted status is cleared only by a successful wave-redraft cycle.** This guarantees the downstream artifacts catch up before the project is treated as stable again.
-6. **Open questions are first-class.** They never become invisible; they get migrated to the wave doc's assumptions register or addressed by a subsequent vision-pivot.
+5. **Pivoted status is cleared only by a successful wave-update cycle.** This guarantees the downstream artifacts catch up before the project is treated as stable again.
+6. **Open questions are first-class.** They never become invisible; they get migrated to the wave plan's assumptions register or addressed by a subsequent vision pivot.
 7. **Non-goals are sticky.** Removing a non-goal is itself a pivot — it broadens the project. The change-log entry must say so explicitly.
 
 ## 7. Worked mini-example
@@ -260,7 +260,7 @@ If we give small private book clubs a lightweight tool that owns the *state* of 
 - OQ5: Do members want a way to see *other* people's clubs they're part of in one place?
 ```
 
-A freshly drafted vision should look approximately like this — short, opinionated, with a real list of open questions seeded for the wave doc to inherit.
+A freshly drafted vision should look approximately like this — short, opinionated, with a real list of open questions seeded for the wave plan to inherit.
 
 ---
 

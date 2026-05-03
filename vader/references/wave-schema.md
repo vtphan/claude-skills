@@ -1,20 +1,14 @@
-# Wave Doc Schema
+# Wave Plan Schema
 
-The wave doc is the central operating artifact of the **VADER** loop. It unifies requirements and plan into a single rolling document, organized wave by wave. The current wave is specified and planned in full; future waves are sketched as themes; past waves carry compact closeout summaries.
+The wave plan is the central operating artifact of the **VADER** loop. It unifies requirements and plan into a single rolling document, organized wave by wave. The current wave is specified and planned in full; future waves are sketched as themes; past waves carry compact closeout summaries.
 
-This schema is the contract between four skills:
+This schema is the contract for three skills:
 
-- `wave-draft` — writes the first version of the wave doc from the vision and architecture artifacts.
-- `wave-execute` — reads the wave doc, implements the current wave, and produces an execution report.
-- `wave-audit` — independently verifies the current wave against the wave doc, the architecture doc and ADRs, and the execution report. Produces an audit report.
-- `wave-redraft` — reads the wave doc, both reports, and the architect-review report. Closes the current wave, expands the next wave's sketch into full detail, re-sketches remaining waves.
+- `wave-plan` — writes the first version of the wave plan from the vision and architecture.
+- `wave-execute` — implements the current wave's tasks and produces an execution report.
+- `wave-update` — closes the current wave, ratifies any architectural changes proposed by its review subagent, expands the next wave, and writes a change-log entry that captures both findings and decisions.
 
-Two adjacent skills also bear on the wave doc:
-
-- `architect-review` reads the wave doc and the wave's reports, and produces an architect-review report. It does not write to the wave doc.
-- `vision-pivot` does not write to the wave doc, but a vision pivot triggers a reconciling redraft cycle that will edit the wave doc substantially.
-
-All readers and writers must follow this schema. If a skill needs information not in the schema, either the schema is wrong (update it here first) or the skill is overreaching (pull it back).
+`wave-update` is the per-cycle hub. It runs an internal review subagent (fresh context, reads only artifacts) to produce findings, presents them interactively to the human for approval, applies any architectural changes, expands the next wave, and saves everything atomically. There is no separate review report — findings live in the change-log entry.
 
 ## Contents
 
@@ -24,15 +18,12 @@ All readers and writers must follow this schema. If a skill needs information no
 4. [Per-wave structure](#4-per-wave-structure)
 5. [Assumptions register](#5-assumptions-register)
 6. [Risks register](#6-risks-register)
-7. [ADR references](#7-adr-references)
+7. [Decision Log references](#7-decision-log-references)
 8. [Change log](#8-change-log)
 9. [Execution report template](#9-execution-report-template)
-10. [Audit report template](#10-audit-report-template)
-11. [Architect-review report](#11-architect-review-report)
-12. [Cycle order and gating](#12-cycle-order-and-gating)
-13. [Pivot handling](#13-pivot-handling)
-14. [Invariants](#14-invariants)
-15. [Worked mini-example](#15-worked-mini-example)
+10. [Pivot handling](#10-pivot-handling)
+11. [Invariants](#11-invariants)
+12. [Worked mini-example](#12-worked-mini-example)
 
 ---
 
@@ -40,34 +31,32 @@ All readers and writers must follow this schema. If a skill needs information no
 
 Rolling-wave development exists because later-wave certainty is an illusion. The further ahead we specify and plan, the more the document is speculation dressed up as detail. The discipline says: **specify and plan the current wave comprehensively, sketch future waves concisely, execute one wave at a time, and commit to learning between waves**.
 
-VADER inherits this from DEAR and adds two things:
+VADER's simplified loop has two skills per cycle:
 
-**The vision and architecture artifacts are upstream of the wave doc.** Goal, non-goals, and roles come from the vision; structural decisions come from the architecture doc and the ADR log. The wave doc references both rather than duplicating them, so they can be edited (under their own discipline) without rewriting the wave doc.
-
-**The cycle has two verification gates per wave.** `wave-audit` checks whether the wave's claimed outcomes hold up. `architect-review` checks whether the architecture's claimed adherence holds up. Both gates produce reports; the redrafter consumes both before advancing.
+- `wave-execute` builds the current wave's tasks and produces an execution report.
+- `wave-update` reviews what happened (via a fresh-context subagent), surfaces findings to the human for approval, applies any architectural changes, closes the current wave, expands the next wave's sketch into full detail.
 
 Three operating principles thread through the schema:
 
-**Current in detail, future in sketch.** Future waves carry only titles, themes, sketches, and sketched criteria. Anything beyond that in a future-wave section is a schema violation.
+**Current in detail, future in sketch.** Future waves carry only titles, themes, sketches, and sketched criteria. Anything beyond that is a schema violation.
 
-**Every claim is traceable.** Stories cite features; features cite waves; tasks cite stories or features and the modules / ADRs they touch. A reader walking backward from any statement can reach its origin in the vision, the architecture doc, or a previous wave's reports.
+**Every claim is traceable.** Stories cite features; features cite waves; tasks cite stories or features and the modules / Decision Log entries (ADRs) they touch. A reader walking backward from any statement can reach its origin in the vision, the architecture doc, or a previous wave's reports.
 
-**Surprises are first-class.** Discoveries during execution are the point, not a failure. The schema has dedicated places to record them — per-task, per-wave, per-doc — so they can't be buried.
+**Surprises are first-class.** Discoveries during execution and review are absorbed into the change log, not buried.
 
 ## 2. File format and location
 
-One markdown file per project, named `<project-slug>-wave-doc.md`. The file lives in the project's `docs/` directory alongside the vision doc and architecture doc.
+One file per project, named `<project-slug>-wave-plan.md`. Lives in `docs/` alongside the vision and architecture docs. Execution reports archive under `<project-slug>-wave-plan.reports/`.
 
-YAML frontmatter holds machine-parseable state. Markdown body holds detail. Reports archive under `<project-slug>-wave-doc.reports/`.
+YAML frontmatter holds machine-parseable state:
 
 ```yaml
 ---
-wave_doc_version: 3                           # Incremented by each redraft pass
+wave_plan_version: 3                          # Incremented by each wave-update pass
 created: 2026-05-02                           # ISO date, never changes
-last_updated: 2026-06-15                      # ISO date, updated each redraft
+last_updated: 2026-06-15                      # ISO date, updated each update pass
 source_vision: bookclub-vision.md             # Path to the vision doc
 source_architecture: bookclub-architecture.md # Path to the architecture doc
-adr_log: bookclub-adr/                        # Path to the ADR directory
 current_wave: W2                              # The wave currently being executed
 status: in_progress                           # in_progress | complete | paused | pivoted
 ---
@@ -77,14 +66,14 @@ status: in_progress                           # in_progress | complete | paused 
 - `in_progress` — normal operating state.
 - `complete` — all waves closed out.
 - `paused` — deliberately halted; requires human input before resuming.
-- `pivoted` — a redraft followed a vision-pivot or substantial-replan; some wave IDs may have been retired. Cleared back to `in_progress` after the next successful execute/audit/architect-review/redraft cycle.
+- `pivoted` — a wave-update pass followed a vision pivot or substantial replan; some wave IDs may have been retired. Cleared back to `in_progress` after the next successful execute → update cycle.
 
 ## 3. Top-level structure
 
-Below the frontmatter, the wave doc contains nine numbered sections, always in this order:
+Below the frontmatter, the wave plan contains nine numbered sections, always in this order:
 
 ```markdown
-# <Project> — Wave Doc
+# <Project> — Wave Plan
 
 ## 1. Goal and non-goals
 ## 2. Roles
@@ -92,38 +81,22 @@ Below the frontmatter, the wave doc contains nine numbered sections, always in t
 ## 4. Waves (detailed)
 ## 5. Assumptions register
 ## 6. Risks register
-## 7. ADR references
+## 7. Decision Log references
 ## 8. Change log
 ## 9. Themes not yet waved
 ```
 
 ### 1. Goal and non-goals
 
-Two or three short paragraphs restating the project's goal, what success looks like, and explicit non-goals. **Drawn from the vision doc**, not invented. If the wave doc's goal contradicts the vision doc's, the vision wins; raise the contradiction to the redrafter or trigger a vision-pivot. The wave doc's goal section is the executor and auditor's quick-reference for in-scope vs. out-of-scope decisions; it must not drift from the vision.
+Two or three short paragraphs restating the project's goal, what success looks like, and explicit non-goals. **Drawn from the vision doc**, not invented. Drift between the wave plan's goal section and the vision is reported and reconciled, not papered over.
 
 ### 2. Roles
 
 A compact table of user roles, mirroring the vision doc's Section 2.
 
-```markdown
-| Role | What they're trying to do |
-|------|---------------------------|
-| ...  | ...                       |
-```
-
-Roles span the whole project, not individual waves. New roles added later are a notable event and get a change-log entry — usually corresponding to a vision pivot.
-
 ### 3. Waves overview
 
-A one-glance summary: the wave ladder.
-
-```markdown
-| Wave | Name                         | Status      | One-line goal |
-|------|------------------------------|-------------|---------------|
-| W1   | Walking skeleton             | complete    | End-to-end login + empty dashboard. |
-| W2   | Nomination and voting flow   | in_progress | Members can pick the next book. |
-| W3   | Scheduling and RSVPs         | future      | A meeting is on the calendar. |
-```
+A one-glance summary: the wave ladder. One row per wave with status and one-line goal.
 
 ### 4. Waves (detailed)
 
@@ -131,23 +104,23 @@ One subsection per wave, in order. Format depends on wave status — see [Sectio
 
 ### 5, 6. Registers
 
-Assumptions and risks are flat lists, referenced by ID from waves, stories, features, and tasks. See [Section 5](#5-assumptions-register) and [Section 6](#6-risks-register).
+Assumptions and risks are flat lists, referenced by ID from waves, stories, features, and tasks.
 
-### 7. ADR references
+### 7. Decision Log references
 
-A pointer table from each ADR ID to the waves that respect it, establish it, or supersede it. The ADR file itself is the source of truth; this table is a cross-reference for navigation. See [Section 7](#7-adr-references).
+A pointer table from each Decision Log entry (ADR-NNN) to the waves that respect it, establish it, or supersede it. The architecture doc's Decision Log section is the source of truth; this table is a cross-reference for navigation.
 
 ### 8. Change log
 
-Append-only. One entry per redraft pass.
+Append-only. One entry per `wave-update` pass. Each entry combines findings (what the review subagent surfaced) and decisions (what was absorbed).
 
 ### 9. Themes not yet waved
 
-Themes the project intends to address but hasn't yet assigned to a wave. One bullet per theme. A theme graduates to a future-wave sketch the first time a redraft pass decides to plan it.
+Themes the project intends to address but hasn't yet assigned to a wave. Graduates to a future-wave sketch when wave-update decides to plan it.
 
 ## 4. Per-wave structure
 
-Every wave uses the same skeleton. The **depth** of each field depends on the wave's status. This makes rolling-wave discipline structural.
+Every wave uses the same skeleton. The **depth** of each field depends on the wave's status — this is how the schema makes rolling-wave discipline structural.
 
 ### Common fields (all waves)
 
@@ -166,14 +139,12 @@ A future wave also carries, and only carries:
 ```markdown
 Entry criteria (sketch): One or two sentences.
 Exit criteria (sketch): 2-4 bullets of testable outcomes, as best they can be stated now.
-Candidate stories: <titles only, no acceptance criteria, no IDs yet>
-  - ...
-Anticipated features: <titles only, no detail>
-  - ...
+Candidate stories: <titles only>
+Anticipated features: <titles only>
 Assumptions: A<N>, A<N>
 Risks: R<N>
 ADRs respected: ADR-NNN, ADR-NNN
-New ADRs anticipated: <one-line titles only>
+Anticipated new ADRs: <one-line titles only>
 Sketch: 2-4 sentences describing approach.
 ```
 
@@ -187,8 +158,8 @@ A current wave has the sketch fields in full detail, plus execution-ready fields
 Started: 2026-05-08
 
 Entry criteria: <precise, satisfied by prior waves' outputs>
-Exit criteria: <testable; each bullet verifiable by an independent auditor>
-Repro: Path to a script or command an auditor can run end-to-end.
+Exit criteria: <testable; each bullet verifiable from the artifacts>
+Repro: Path to a script or command that exercises this wave end-to-end from a clean state.
 
 #### Stories
 - **US-<role>-<N>: <title>**
@@ -199,17 +170,15 @@ Repro: Path to a script or command an auditor can run end-to-end.
 
 #### Features
 - **F-<N>: <name>**
-  Description: One or two sentences describing the capability.
+  Description: One or two sentences.
   Supports stories: US-..., US-...
   Priority: must-have | should-have | nice-to-have
-  Notes: <if any>
 
 #### Tasks
 - [ ] T<N>.1 — <short task description>
       Acceptance: <one or two concrete testable conditions>
       Serves: <US or F IDs the task advances, or "plumbing" if implicit>
       Touches: <module names from architecture doc; ADRs respected>
-- [ ] T<N>.2 — ...
 
 Assumptions: A<N>, A<N>
 Risks: R<N>
@@ -217,13 +186,20 @@ ADRs respected: ADR-NNN, ADR-NNN
 New ADRs proposed: ADR-NNN (proposed)   # If any will be established by this wave
 ```
 
-Story, feature, and task guidelines are unchanged from DEAR — same INVEST filter for stories, same one-session sizing for tasks, same mandatory acceptance criteria for both.
+Story, feature, and task guidelines:
+
+- **Every current-wave story has acceptance criteria.** A story without acceptance can't be honestly closed.
+- **INVEST filter for stories:** Independent, Negotiable, Valuable, Estimable, Small, Testable.
+- **Every current-wave task has acceptance criteria.** No exceptions.
+- **Tasks sized for one agent session.** A task larger than a few hours of focused work is split.
+- **Tasks cite what they serve and touch.** Story or feature ID; module name(s); ADR ID(s).
+- **Order matters.** Within a wave, the task that most reduces uncertainty comes first — usually the end-to-end integration task.
 
 Checkbox state (`[ ]` / `[x]`) is the single source of truth for task status. The executor flips them as it finishes each task; no other skill touches them.
 
 ### Past waves (closeout)
 
-When a wave completes, its detailed content is replaced by a compact closeout summary. The story list, feature list, and task list are removed (the reports archive them); what remains is the learning.
+When `wave-update` closes a wave, its detailed content is replaced by a compact closeout summary.
 
 ```markdown
 ### W<N> — <Wave name>
@@ -238,8 +214,6 @@ ADRs superseded: ADR-NNN → ADR-NNN
 Stories closed: US-..., US-...
 Features delivered: F-..., F-...
 Execution report: <path>
-Audit report: <path>
-Architect-review report: <path>
 ```
 
 ## 5. Assumptions register
@@ -249,85 +223,100 @@ Flat list. Waves, stories, features, and tasks reference entries by ID.
 ```markdown
 - **A1** — Club sizes stay under ~20 members. *Wave: W1. Status: untested.*
 - **A2** — Voting is single-choice per member, not ranked. *Wave: W2. Status: broken (2026-06-12) — superseded by A6.*
-- **A3** — Magic-link auth is acceptable for guest access. *Wave: W1. Status: validated (2026-05-15).*
 - **A6** — Members prefer ranked-choice voting over single-choice. *Wave: W2. Status: open.* Replaces: A2.
 ```
 
 Status values: `untested` | `open` | `validated` | `broken`.
 
-Rules (unchanged from DEAR): never delete; broken assumptions are superseded with new IDs; status changes are dated; assumption bodies are never edited.
+Rules: never delete; broken assumptions are superseded with new IDs; status changes are dated; assumption bodies are never edited.
 
 ## 6. Risks register
 
-Same flat-list shape as assumptions, with mitigation instead of status text. Risks have their own status: `open` | `retired (did not materialize)` | `triggered — mitigated` | `triggered — unresolved`.
+Same flat-list shape as assumptions, with mitigation instead of status text. Risk status values: `open` | `retired (did not materialize)` | `triggered — mitigated` | `triggered — unresolved`.
 
-## 7. ADR references
+## 7. Decision Log references
 
-A pointer table, not the source of truth. The architecture doc's `<project>-adr/` directory holds the actual ADR files.
+A pointer table, not the source of truth. The architecture doc's `## 8. Decision Log` section (or promoted ADR files) holds the actual entries.
 
 ```markdown
-| ADR     | Title                              | Established | Status                           | Cited by                   |
-|---------|------------------------------------|-------------|----------------------------------|----------------------------|
-| ADR-001 | Persistence: SQLite local file     | W1          | Accepted                         | W1, W2                     |
-| ADR-002 | Magic-link auth, no passwords      | W1          | Accepted                         | W1                         |
-| ADR-004 | Voting data model: flat columns    | W2 sketch   | Superseded (2026-06-12) by ADR-007 | (historical)             |
-| ADR-007 | Voting data model: row-per-rank    | W2          | Accepted                         | W2, W3 (anticipated)       |
+| ADR     | Title                              | Established | Status                             | Cited by               |
+|---------|------------------------------------|-------------|------------------------------------|------------------------|
+| ADR-001 | Persistence: SQLite local file     | architect   | Accepted                           | W1, W2                 |
+| ADR-004 | Voting data model: flat columns    | W2 sketch   | Superseded (2026-06-12) by ADR-007 | (historical)           |
+| ADR-007 | Voting data model: row-per-rank    | W2 update   | Accepted                           | W2, W3 (anticipated)   |
 ```
 
-The "Cited by" column is denormalized from the wave-detail sections and updated by the redrafter.
-
-A new ADR enters this table when `architect-review` proposes it. It enters with `Status: Proposed` and is moved to `Accepted` only when the redrafter expands the next wave that ratifies it.
+The "Cited by" column is denormalized from the wave-detail sections and updated by `wave-update` when entries are added or supersession changes the picture.
 
 ## 8. Change log
 
-Append-only. One entry per redraft pass, even if the redraft was minimal — so the history is complete.
+Append-only. One entry per `wave-update` pass. Each entry combines the review subagent's findings (with disposition) and the decisions absorbed. The findings list is the durable record of what the review surfaced — including findings the human rejected — so a reader can reconstruct both what was found and what was done. **Findings carry their own evidence**, not just labels: enough text that a future reader can understand the finding without reopening the (ephemeral) subagent conversation.
 
 ```markdown
-### 2026-06-15 — Redraft after W2 closeout
-Type: normal-redraft
-- Closed W2. All exit criteria met.
-- A2 (single-choice voting) marked broken; A6 (ranked-choice) opened.
-- ADR-004 (flat vote columns) superseded by ADR-007 (row-per-rank),
-  per architect-review report.
-- Architecture doc bumped to v4 (Section 4 Data model edited per ADR-007).
-- Expanded W3 sketch into full detail. current_wave advanced to W3.
-- Re-sketched W4 to account for ranked-voting data shape.
+### 2026-06-15 — Update after W2
+Type: normal-update
+Audit verdict: pass-with-findings
 
-### 2026-05-08 — Wave doc created
-Type: initial-draft
-- Drafted from bookclub-vision.md (v1) and bookclub-architecture.md (v1)
-  with seed ADRs ADR-001 through ADR-005.
-- Four waves; W1 fully planned as walking skeleton; W2-W4 sketched.
-- Assumptions A1-A5 and risks R1-R2 seeded from vision Open Questions.
+Review findings (from subagent):
+- F1 (high, accepted): A2 (single-choice voting) is broken.
+  Evidence: user-test simulation in W2 produced minority winners in 5 of 8 sampled
+  scenarios; the W1 sketch's flat-column model can't represent ranked preferences
+  without schema migration. Recommend opening A6 (members prefer ranked-choice).
+- F2 (medium, accepted, ratified ADR-007): ADR-004 (flat vote columns) violated
+  by T2.3.
+  Evidence: T2.3's implementation (`db/migrations/004_votes.sql`) adds a `rank`
+  column inconsistent with the flat-column shape ADR-004 mandated. Subagent
+  proposed ADR-007 (row-per-rank); full body in proposed-ADR section below.
+- F3 (low, accepted as plumbing): tests/perf/ added without a planned task.
+  Evidence: 4 perf tests under tests/perf/voting/ — diff scope leakage but
+  benign; treat as undeclared-but-aligned plumbing.
+- F4 (medium, deferred to W3): T2.4 marked [x] but admits partial coverage.
+  Evidence: report admits tie-break E2E missing; checkbox should have been [~].
+  Coverage gap doesn't block W2 exit criteria but should be picked up in W3.
+
+Decisions absorbed:
+- Closed W2 with T2.4 partial; tie-break E2E carried to W3 scope (per F4).
+- A2 marked broken; A6 (ranked-choice) opened (per F1).
+- ADR-007 added (Accepted), supersedes ADR-004 (per F2).
+- Architecture doc Section 3 (Data and state) edited to reference row-per-rank schema; architecture v3 → v4.
+- Expanded W3 from sketch.
+- Re-sketched W4 to account for ranked-voting data shape.
 ```
 
+The format is mandatory: every entry has `Type:`, `Audit verdict:`, a `Review findings` list, and a `Decisions absorbed` list. Each finding line has the shape `F<N> (<severity>, <disposition>[, <action>]): <one-line summary>` followed by an indented `Evidence:` block of one to three sentences naming the specific artifact, file, ADR, or test that grounds the finding. Disposition values: `accepted` | `rejected (user override: <reason>)` | `deferred to W<N+M>`. A reader six months later should be able to reconstruct what the review found and how the human handled it without opening any other file.
+
 `Type` values:
-- `initial-draft` — first write by `wave-draft`.
-- `normal-redraft` — routine: one wave closed, next wave planned, minor register updates.
-- `substantial-redraft` — multiple assumptions broken, multiple future waves materially changed. Doc still coherent.
-- `vision-pivot-redraft` — the vision was pivoted; this redraft reconciles the wave doc to the new vision. Retired wave IDs and superseded ADRs are listed; new wave IDs may appear. Frontmatter `status` is set to `pivoted` until a subsequent execute/audit/architect-review/redraft cycle clears it.
+- `initial-draft` — first write by `wave-plan`.
+- `normal-update` — routine: one wave closed, next wave planned, minor register/Decision Log updates.
+- `substantial-update` — multiple assumptions broken, multiple future waves materially changed. Plan still coherent.
+- `vision-pivot-update` — the vision was pivoted; this update reconciles the wave plan to the new vision. Retired wave IDs and superseded ADRs are listed; new wave IDs may appear. Frontmatter `status` is set to `pivoted` until a subsequent execute → update cycle clears it.
+- `blocked-update` — audit verdict `fail`. The wave is *not* closed and the next wave is *not* expanded. The change log records the failing findings (with evidence) and the human's chosen recovery path (loop back to `wave-execute`, renegotiate scope on the current wave's exit criteria, or pause the project).
+
+`Audit verdict` values, captured per update pass: `pass` | `pass-with-findings` | `fail`.
+- `pass` / `pass-with-findings` allow the update to close the wave and expand the next; Type is `normal-update`, `substantial-update`, or `vision-pivot-update`.
+- `fail` blocks closeout. Type is `blocked-update`. Frontmatter behavior on a `blocked-update`: `wave_plan_version` still bumps (the change log was appended, which is itself a state change); `current_wave` is unchanged; `last_updated` is set to today; `status` stays `in_progress` unless the human chooses `paused`. The change-log entry's `Decisions absorbed` list records the recovery path explicitly (e.g., "Loop back to wave-execute for T2.3 with revised acceptance" or "Renegotiate W2 exit criteria E2 from p95 ≤ 5s to p95 ≤ 8s — see body edit"). Renegotiating exit criteria *is* allowed under a blocked-update, with explicit human approval and an explicit change-log bullet — that's the only place the wave plan's structural content can change without the wave being closed.
 
 ## 9. Execution report template
 
-Produced by `wave-execute` at the end of each wave. Read by `wave-audit` (to verify) and (later) `wave-redraft`.
+Produced by `wave-execute` at the end of each wave. Read by `wave-update` (via its review subagent and directly).
 
-Location: `<project-slug>-wave-doc.reports/wave-W<N>-execution.md`.
+Location: `<project-slug>-wave-plan.reports/wave-W<N>-execution.md`.
 
 ```markdown
 ---
 wave: W<N>
-wave_start_ref: <git-sha-at-start>      # captured by wave-execute at start of work; empty if no git
-wave_end_ref: <git-sha-at-end>          # captured by wave-execute at end; empty if no git
+wave_start_ref: <git-sha-at-start>      # captured by wave-execute before work; empty only if project lacks git
+wave_end_ref: <git-sha-at-end>          # captured by wave-execute after its commit; empty only if project lacks git
 completed: 2026-06-12
-wave_doc_version_at_start: 2
+wave_plan_version_at_start: 2
 ---
 
 # W<N> <Wave name> — Execution Report
 
 ## What was built
-Prose summary of actual outcome — what a user can now do that they
-couldn't before. Reference completed task IDs and the stories/features
-they delivered. Not a commit log; a capability summary.
+Prose summary of actual outcome — what a user can now do that they couldn't
+before. Reference completed task IDs and the stories/features they delivered.
+Not a commit log; a capability summary.
 
 ## Task status
 - [x] T2.1 — ...
@@ -343,14 +332,10 @@ they delivered. Not a commit log; a capability summary.
 ## ADR adherence
 For each ADR cited by this wave, did the implementation respect it?
 - ADR-001: respected.
-- ADR-004: violated — implementation required a row-per-rank shape;
-  recommend supersede via architect-review.
+- ADR-004: violated — implementation required a row-per-rank shape; recommend supersede via wave-update.
 
-## Spec-level discoveries
-Things learned about users, stories, or features that change future waves.
-
-## Plan-level discoveries
-Things learned about implementation that change future waves.
+## Discoveries
+Things learned during execution that affect future waves or challenge plan assumptions.
 
 ## Proposed scope changes
 Explicit, bulleted — each with one-line rationale.
@@ -365,156 +350,65 @@ Prerequisites the next wave needs that weren't originally planned.
 
 A section may be omitted **only** if it would be empty.
 
-## 10. Audit report template
-
-Produced by `wave-audit` after `wave-execute`. Verifies the execution report against the wave doc and the artifacts.
-
-Location: `<project-slug>-wave-doc.reports/wave-W<N>-audit.md`.
-
-```markdown
----
-wave: W<N>
-verdict: pass-with-findings              # pass | pass-with-findings | fail
-audited: 2026-06-12
-wave_doc_version_at_audit: 2
-execution_report: wave-W<N>-execution.md
-diff_baseline: <git-sha>                 # copied from execution report's wave_start_ref
-diff_head: <git-sha>                     # commit at the time of audit
----
-
-# W<N> <Wave name> — Audit Report
-
-## Verdict
-pass | pass-with-findings | fail
-
-One-paragraph summary justifying the verdict.
-
-## Exit criteria verification
-For each exit criterion: pass / fail / unverifiable, with reproduction step.
-- [x] <criterion> — verified by <evidence>
-- [~] <criterion> — finding F<N>
-
-## Task verification
-Cross-reference the report's claimed task status against the wave doc's
-checkboxes and the repo diff. Flag discrepancies.
-
-## Assumption verification
-For each assumption the report claims to have resolved, check the evidence.
-
-## ADR adherence
-For each ADR cited by this wave, confirm adherence independently.
-Disagreement with the execution report's ADR-adherence section goes
-under Findings.
-
-## Scope findings
-Changes in the diff that don't map to planned tasks or declared
-discoveries. None is ideal; any means investigate.
-
-## Entry-criteria check for next wave
-Per the wave doc's W<N+1> entry criteria (sketch), check whether this
-wave's outputs satisfy them. If not, flag what's missing.
-
-## Findings
-- **F1** — <description>. Severity: low | medium | high.
-  Recommendation: <one or two sentences>.
-
-## Recommendations to architect-review and redrafter
-Brief — name the issues that need a decision, not prescriptions for
-how to decide them.
-```
-
-Verdict guidance:
-- `pass` — all exit criteria met, all claims verified, no scope leakage, no ADR violations.
-- `pass-with-findings` — substantive issues but none block closeout. Architect-review and redraft proceed, addressing findings explicitly.
-- `fail` — exit criteria not met, ADR violated without a supersede proposal, or next-wave entry criteria unsatisfied. Architect-review and redraft cannot close this wave.
-
-## 11. Architect-review report
-
-Produced by `architect-review` after `wave-audit`. Format defined in `architecture-schema.md` Section 6. Lives at `<project-slug>-wave-doc.reports/wave-W<N>-architect-review.md`.
-
-The architect-review report is required for wave closeout in normal cycles. It can be skipped only if the audit verdict is `fail` (in which case the cycle loops back to execute or to scope renegotiation, neither of which involves architecture review).
-
-## 12. Cycle order and gating
-
-The per-wave loop is strictly ordered:
-
-```
-wave-execute → wave-audit → architect-review → wave-redraft
-```
-
-Gating rules:
-
-- `wave-audit` runs only after `wave-execute` produces an execution report.
-- `architect-review` runs only after `wave-audit` produces an audit report whose verdict is `pass` or `pass-with-findings`. A `fail` verdict blocks architect-review.
-- `wave-redraft` runs only after both audit and architect-review reports exist (in the normal-cycle case). On a `fail` audit, the user decides whether to loop back to `wave-execute` or to renegotiate scope explicitly via `wave-redraft`; in either case the architect-review is skipped, and the eventual redraft change-log entry says so.
-
-Each step is invoked by the user. No skill auto-invokes the next.
-
-## 13. Pivot handling
+## 10. Pivot handling
 
 Pivots can originate at two layers, with different cascades.
 
-**Wave-doc pivot (substantial-redraft or pivot type).** The vision is unchanged, but multiple wave-level decisions are revised. Type in change log: `substantial-redraft` if waves are revised but the wave ladder shape persists, or a wave-doc-level `pivot` if wave IDs are retired. Frontmatter `status` becomes `pivoted` for a wave-doc-level pivot.
+**Wave-plan pivot (substantial-update or pivot type).** Vision unchanged; multiple wave-level decisions revised. Type in change log: `substantial-update` if waves are revised but the wave ladder shape persists; for genuine wave-ladder pivots (retiring wave IDs), use `vision-pivot-update` if vision changed alongside, or note the wave-only pivot in `substantial-update` with explicit retired-IDs list.
 
-**Vision pivot.** The vision doc is revised by `vision-pivot`, which sets vision frontmatter to `pivoted`. The next `wave-redraft` invocation must produce a `vision-pivot-redraft` change-log entry that:
+**Vision pivot.** The vision doc is revised by `vision pivot` mode, which sets vision frontmatter to `pivoted`. The next `wave-update` invocation must produce a `vision-pivot-update` change-log entry that:
 
 1. Notes the source vision change (which sections were revised in vision-version N).
-2. Reconciles the wave doc's Goal and Roles sections to match the new vision.
-3. Retires any waves whose goal no longer fits the new vision. Retired wave IDs are listed; never reused.
-4. Introduces new wave IDs as needed (W7, W8, ... — never reusing retired numbers).
-5. Triggers an architecture review check: if any ADRs are now invalid under the new vision, mark them for supersession in the next architect-review pass.
-6. Sets wave-doc frontmatter `status: pivoted` until the next successful execute/audit/architect-review/redraft cycle.
+2. Reconciles the wave plan's Goal and Roles sections to match the new vision.
+3. Retires any waves whose goal no longer fits. Retired wave IDs are listed; never reused.
+4. Introduces new wave IDs as needed.
+5. Triggers an architecture review (within the same wave-update invocation): if any ADRs are now invalid under the new vision, the review subagent surfaces them as supersession proposals and wave-update applies them.
+6. Sets wave-plan frontmatter `status: pivoted` until the next successful execute → update cycle.
 
-The vision pivot does *not* edit the wave doc directly. `vision-pivot` only edits the vision and signals the wave-redraft cycle to reconcile.
+The `vision pivot` mode does *not* edit the wave plan directly. It only edits the vision and signals the wave-update cycle to reconcile.
 
-## 14. Invariants
+## 11. Invariants
 
-Rules every skill must honor.
-
-1. **The wave doc is the single source of truth for project state below the vision.** Skills do not maintain parallel state for waves, assumptions, risks, or ADR cross-references.
-2. **The vision and architecture are upstream sources of truth.** The wave doc's Goal/Roles mirror the vision; the wave doc's ADR references mirror the ADR log. Drift is reported and fixed; not papered over.
+1. **The wave plan is the single source of truth for project state below the vision.** Skills do not maintain parallel state for waves, assumptions, risks, or Decision Log cross-references.
+2. **The vision and architecture are upstream sources of truth.** The wave plan's Goal/Roles mirror the vision; the wave plan's Decision Log references mirror the architecture's Decision Log section. Drift is reported and fixed; not papered over.
 3. **Future waves never get task-level detail, per-story acceptance, or feature definitions.** Only titles, themes, sketches, and sketched criteria.
 4. **Every current-wave task has acceptance criteria.** No exceptions.
 5. **Every current-wave story has acceptance criteria.**
-6. **Every wave has exit criteria and a repro path.** A wave without them cannot be audited independently.
-7. **Registers are append-only.** Assumptions, risks, and the ADR-references table are never shrunk; broken or superseded entries are kept with new IDs replacing them.
+6. **Every wave has exit criteria and a repro path.** A wave without them cannot be reviewed.
+7. **Registers are append-only.** Assumptions, risks, and the Decision Log references table are never shrunk; broken or superseded entries are kept with new IDs replacing them.
 8. **The change log is append-only.** Entries are never rewritten.
-9. **Execution and audit reports do not modify the wave doc.** Only `wave-redraft` modifies the doc.
-10. **Architect-review does not modify the wave doc.** It only modifies the architecture doc and ADR log; its findings are absorbed into the wave doc by `wave-redraft`.
+9. **Execution reports do not modify the wave plan.** Only `wave-update` modifies the plan.
+10. **`wave-update`'s review subagent runs in fresh context.** It reads only committed artifacts (wave plan, execution report, architecture doc, code, repro). The subagent's output is presented to the human for approval before any plan or architecture edits are applied.
 11. **Scope expansion requires an explicit change-log entry.** No silent absorption.
-12. **Walking-skeleton default for W1.** Vertical slice exercising the full architecture; horizontal-foundation W1 requires explicit justification in the Goal section.
-13. **One expansion per redraft.** Exactly one future wave is expanded per redraft cycle.
-14. **Audit verdict gates architect-review and redraft.** A `fail` verdict blocks both until addressed.
-15. **Architect-review verdict (proposed ADRs / supersessions) gates redraft.** Redraft cannot ratify or expand without architect-review's input on the cycle.
-16. **Pivots bump frontmatter status to `pivoted`.** Cleared back to `in_progress` only by the next successful full cycle.
-17. **Retired wave IDs and superseded ADR IDs are never reused.**
-18. **ADRs cited by the architecture doc must be ratified (`Status: Accepted`) before `wave-draft` runs.** Seed ADRs from `architect-draft` start as `Proposed` and are ratified by the human (manual edit or `architect-draft --ratify`). Mid-cycle ADRs from `architect-review` start as `Proposed` and are ratified by `wave-redraft`. `wave-draft` and `wave-execute` refuse to run against un-ratified seed ADRs.
-19. **No skill auto-invokes the next.** Each step is invoked by the human lead. The optional `vader-next` helper dispatches the next skill *only* on explicit user confirmation per invocation; it is not an exception to this rule.
+12. **Walking-skeleton default for W1.** Vertical slice exercising every architecture-module marked `W1: required`. Modules marked `deferred (W<N>)` in the architecture's Section 2 are skipped by the walking-skeleton check. Horizontal-foundation W1 (no vertical slice at all) requires explicit justification in the Goal section.
+13. **One expansion per update.** Exactly one future wave is expanded per update cycle.
+14. **Audit verdict gates closeout.** A `fail` verdict blocks the wave from being closed and the next wave from being expanded. The change-log entry uses Type `blocked-update`, captures the failing findings with evidence, and names the chosen recovery path (loop back to `wave-execute`, renegotiate the current wave's exit criteria, or pause). `current_wave` is unchanged on a blocked-update; `wave_plan_version` still bumps because the change log was appended.
+15. **Pivots bump frontmatter status to `pivoted`.** Cleared back to `in_progress` only by the next successful full cycle.
+16. **Retired wave IDs and superseded ADR IDs are never reused.**
+17. **ADRs cited by the architecture doc must be ratified (`Status: Accepted`) before `wave-plan` and `wave-execute` run.** Seed ADRs from `architect draft` are ratified by `architect ratify` (or manual edit). Mid-cycle ADRs from `wave-update`'s review subagent are ratified by `wave-update` itself before saving.
+18. **No skill auto-invokes the next.** Each step is invoked by the human lead.
 
-## 15. Worked mini-example
+## 12. Worked mini-example
 
-A truncated wave doc for `filetagger`, a CLI that tags files by content, after W1 closeout and W2 in progress:
+A truncated wave plan for `filetagger` (a CLI that tags files by content), after W1 closeout and W2 in progress:
 
 ```markdown
 ---
-wave_doc_version: 2
+wave_plan_version: 2
 created: 2026-05-02
 last_updated: 2026-05-26
 source_vision: filetagger-vision.md
 source_architecture: filetagger-architecture.md
-adr_log: filetagger-adr/
 current_wave: W2
 status: in_progress
 ---
 
-# filetagger — Wave Doc
+# filetagger — Wave Plan
 
 ## 1. Goal and non-goals
 A local CLI that tags files in a directory by content (topic, sentiment,
 language) and lets users find files by tag combinations. Non-goals: no
 cloud sync, no GUI, no write-back into file contents.
-
-(Drawn from filetagger-vision.md §1, §4, §5.)
 
 ## 2. Roles
 | Role | What they're trying to do |
@@ -533,36 +427,45 @@ cloud sync, no GUI, no write-back into file contents.
 
 ## 5. Assumptions register
 - **A1** — SQLite handles 10k-file indexes fast enough. *Wave: W1, W2. Status: validated (2026-05-15).*
-- **A2** — One tag set per file (flat). *Wave: W1. Status: broken — superseded by A3.*
-- **A3** — Tag namespace is flat with string prefixes. *Wave: W1, W2. Status: validated (2026-05-15).*
 - **A4** — Query latency is dominated by SQLite, not the LLM. *Wave: W2. Status: untested.*
 - **A5** — mtime + size is a reliable change signal. *Wave: W3. Status: open.*
 
 ## 6. Risks register
 - **R1** — Boolean parser may misinterpret ambiguous queries. *Wave: W2. Likelihood: medium. Impact: low. Status: open.* *Mitigation: echo parsed AST on `--explain`.*
-- **R2** — Filesystems without mtime precision break incremental scan. *Wave: W3. Likelihood: low. Impact: medium. Status: open.* *Mitigation: detect and fall back to full scan with warning.*
 
-## 7. ADR references
+## 7. Decision Log references
 | ADR     | Title                          | Established | Status   | Cited by   |
 |---------|--------------------------------|-------------|----------|------------|
-| ADR-001 | Persistence: SQLite local file | W1          | Accepted | W1, W2, W3 |
-| ADR-002 | Tagger: remote LLM API         | W1          | Accepted | W1, W2     |
-| ADR-003 | Distribution: single-binary    | W1          | Accepted | W1, W2, W3 |
-| ADR-004 | Tag namespace: string-prefixed | W1          | Accepted | W1, W2     |
+| ADR-001 | Persistence: SQLite local file | architect   | Accepted | W1, W2, W3 |
+| ADR-002 | Tagger: remote LLM API         | architect   | Accepted | W1, W2     |
+| ADR-003 | Distribution: single-binary    | architect   | Accepted | W1, W2, W3 |
+| ADR-004 | Tag namespace: string-prefixed | W1 update   | Accepted | W1, W2     |
 
 ## 8. Change log
-### 2026-05-26 — Redraft after W1 closeout
-Type: normal-redraft
-- Closed W1 (walking skeleton). Exit criteria met.
-- A2 broken during W1; A3 opened and validated.
-- ADR-004 established (string-prefixed tag namespace).
+### 2026-05-26 — Update after W1
+Type: normal-update
+Audit verdict: pass
+
+Review findings (from subagent):
+- F1 (medium, accepted): A2 (one tag set per file) is broken.
+  Evidence: 3 of 5 W1 dogfooding sessions tagged the same file under conflicting
+  meanings (work/personal). Single tag-set forces destructive overwrites.
+- F2 (medium, accepted, ratified ADR-004): Tag namespace needs a structural
+  decision.
+  Evidence: T1.4 introduced ad-hoc string prefixes (`work:`, `personal:`) without
+  a Decision Log entry; subagent proposed ADR-004 (string-prefixed namespace) to
+  formalize. Full body in subagent's proposed-ADR section.
+
+Decisions absorbed:
+- Closed W1 (walking skeleton). All exit criteria met.
+- A2 marked broken; A3 (string-prefixed namespace) opened and validated in same wave (per F1).
+- ADR-004 (tag namespace: string-prefixed) added (Accepted), no supersession (per F2).
 - Expanded W2 sketch into full detail. current_wave advanced to W2.
 - Re-sketched W3 briefly to confirm re-scan against the prefixed namespace.
 
-### 2026-05-02 — Wave doc created
+### 2026-05-02 — Wave plan created
 Type: initial-draft
-- Drafted from filetagger-vision.md (v1) and filetagger-architecture.md (v1)
-  with seed ADRs ADR-001, ADR-002, ADR-003.
+- Drafted from filetagger-vision.md (v1) and filetagger-architecture.md (v1) with seed ADRs ADR-001, ADR-002, ADR-003.
 - Three waves; W1 fully planned as walking skeleton; W2-W3 sketched.
 - 5 assumptions, 2 risks seeded from vision Open Questions.
 
