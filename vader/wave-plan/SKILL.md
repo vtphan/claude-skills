@@ -51,6 +51,7 @@ Aim for 3-6 waves. Four principles, in priority order:
 Expand W1 per the schema's Current Wave format:
 - **Entry criteria:** for W1 specifically, "vision and architecture are ratified."
 - **Exit criteria:** 2-5 testable bullets. The walking skeleton should produce something an external reader can run end-to-end and verify.
+- **Expected touched modules:** the union of modules each W1 task names in its `Touches` field, plus any cross-cutting plumbing (test infra, build config, scripts) the wave will modify. Module-level granularity, drawn from architecture Section 2. The review subagent uses this to detect scope drift.
 - **Repro path:** a script (e.g., `scripts/demo-w1.sh`) that exercises the exit criteria from a clean state.
 - **Stories:** one per (role, goal) pair W1 advances. Acceptance criteria mandatory. INVEST filter applies.
 - **Features:** the capabilities W1 builds. Each supports at least one story.

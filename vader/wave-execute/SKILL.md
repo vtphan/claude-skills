@@ -47,19 +47,26 @@ This skill's job is to hold the line against all of those.
 
 6. **Run the repro.** Every wave has a repro path. Build it as part of the wave. Run it. Pass before you mark the wave done.
 
+7. **Match verification depth to change risk.** A docs-only change doesn't need a full integration suite; a logic change in a load-bearing module probably does. The Verification matrix in the execution report (schema §9) is your accountability — list every check you considered with `pass`, `fail`, `skipped (<reason>)`, or `n/a (<reason>)`. Don't pad with unjustified `n/a` rows; don't skip checks that genuinely apply.
+
 ## Workflow
 
 ### 1. Read everything before writing anything
 
 - The wave schema (if not already this session).
-- The wave plan in full. Look at: `current_wave`, the section for the current wave, the assumptions/risks registers, the Decision Log references, the most recent change-log entry.
+- The wave plan in full. Look at: `current_wave`, the section for the current wave (including its `Expected touched modules` declaration), the assumptions/risks registers, the Decision Log references, the most recent change-log entry.
 - The vision doc (Goal, Non-goals) for sanity-checking scope.
 - The architecture doc and the Decision Log entries cited by the current wave's tasks.
-- The repo state — where does prior-wave code live, what's the test setup, what conventions exist.
+- The repo state — where does prior-wave code live, what's the test setup, what conventions exist. For W1 specifically, if the project has pre-existing code (brownfield adoption of VADER), inventory the existing structure before building W1's walking-skeleton tasks: which modules from the architecture's Section 2 already exist, which need to be created, and what conventions (test framework, build system, lint config) the existing code establishes.
 
-### 2. Capture the start ref (if git is in use)
+### 2. Pre-flight: capture start ref and check working tree state
 
-If the project is a git repo, capture `git rev-parse HEAD` as the wave's `wave_start_ref`. Hold it in memory; you'll write it to the execution report's frontmatter at the end. If no git, leave the field empty.
+If the project is a git repo:
+
+1. Run `git status --porcelain`. If the working tree is dirty (any uncommitted modifications, additions, or deletions), stop and surface the state to the user: list the dirty files and ask whether to (a) stash them with `git stash --include-untracked`, (b) commit them first, or (c) proceed knowing the wave's commit will mix unrelated work. Default recommendation: stash, then proceed. Do not silently mix the user's in-progress work with the wave's commit.
+2. Once the working tree is clean (or the user has explicitly approved proceeding dirty), capture `git rev-parse HEAD` as the wave's `wave_start_ref`. Hold it in memory; you'll write it to the execution report's frontmatter at the end.
+
+If git is not in use, leave `wave_start_ref` empty and skip the dirty-state check (note in the handoff that the audit subagent will have less precise diff scoping).
 
 ### 3. Plan the wave execution briefly
 
@@ -79,22 +86,26 @@ For each task:
 
 If a task blocks — you hit a stop-and-report trigger — leave its checkbox `[ ]`, stop, and write the report.
 
-### 5. Run the repro at the end
+### 5. Run the repro and assemble the Verification matrix
 
-Once tasks are done, run the wave's repro path. It must pass. If it doesn't, that's a stop-and-report situation: the wave's exit criteria aren't actually met.
+Once tasks are done:
+
+1. Run the wave's repro path. It must pass. If it doesn't, that's a stop-and-report situation: the wave's exit criteria aren't actually met.
+2. Run the other verification checks the wave warrants — unit tests, integration tests, typecheck, build, manual/browser check if the wave touched UI. Calibrate to risk per principle 7; don't over-verify trivial changes, don't under-verify load-bearing ones.
+3. Record each check's outcome for the Verification matrix in step 6: `pass`, `fail`, `skipped (<reason>)`, or `n/a (<reason>)`. Capture the actual command run and the headline result so the matrix's Evidence column is concrete.
 
 ### 6. Write the execution report (still uncommitted)
 
 Use the template from `references/wave-schema.md` Section 9. Save to `<project-slug>-wave-plan.reports/wave-W<N>-execution.md`. Create the directory if it doesn't exist.
 
-Fill `wave_start_ref` from the value captured in step 2a. Leave `wave_end_ref` blank for now — it will be set in step 7 after the commit.
+Fill `wave_start_ref` from the value captured in step 2. Fill the Verification matrix from step 5's results. Leave `wave_end_ref` blank for now — it will be set in step 7 after the commit.
 
 ### 7. Commit and capture wave_end_ref
 
 Show the user a brief summary of the report's verdict (tasks done, assumptions broken, ADRs challenged, repro pass/fail). Ask for approval to commit.
 
 On approval, if git is in use (`git rev-parse --is-inside-work-tree` succeeds):
-1. `git add` all changed files (code + execution report).
+1. `git add` *only the files this wave touched* — code files you wrote/edited plus the execution report. Do not run `git add -A` or `git add .` (those would sweep up any user-side changes that appeared during execution). If unsure which files you touched, `git diff --name-only` against `wave_start_ref` lists them; cross-check against the wave's `Expected touched modules`.
 2. `git commit -m "exec: W<N> — <one-line summary>" -m "<details>" -m "Co-authored-by: Claude <noreply@anthropic.com>"`.
 3. Capture the resulting commit sha as `wave_end_ref`.
 4. Open the execution report and fill in `wave_end_ref` in the frontmatter.

@@ -19,6 +19,8 @@ Before doing anything else, read `references/architecture-schema.md` in full. Th
 
 **Workflow:**
 
+0. **Detect brownfield and orient.** Before drafting, check whether the working directory contains existing source code (manifest files, `src/` / `lib/` directories, top-level scripts). If yes, this is a *brownfield* architecture draft: the system already exists in some form, and the architecture doc documents what's there plus what should change. Read the top-level structure: directory layout, build/test entry points, primary dependencies, and a representative file or two from each apparent module. Goal is not exhaustive reverse-engineering — it's enough orientation that the modules you propose match the names and boundaries the code already establishes (or, where they shouldn't, you can name the divergence explicitly as a Decision Log entry: "ADR-NNN: rename the existing `core` module to `engine` because…"). On greenfield projects (no existing code), skip this step and propose modules from the vision directly.
+
 1. **Read the vision carefully.** Extract: constraints (§7), non-goals (§5), in-scope capabilities (§4), roles (§2), success metrics (§6), open questions (§9), and core journeys (§10) if present. Constraints and non-goals constrain decisions directly; in-scope capabilities determine what modules must exist; success metrics shape non-functional considerations.
 
 2. **Read core journeys if present.** For product-heavy projects, journeys are the strongest input to module decomposition. Walk each journey end-to-end and ask: which module owns each step? Where do steps cross module boundaries (those become key interfaces)? Where does a journey reveal that two notional modules should be one (or vice versa)?

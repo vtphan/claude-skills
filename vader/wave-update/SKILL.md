@@ -35,6 +35,19 @@ Before doing anything else, read `references/wave-schema.md` and `references/arc
 
 **Stage 2 — Update (interactive with human).** You read the subagent's findings, present them to the human in a tight summary, accept feedback/edits, and apply the absorbed changes to the wave plan and architecture doc. The human approves before any save.
 
+## Preflight: working tree state
+
+Before entering Stage 1, if git is in use, run `git status --porcelain`. If the working tree has uncommitted modifications to `<project-slug>-wave-plan.md`, the architecture doc, the vision doc, or any execution report, stop and surface the state to the user. `wave-update` will write to the wave plan (and possibly the architecture doc and vision frontmatter) atomically; mixing those writes with pre-existing manual edits to the same files corrupts the precondition contract (§I).
+
+Three resolutions, in order of preference:
+1. Commit the manual edits first under their own commit prefix (e.g., `wave: manual edit to W3 sketch before review`), then re-invoke `wave-update`.
+2. Stash with `git stash --include-untracked`, run `wave-update`, then `git stash pop` and reconcile the diff manually.
+3. Discard the manual edits if they were exploratory.
+
+Uncommitted changes to *other* files (project code, scripts, etc.) are not blocking — they affect the diff but not the artifacts `wave-update` writes. Note them in the handoff so the human knows the wave's diff baseline isn't perfectly clean.
+
+If git is not in use, this preflight is skipped; the human is responsible for not running `wave-update` while editing the wave plan or architecture doc by hand.
+
 ## Stage 1: Review (via fresh subagent)
 
 Spawn a subagent (Task tool, isolated context). If the current agent environment lacks subagent spawning, the human runs a fresh agent session manually with the same briefing inputs, returns the findings document, and resumes — independence comes from the fresh context, not the spawn mechanism.
@@ -46,18 +59,21 @@ Brief the subagent (or the fresh manual session) with:
 - The architecture doc path.
 - The architecture schema (`references/architecture-schema.md`) and wave schema (`references/wave-schema.md`) — required reading so any proposed ADR bodies and finding entries match format.
 - The wave's diff baseline and head (from execution report frontmatter, or fallback tags).
+- The wave's `Expected touched modules` declaration (from the current wave's section in the wave plan), for the scope-drift check.
+- If CI is configured for the project (e.g., GitHub Actions, GitLab CI), the CI status for the wave's commit. Treat CI as supplemental evidence, not a replacement for the local repro: if CI fails on something the local repro passed, that's itself a finding worth surfacing. If CI is not configured, note in the verdict that the review is local-only.
 - Instructions to produce a findings document covering the categories below.
 
 The subagent's findings document (in-conversation, not saved as a file):
 
-1. **Audit verdict:** `pass` / `pass-with-findings` / `fail`. One paragraph justifying.
+1. **Audit verdict:** `pass` / `pass-with-findings` / `fail`. One paragraph justifying. Note explicitly whether CI was consulted.
 2. **Exit criteria verification:** for each criterion, pass / fail / unverifiable, with evidence (e.g., "ran `scripts/demo-w2.sh`, all three checks printed PASS").
-3. **Task verification:** cross-reference the executor's claimed task status against the wave plan's checkboxes and the diff. Flag discrepancies.
-4. **Assumption verification:** for each assumption the report claims to have resolved, check the evidence.
-5. **ADR adherence (architectural):** for each cited ADR, independently confirm adherence. Flag violations. *Propose new ADRs or supersessions if the diff or discoveries imply structural change.* Each proposed ADR includes a full body (Context, Decision, Consequences with at least one negative, Supersedes if applicable). Each proposed body edit to architecture.md sections is named explicitly.
-6. **Scope findings:** changes in the diff that don't map to planned tasks or declared discoveries.
-7. **Entry-criteria check for next wave:** does the current wave's output satisfy the next wave's sketched entry criteria?
-8. **Recommendations:** brief notes on what needs a decision (not prescriptions).
+3. **Verification matrix verification:** confirm the executor's Verification matrix (execution report §Verification) — spot-check that pass-marked checks actually pass on the diff baseline. Flag rows that should not have been marked `n/a`.
+4. **Task verification:** cross-reference the executor's claimed task status against the wave plan's checkboxes and the diff. Flag discrepancies.
+5. **Assumption verification:** for each assumption the report claims to have resolved, check the evidence.
+6. **ADR adherence (architectural):** for each cited ADR, independently confirm adherence. Flag violations. *Propose new ADRs or supersessions if the diff or discoveries imply structural change.* Each proposed ADR includes a full body (Context, Decision, Consequences with at least one negative, Supersedes if applicable). Each proposed body edit to architecture.md sections is named explicitly.
+7. **Scope findings:** changes in the diff that don't map to planned tasks, declared discoveries, or the wave's `Expected touched modules` declaration. Surface any module touched but not declared (drift outward) and any expected module untouched (drift inward — possibly an unmet exit criterion).
+8. **Entry-criteria check for next wave:** does the current wave's output satisfy the next wave's sketched entry criteria?
+9. **Recommendations:** brief notes on what needs a decision (not prescriptions).
 
 Read the subagent's findings carefully. Do not blindly trust them — but their independence is the value. Where the subagent and the executor disagree on facts (did the test pass?), the subagent wins. Where they disagree on intent (what the executor was trying to do), the executor's report wins.
 
@@ -153,12 +169,13 @@ For each architecture-doc body edit the human approved:
 Take the next wave's sketch and expand to full detail per schema Section 4 (Current Wave):
 1. Refine **entry criteria** based on what the just-closed wave produced.
 2. Tighten **exit criteria** — often the sketch was vague; now you can make them testable.
-3. Expand **stories** with full acceptance criteria.
-4. Expand **features** with descriptions.
-5. Break the work into **tasks** with acceptance criteria. Same rules as `wave-plan`.
-6. Define the **repro path**.
-7. List **assumptions, risks, ADRs respected, new ADRs anticipated**.
-8. Set `Started: <today>` and `Status: in_progress`.
+3. Compute **Expected touched modules**: union of modules the wave's tasks will `Touches:`, plus any cross-cutting plumbing the wave will modify. Module-level granularity, drawn from architecture Section 2.
+4. Expand **stories** with full acceptance criteria.
+5. Expand **features** with descriptions.
+6. Break the work into **tasks** with acceptance criteria. Same rules as `wave-plan`.
+7. Define the **repro path**.
+8. List **assumptions, risks, ADRs respected, new ADRs anticipated**.
+9. Set `Started: <today>` and `Status: in_progress`.
 
 **One expansion per update.** Never pre-plan W<N+2>.
 
@@ -222,7 +239,7 @@ If all preconditions pass, write the files in this order: wave plan → architec
 ### J. Commit and hand off
 
 If git is in use, after saving, commit:
-1. `git add` all modified files (wave plan, architecture doc if edited, vision doc if status was flipped).
+1. `git add` *only the artifacts `wave-update` wrote* — the wave plan, the architecture doc (if edited), and the vision doc (if status was flipped). Do not run `git add -A` or `git add .` (those would sweep up any unrelated user-side changes to project code). Pass each path explicitly.
 2. Compose the commit message based on Type:
    - `normal-update` / `substantial-update` / `vision-pivot-update`: `git commit -m "wave: update after W<N> — <key changes>" -m "<details>" -m "Co-authored-by: Claude <noreply@anthropic.com>"`.
    - `blocked-update`: `git commit -m "wave: blocked-update after W<N> — <one-line reason>" -m "<details: failing findings, recovery path>" -m "Co-authored-by: Claude <noreply@anthropic.com>"`.

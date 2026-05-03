@@ -159,6 +159,7 @@ Started: 2026-05-08
 
 Entry criteria: <precise, satisfied by prior waves' outputs>
 Exit criteria: <testable; each bullet verifiable from the artifacts>
+Expected touched modules: <module names from architecture Section 2>
 Repro: Path to a script or command that exercises this wave end-to-end from a clean state.
 
 #### Stories
@@ -185,6 +186,8 @@ Risks: R<N>
 ADRs respected: ADR-NNN, ADR-NNN
 New ADRs proposed: ADR-NNN (proposed)   # If any will be established by this wave
 ```
+
+`Expected touched modules` is the wave-level declaration of blast radius — the union of the modules each task names in its `Touches` field, plus any cross-cutting plumbing the wave will modify (test infra, build config, scripts). The review subagent in `wave-update` checks the actual diff against this list and surfaces any module touched that wasn't declared. Module-level granularity, not file-level — file-level declarations create compliance theater under refactors.
 
 Story, feature, and task guidelines:
 
@@ -326,6 +329,18 @@ Not a commit log; a capability summary.
 ## Exit criteria status
 - [x] <criterion>: <evidence>
 - [~] <criterion>: <gap>
+
+## Verification
+| Check                    | Status         | Evidence                                  |
+|--------------------------|----------------|-------------------------------------------|
+| Unit tests               | pass           | `pytest tests/unit` — 87/87               |
+| Integration tests        | pass           | `pytest tests/integration` — 12/12        |
+| Typecheck                | pass           | `mypy src/` — clean                       |
+| Build                    | pass           | `make build` — produced `dist/app`        |
+| Repro                    | pass           | `scripts/demo-w2.sh` — 3/3 checks PASS    |
+| Manual / browser check   | n/a            | (CLI only; no UI in this wave)            |
+
+The matrix lists every check the executor considered for this wave, with `pass`, `fail`, `skipped (<reason>)`, or `n/a (<reason>)`. Don't omit rows; don't pad with `n/a` for checks that genuinely don't apply without naming why. Match verification depth to change risk: a docs-only change doesn't need an integration suite; a load-bearing logic change probably does. The matrix is the executor's accountability for what was actually run.
 
 ## Assumptions status
 - A<N>: validated | broken — <evidence or recommended replacement>

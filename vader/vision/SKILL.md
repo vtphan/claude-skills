@@ -13,9 +13,11 @@ Before doing anything else, read `references/vision-schema.md` in full. The sche
 
 ## Mode: draft
 
-The default. Used at project start. Walk the user through the questions that turn an idea into a vision they can plan against.
+The default. Used at project start — or when applying VADER to an existing codebase that has no vision doc yet (brownfield adoption). Walk the user through the questions that turn an idea into a vision they can plan against.
 
 **Workflow:**
+
+0. **Detect brownfield.** Before opening the conversation, check whether the working directory contains existing source code (look for `package.json`, `Cargo.toml`, `pyproject.toml`, `go.mod`, `Makefile`, a `src/` or `lib/` directory, or any non-trivial code outside `docs/`). If yes, this is a *brownfield* vision: there is already a system, and you're documenting intent in retrospect. Tell the user you noticed existing code and offer two paths: (a) you read the top-level structure and a few key files briefly to ground the conversation in what already exists, or (b) the user prefers a clean greenfield-style conversation, treating the existing code as a starting point only. Default to (a). Brownfield visions tend to need more attention to *why this project exists distinct from what was already built* — the value hypothesis often gets sharper when there's existing code to compare against.
 
 1. **Listen first, ask second.** Open by inviting the user to describe what they're thinking, in their own words. Let them ramble. Note what they emphasize and what they skip — those gaps are usually the most fruitful conversation territory.
 
