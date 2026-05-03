@@ -5,7 +5,7 @@ ACCORD is a lightweight process for a human lead and a capable LLM to develop a 
 ## Principles
 
 1. **Five skills.** `intent`, `design`, `plan`, `execute`, `review-update`. No additional skills.
-2. **Brainstorm-this codesign.** `intent` and `design` adopt the discipline of the `brainstorm-this` skill: numbered drafts, round stances, immutable core after round 0, required critique pass before convergence, strict non-overwrite. The discipline is the protection against premature consensus.
+2. **Codesign discipline.** `intent` and `design` use a strict codesign discipline: numbered drafts, round stances, immutable core after round 0, required critique pass before convergence, strict non-overwrite. The discipline protects against premature consensus and sycophantic refinement; it is fully described in `references/draft-conventions.md`.
 3. **Greenfield only.** ACCORD assumes the project starts under ACCORD. There is no brownfield adoption path.
 4. **Auto-git.** Approved phase boundaries become commits and lightweight tags. Git history is the framework's durable state.
 5. **The agent is capable.** ACCORD does not micromanage the LLM. Schemas protect handoff between phases; they do not script the LLM's thinking inside a phase.
@@ -18,7 +18,7 @@ ACCORD is a lightweight process for a human lead and a capable LLM to develop a 
 
 ### Codesign mode — `intent` and `design`
 
-The human lead and the agent build the project's intent and design together via brainstorm-this draft rounds. The agent's posture is **elicitive and generative** — drawing out aspects the human hasn't yet articulated, and proposing transformative alternatives the human can react to, redirect, or reject. This applies especially to UI/UX, which is part of design: the agent proposes interaction models, information architecture, and accessibility considerations rather than waiting to be asked. The discipline (round stances, immutable core after round 0, required critique pass before convergence) keeps this from sliding into sycophantic refinement or premature consensus. The approved draft is promoted to a clean canonical artifact (`intent.md`, `design.md`).
+The human lead and the agent build the project's intent and design together via codesign draft rounds. The agent's posture is **elicitive and generative** — drawing out aspects the human hasn't yet articulated, and proposing transformative alternatives the human can react to, redirect, or reject. This applies especially to UI/UX, which is part of design: the agent proposes interaction models, information architecture, and accessibility considerations rather than waiting to be asked. The discipline (round stances, immutable core after round 0, required critique pass before convergence) keeps this from sliding into sycophantic refinement or premature consensus. The approved draft is promoted to a clean canonical artifact (`intent.md`, `design.md`).
 
 This is where the human's mental model of the project gets built and tested. Approval gates here are usually consequential.
 
@@ -68,7 +68,7 @@ Adding a new unit that fits the existing approved plan does not re-run intent or
 
 ### Re-entry at intent for new features or revisions
 
-When the human lead wants to add a new feature or revise an existing one, re-invoke `intent`. The agent runs a brainstorm-this round to test whether intent has actually shifted:
+When the human lead wants to add a new feature or revise an existing one, re-invoke `intent`. The agent runs a codesign round to test whether intent has actually shifted:
 
 - **If intent still holds**, the round converges quickly (stance `stop`); canonical `intent.md` stays as-is and the work moves to `design`.
 - **If intent has shifted**, real codesign happens; an updated `intent.md` is promoted and tagged.

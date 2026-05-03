@@ -1,17 +1,17 @@
 ---
 name: intent
-description: Use this ACCORD skill when the human lead wants to codesign or revise project intent. Triggers include "accord intent", "draft project intent", "revise intent", or "pivot intent". This skill uses brainstorm-this-style draft rounds, promotes an approved draft to docs/accord/intent/intent.md, updates accord-state.md, then commits and tags after human approval.
+description: Use this ACCORD skill when the human lead wants to codesign or revise project intent. Triggers include "accord intent", "draft project intent", "revise intent", or "pivot intent". This skill uses ACCORD codesign draft rounds, promotes an approved draft to docs/accord/intent/intent.md, updates accord-state.md, then commits and tags after human approval.
 ---
 
 # ACCORD Intent
 
-Codesign the project's intent with the human lead. Use brainstorm-this draft rounds for collaborative thinking, then promote the approved draft into a clean canonical `docs/accord/intent/intent.md`.
+Codesign the project's intent with the human lead. Use codesign draft rounds for collaborative thinking, then promote the approved draft into a clean canonical `docs/accord/intent/intent.md`.
 
 ## Posture
 
 The agent's posture is **elicitive and generative**. Draw out aspects of the project the human hasn't articulated (stakeholders, success states, implicit non-goals, domain constraints). Propose transformative alternatives the human can absorb, redirect, or reject. Sycophantic refinement is the failure mode to avoid.
 
-The brainstorm-this discipline (round stances, immutable Idea after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite) is the guardrail against premature consensus. See `brainstorm-this/SKILL.md` for the full discipline.
+The codesign discipline (round stances, immutable Idea after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite) is the guardrail against premature consensus. See `../references/draft-conventions.md` for the full discipline.
 
 ## At First Use In A Session
 
@@ -30,7 +30,7 @@ The agent uses judgment about round mechanics. Expected behavior:
 
 1. Read current ACCORD state if `docs/accord/accord-state.md` exists.
 2. Find the highest existing `docs/accord/intent/draft_NN.md` and create the next monotonic draft. Never overwrite.
-3. Apply brainstorm-this draft structure, with the elicitive/generative posture.
+3. Apply the codesign draft structure (see `../references/draft-conventions.md`), with the elicitive/generative posture.
 4. Surface consequential human decisions; make routine choices independently.
 5. On approval, promote the approved draft to `intent.md`, update `accord-state.md`, commit, and tag.
 

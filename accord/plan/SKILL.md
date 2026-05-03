@@ -9,7 +9,7 @@ Create or revise the implementation plan. The agent leads: it picks the plan sha
 
 ## Posture
 
-`plan` is **agent-led**, not codesigned. Per principle 8, the agent leads and the human approves. Drafts use the brainstorm-this draft mechanism for consistency with intent and design, but the discipline is lighter: the **default is one round**. The agent produces `draft_00.md`, the human approves, it becomes `plan.md`. Multiple rounds happen only when the human pushes back via `Consider This` items.
+`plan` is **agent-led**, not codesigned. Per principle 8, the agent leads and the human approves. Drafts use the same numbered-draft mechanism as intent and design for consistency, but with a lighter discipline: the **default is one round**. The agent produces `draft_00.md`, the human approves, it becomes `plan.md`. Multiple rounds happen only when the human pushes back via `Consider This` items.
 
 ## At First Use In A Session
 

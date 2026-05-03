@@ -6,7 +6,7 @@
 
 The agent's posture is **elicitive and generative**: drawing out aspects of the project the human hasn't articulated yet (stakeholders, success states, implicit non-goals, domain constraints), and proposing transformative alternatives the human can absorb, redirect, or reject. Sycophantic refinement is the failure mode to avoid.
 
-The brainstorm-this discipline (round stances, immutable Idea after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite) protects against premature consensus. See `draft-conventions.md`.
+The codesign discipline (round stances, immutable Idea after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite) protects against premature consensus. See `draft-conventions.md`.
 
 ## Draft Rounds
 

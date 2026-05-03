@@ -1,6 +1,6 @@
 ---
 name: design
-description: Use this ACCORD skill when an approved intent exists and the human lead wants to codesign architecture, boundaries, UI/UX, project commands, verification expectations, and consequential decisions. Triggers include "accord design", "draft the design", "revise architecture", or "pivot design". This skill uses brainstorm-this-style draft rounds, promotes an approved draft to docs/accord/design/design.md, updates accord-state.md, then commits and tags after human approval.
+description: Use this ACCORD skill when an approved intent exists and the human lead wants to codesign architecture, boundaries, UI/UX, project commands, verification expectations, and consequential decisions. Triggers include "accord design", "draft the design", "revise architecture", or "pivot design". This skill uses ACCORD codesign draft rounds, promotes an approved draft to docs/accord/design/design.md, updates accord-state.md, then commits and tags after human approval.
 ---
 
 # ACCORD Design
@@ -16,7 +16,7 @@ The agent's posture is **elicitive and generative** (same as intent). For design
 - boundary and ownership reframings
 - **UI/UX**: interaction model, information architecture, accessibility, error/empty/loading states. The agent proposes these rather than waiting to be asked. UI/UX is part of design, not an afterthought.
 
-Brainstorm-this discipline applies (round stances, immutable Design Brief after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite). See `brainstorm-this/SKILL.md`.
+Codesign discipline applies (round stances, immutable Design Brief after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite). See `../references/draft-conventions.md`.
 
 ## At First Use In A Session
 
@@ -38,7 +38,7 @@ Re-read when schema behavior is uncertain or files changed.
 3. Read current `docs/accord/design/design.md` if revising.
 4. If revising mid-project, also read current `plan.md`, recent review/update entries, execution reports, and inspect implementation enough to avoid greenfield drift.
 5. Find the highest existing draft and create the next monotonic one. Never overwrite.
-6. Apply brainstorm-this discipline with the elicitive/generative posture; treat UI/UX with the same rigor as architecture.
+6. Apply the codesign discipline with the elicitive/generative posture; treat UI/UX with the same rigor as architecture.
 7. On approval, promote to `design.md`, update state, commit, and tag.
 
 ## Consider This Tagging
