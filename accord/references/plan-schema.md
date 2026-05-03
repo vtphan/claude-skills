@@ -145,10 +145,8 @@ On initial approval:
 
 On review/update:
 
-- update `plan.md` directly when the next step is a continuation of the approved plan
 - record execution report path and tags in `Review and Update Log`
-- set the next approved unit when already anticipated, a targeted repair, or an approved redo
-- route to `plan` (new draft) when findings change sequencing, plan shape, acceptance criteria, risk posture, or later-work boundaries
+- `review-update` may advance the next unit directly within its authority — see the precise criteria in `review-update/SKILL.md` (Authority Over plan.md). When any criterion fails, route to `plan` for a new draft.
 - route to `design` before further execution when findings invalidate architecture, boundaries, data ownership, dependencies, deployment, security, or verification strategy
 - route to `intent` only when implementation has invalidated the project's goal or success criteria (rare)
 - commit explicit paths

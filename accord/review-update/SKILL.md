@@ -58,15 +58,36 @@ Read:
 - `redo` — implementation should not stand. Identify the rejected exec tag; if the bad changes should not remain on the branch, use a new revert commit. Approve a retry unit `u-NNN-slug-r02`.
 - `replan` — execution shows the plan shape or next units are wrong. Update `plan.md` shape or route through `design`. If implementation has invalidated intent itself (rare), route through `intent`.
 
-## Routing
+## Authority Over plan.md
 
-The agent uses judgment about routing:
+`review-update` may write directly to `plan.md` when the next step is a continuation of the approved plan: marking the current unit complete, recording findings, approving the next unit, or approving a recovery unit. The boundary with `plan` is precise.
 
-- update `plan.md` directly when the next step is a continuation of the approved plan (mark unit complete, record findings, approve next anticipated unit, approve targeted repair, approve redo after naming rejected exec tag and any required revert)
-- route to `plan` (new draft) when findings change sequencing, plan shape, acceptance criteria, risk posture, or later-work boundaries
-- route to `design` before further execution when findings invalidate architecture, boundaries, data ownership, dependencies, deployment, security, or verification strategy
-- route to `intent` only when implementation has invalidated the project's goal or success criteria (rare)
-- use `blocked` state when the correct route depends on a human decision, missing dependency, unavailable command, or unresolved dirty working tree
+**`review-update` may advance the next unit directly when ALL of:**
+
+1. The next unit is already named in `Later Work` with at least an id and summary, OR it is a targeted repair unit (`u-NNN-slug-repair-NN`) or retry unit (`u-NNN-slug-rNN`).
+2. The current `Plan Shape` does not change.
+3. Acceptance criteria can be written by inference from `design.md` and the unit's stated summary — no fresh substantive judgment about what "done" means is required.
+4. Sequencing in `Later Work` does not change.
+5. `Review mode` follows the established convention for this project (default `same-session-ok`; `fresh-required` only when the unit fits the existing fresh-required criteria).
+
+**`review-update` must route to `plan`** (new draft) when ANY of:
+
+- The next unit is not in `Later Work`.
+- Acceptance criteria require fresh judgment about scope or what "done" means.
+- `Plan Shape` changes, or its `Rationale for Shape` no longer fits.
+- Sequencing in `Later Work` changes.
+- Multiple units need to be added, removed, or restructured.
+- The plan-level risk posture shifts (e.g., units that were `same-session-ok` should now be `fresh-required`, or vice versa).
+
+**`review-update` must route to `design`** when findings invalidate architecture, boundaries, data ownership, dependencies, deployment, security, or verification strategy.
+
+**`review-update` must route to `intent`** when implementation has invalidated the project's goal or success criteria (rare).
+
+For `repair` and `redo` verdicts: `review-update` defines and approves the recovery unit directly within its authority, since scope is bounded by the original unit and the recovery type.
+
+Use `blocked` state when the correct route is known but depends on a human decision, missing dependency, unavailable command, or unresolved dirty working tree. Record the blocker in `accord-state.md` `Next.notes`.
+
+When in doubt about which side of the boundary a case falls on, route to `plan`. The cost of an extra plan round is small; the cost of `review-update` writing a unit that needs replanning is higher.
 
 ## Approval Advisory
 
