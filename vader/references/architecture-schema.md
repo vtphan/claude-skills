@@ -118,6 +118,21 @@ How the system runs in production: hosts, processes, environments, build artifac
 
 Testing strategy, performance budgets, security posture, accessibility. The cross-cutting properties the architecture commits to maintain.
 
+When project-specific commands are not obvious from manifest files (`package.json` scripts, `Makefile` targets, `Cargo.toml`, etc.), include a lightweight **Project Commands** subsection so `wave-execute`'s Verification matrix has a single source of truth and doesn't rediscover commands per wave:
+
+```markdown
+**Project Commands**
+- Install: `<command>`
+- Run locally: `<command>`
+- Test (unit): `<command>`
+- Test (integration): `<command>` (or "n/a — none yet")
+- Typecheck: `<command>` (or "n/a — dynamic language, no static check")
+- Build: `<command>`
+- Lint / format: `<command>`
+```
+
+Skip the subsection entirely when commands are derivable from a standard manifest the executor will read anyway (`npm test`, `cargo test`, `make test` — universal enough that documenting them is duplication). Add the subsection when commands are non-standard, multi-step, or wave-relevant in a way the executor would otherwise have to guess. Keep it command-only — the *strategy* (when to run integration vs unit, performance budgets, etc.) belongs in the prose above, not in the cheat-sheet.
+
 ### 7. Open technical questions
 
 Things the architect hasn't yet decided. Mirrors the vision's Open Questions section but at the technical layer. Each is a candidate for a future Decision Log entry.

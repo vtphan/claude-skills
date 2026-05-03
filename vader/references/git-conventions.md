@@ -1,6 +1,6 @@
 # Git Conventions for VADER
 
-A lightweight, optional layer that maps VADER's artifacts onto Git so transitions between stages and waves leave a legible trail. These are *conventions*, not enforcement: nothing in VADER's skills depends on git being used, and skills never run git commands themselves. The human lead runs commits and tags; the skills suggest messages.
+A lightweight, optional layer that maps VADER's artifacts onto Git so transitions between stages and waves leave a legible trail. These are *conventions*, not enforcement: nothing in VADER's skills depends on git being used. When git is in use, each VADER skill runs `git commit` (and `git tag` where applicable) itself after the human approves the artifact it produced — the skill knows the right prefix, message, co-author trailer, and tag set. The human's checkpoint is the explicit approval before save; the commit is the durable record of what was approved. Override is straightforward (`git reset --soft HEAD~1`, amend, recompose).
 
 The point of these conventions is two-fold. First, the git log becomes a readable narrative of how the project was developed — which stage, which wave, what changed, in what order. Second, `wave-update`'s review subagent (and any future tooling that walks history) can rely on stable signals for diff scoping and orientation.
 

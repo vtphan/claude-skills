@@ -37,16 +37,17 @@ Before doing anything else, read `references/wave-schema.md` and `references/arc
 
 ## Preflight: working tree state
 
-Before entering Stage 1, if git is in use, run `git status --porcelain`. If the working tree has uncommitted modifications to `<project-slug>-wave-plan.md`, the architecture doc, the vision doc, or any execution report, stop and surface the state to the user. `wave-update` will write to the wave plan (and possibly the architecture doc and vision frontmatter) atomically; mixing those writes with pre-existing manual edits to the same files corrupts the precondition contract (§I).
+Before entering Stage 1, if git is in use, run `git status --porcelain`. **The working tree must be clean.** Two reasons it must be fully clean — not just "no dirty artifact files":
 
-Three resolutions, in order of preference:
-1. Commit the manual edits first under their own commit prefix (e.g., `wave: manual edit to W3 sketch before review`), then re-invoke `wave-update`.
-2. Stash with `git stash --include-untracked`, run `wave-update`, then `git stash pop` and reconcile the diff manually.
-3. Discard the manual edits if they were exploratory.
+1. The review subagent re-runs the wave's repro and verification checks. A dirty working tree means it would verify code that isn't in `wave_end_ref`, polluting the audit. The whole point of the fresh-context subagent is independence; running it against a tree that doesn't match the committed state defeats that.
+2. `wave-update` writes the wave plan (and possibly the architecture doc and vision frontmatter) atomically. Mixing those writes with pre-existing manual edits to *any* file corrupts the precondition contract (§I).
 
-Uncommitted changes to *other* files (project code, scripts, etc.) are not blocking — they affect the diff but not the artifacts `wave-update` writes. Note them in the handoff so the human knows the wave's diff baseline isn't perfectly clean.
+If the tree is dirty, stop and surface the state to the user. Three resolutions, in order of preference:
+1. Commit the changes first under their own commit prefix (e.g., `wave: manual edit to W3 sketch before review` for artifact edits, or `chore: WIP scratch` for unrelated code), then re-invoke `wave-update`.
+2. Stash with `git stash --include-untracked`, run `wave-update`, then `git stash pop` and reconcile.
+3. Discard the changes if they were exploratory.
 
-If git is not in use, this preflight is skipped; the human is responsible for not running `wave-update` while editing the wave plan or architecture doc by hand.
+If git is not in use, this preflight is skipped and the human is responsible for not running `wave-update` while editing the wave plan, architecture doc, or wave-touched code by hand. Note in the handoff that the audit's diff/repro baseline is fuzzier without git.
 
 ## Stage 1: Review (via fresh subagent)
 
@@ -73,7 +74,8 @@ The subagent's findings document (in-conversation, not saved as a file):
 6. **ADR adherence (architectural):** for each cited ADR, independently confirm adherence. Flag violations. *Propose new ADRs or supersessions if the diff or discoveries imply structural change.* Each proposed ADR includes a full body (Context, Decision, Consequences with at least one negative, Supersedes if applicable). Each proposed body edit to architecture.md sections is named explicitly.
 7. **Scope findings:** changes in the diff that don't map to planned tasks, declared discoveries, or the wave's `Expected touched modules` declaration. Surface any module touched but not declared (drift outward) and any expected module untouched (drift inward — possibly an unmet exit criterion).
 8. **Entry-criteria check for next wave:** does the current wave's output satisfy the next wave's sketched entry criteria?
-9. **Recommendations:** brief notes on what needs a decision (not prescriptions).
+9. **Code-quality lens (optional, opt-in):** apply only when the diff includes non-trivial logic in a load-bearing module (not config, schema, docs, or simple plumbing). When applied, surface findings under five sub-lenses, each as its own finding with severity and evidence: (a) coupling and duplication that crossed module boundaries, (b) error handling — paths that swallow errors or assume success, (c) edge cases the diff didn't account for, (d) test quality — happy-path-only coverage, fixtures hiding the actual assertion, (e) accepted debt — visible compromises the executor took without flagging in the report. Skip this category entirely on routine waves; the goal is to catch what plan-conformance review wouldn't, not to do a full code review on every cycle. If the human asked for a deeper code review at wave-update time, hand off to a separate review skill rather than expanding this category.
+10. **Recommendations:** brief notes on what needs a decision (not prescriptions).
 
 Read the subagent's findings carefully. Do not blindly trust them — but their independence is the value. Where the subagent and the executor disagree on facts (did the test pass?), the subagent wins. Where they disagree on intent (what the executor was trying to do), the executor's report wins.
 
