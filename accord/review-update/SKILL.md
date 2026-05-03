@@ -54,16 +54,38 @@ The order of reads matters. Read the *requirements* (what should have happened) 
 
 ## Review Diff Baseline
 
-The review diff is `<base>..accord-exec-<unit-id>` where `<base>` is determined by ACCORD tag conventions:
+The review diff is `<base>..accord-exec-<unit-id>` where `<base>` is resolved by the algorithm below. Chained repairs and retries make plain-language rules ambiguous (which "previous unit"? which "original"?), so the agent should follow the algorithm directly.
 
-- **First unit reviewed in a project**: `<base>` is the most recent `accord-plan-v<N>` tag.
-- **Subsequent units**: `<base>` is the most recent `accord-review-<previous-unit-id>` tag.
-- **Repair units** (`u-NNN-slug-repair-NN`): `<base>` is `accord-review-<original-unit-id>` — the review whose verdict triggered the repair. The diff shows only the repair work.
-- **Retry units** (`u-NNN-slug-rNN`): `<base>` is the same boundary as the original rejected unit (most recent prior `accord-review-*` or `accord-plan-v<N>`). The diff includes any revert commit plus the retry, showing the full net effect of the redo.
+### Resolution Algorithm
 
-Read the baseline from `accord-state.md`'s `Latest Boundaries` (`review_tag`, `plan_tag`); the rule above resolves which one applies for the unit being reviewed.
+Given a unit being reviewed with id `<unit-id>`:
 
-Concretely: `git diff <base>..accord-exec-<unit-id>` is the review diff. `git log <base>..accord-exec-<unit-id>` shows the commits being reviewed. If a plan revision tag (`accord-plan-v<N+1>`) sits between the base and the exec tag, include the plan revision commits in the diff but do not treat them as part of the unit's implementation evidence — they are framework state changes, not code under review.
+1. **Parse the unit id.** It has one of three shapes:
+   - **Plain**: `u-NNN-slug` (no suffix)
+   - **Repair**: `u-NNN-slug-repair-MM`
+   - **Retry**: `u-NNN-slug-rMM`
+
+2. **Identify the unit family.** For repair and retry units, the family root is `u-NNN-slug` (strip the suffix). For plain units, the family is just the unit itself.
+
+3. **Find `<base>`** by case:
+
+   - **Plain unit**: most recent `accord-review-*` tag in the project (any prior unit). If none exists, `<base>` is the most recent `accord-plan-v<N>` tag.
+   - **Repair unit**: most recent `accord-review-*` tag for the family root (`u-NNN-slug`) or any prior repair in the same family (`u-NNN-slug-repair-<smaller-number>`). The diff shows only this repair's work.
+   - **Retry unit**: most recent `accord-review-*` tag for the family root or any prior retry in the same family (`u-NNN-slug-r<smaller-number>`). The diff shows any revert commit plus this retry's work.
+
+4. **Set `<exec>`** = `accord-exec-<unit-id>` matching the full id of the unit being reviewed (with its suffix if any).
+
+5. **The review diff is `<base>..<exec>`.**
+
+### Verification
+
+Inspect `git log <base>..<exec>` — the commit list should be exactly the work attributable to this unit's attempt. If you see commits from another unit or another unit-family, the resolution is wrong; recompute.
+
+If a plan-revision tag (`accord-plan-v<N+1>`) sits inside the range, include those commits in the diff but treat them as state changes, not implementation evidence.
+
+### Source of Tag Information
+
+Read `accord-state.md`'s `Latest Boundaries` for the latest `review_tag` and `plan_tag`. For chained recovery cases, list `git tag --list "accord-review-u-NNN-slug*"` (replacing `u-NNN-slug` with the family root) to find all prior reviews in the family.
 
 ## Verdicts
 

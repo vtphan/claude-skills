@@ -1,6 +1,6 @@
 ---
 name: execute
-description: Use this ACCORD skill when canonical intent, design, and plan artifacts exist and the human lead wants the current approved unit implemented. Triggers include "accord execute", "execute the current unit", "implement the approved unit", "build the next unit", or "go ahead". This skill writes code, writes docs/accord/reports/exec-<unit-id>.md using the approved u-NNN-slug ID, updates accord-state.md, then commits and tags after human approval.
+description: Use this ACCORD skill when canonical intent, design, and plan artifacts exist and the human lead wants the current approved unit implemented. Triggers include "accord execute", "execute the current unit", "implement the approved unit", or "build the next unit". Do not invoke on bare phrases like "go ahead" or "do it" without explicit ACCORD context. This skill writes code, writes docs/accord/reports/exec-<unit-id>.md using the approved u-NNN-slug ID, updates accord-state.md, then commits and tags after human approval.
 ---
 
 # ACCORD Execute

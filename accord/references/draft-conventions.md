@@ -42,6 +42,8 @@ Stop only after **two consecutive small-diff rounds AND** at least one verified 
 
 A small-diff round is one where the agent cannot articulate substantive changes — only phrasing, ordering, or polish.
 
+**Human override.** The human lead may declare convergence explicitly at any point, with or without the rule satisfied. The agent should advise whether the rule's preconditions are met (so the human knows what discipline they are skipping) but does not block on them. For small projects where the convergence rule's overhead exceeds its value, an explicit human "stop here" is a valid termination. Record the override in the final draft's Round Stance recommendation (e.g., `Recommendation: human override; convergence rule's critique pass was not run`).
+
 ### Strict Non-Overwrite
 
 Each round produces a new file. Never overwrite a prior draft. The user may edit any draft between rounds; the agent reads those edits as high-priority signal for the next round.
