@@ -118,6 +118,16 @@ When `vision pivot` revises the vision, the next `wave-update` produces a `visio
 
 No skill auto-invokes the next. Each transition is yours.
 
+### Three process shapes from one architect ratify
+
+After `architect ratify`, the architect surfaces a process-fit verdict naming which of three shapes the rest of the project should run as:
+
+- **Full VADER** — the wave cycle as shipped. Default when signals favor it (real uncertainty, multiple structural decisions, 3-6 anticipated waves, mismatched or mutually-novel domain familiarity).
+- **VADER with notes** — the same cycle with project-specific simplifications or additions captured in `docs/<project-slug>-process-notes.md`. The wave skills consult the notes; the cycle structure is unchanged. Notes adjust *process* (depth, order, rigor) — not features, tooling, architectural decisions, or artifact shapes (those each have their own home).
+- **Bail** — VADER's envelope doesn't fit. The vision and architecture remain as inputs to whatever process replaces VADER. *Bail-down* (project under VADER's envelope: low uncertainty, conventional decisions, 1-2 logical waves) recommends a lighter alternative. *Bail-up* (project over the envelope: cross-cutting concerns, compliance/certification, longitudinal validation, research-before-spec, tight cross-component coupling) recommends a heavier alternative.
+
+The notes file's contract is in `references/process-notes-schema.md`. The cap is firm: notes can subtract overhead or add discipline, but cannot eliminate invariants, redefine artifact shapes, or replace the cycle. Anything that would do those is a bail or a schema change, not a note.
+
 ## Engineering safeguards
 
 Beyond process discipline, VADER's skills enforce concrete engineering practices that mid-execution agents commonly skip:

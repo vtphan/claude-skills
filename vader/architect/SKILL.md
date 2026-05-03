@@ -57,15 +57,35 @@ Before doing anything else, read `references/architecture-schema.md` in full. Th
 
 **Inputs:** an existing architecture doc whose Decision Log contains one or more entries with `Status: Proposed (date). Drafted by architect draft.`
 
-**Output:** the same architecture doc, with each Proposed seed entry's `Status` line updated to `Accepted (today's date). Established by architect draft, ratified <today>.`
+**Output:** the same architecture doc, with each Proposed seed entry's `Status` line updated to `Accepted (today's date). Established by architect draft, ratified <today>.` Plus, when the process-fit verdict is "VADER with notes," a new file `docs/<project-slug>-process-notes.md`.
 
 **Workflow:**
 
 1. Confirm with the user that they've reviewed the proposed architecture and entries. Don't ratify without explicit signoff.
 2. Walk every entry in the Decision Log section. For each with status starting `Proposed (...). Drafted by architect draft.`, update to `Accepted (today). Established by architect draft, ratified <today>.`
 3. Bump the architecture doc's frontmatter `last_updated` to today.
-4. Save the doc.
-5. Hand off — `wave-plan` is now unblocked.
+4. **Run the process-fit assessment.** Based on the just-ratified vision and architecture, surface a verdict naming which of three shapes the rest of the project should run as. Signals to consider:
+   - **Vision Open Questions count.** ≥5 → uncertainty is real; ≤2 → mostly known.
+   - **Decision Log entries with material negative consequences.** ≥3 entries where the negative is non-trivial (not just "uses some disk") → real architectural choices; ≤1 → mostly conventional.
+   - **Anticipated wave count.** Estimate from the in-scope capabilities and module decomposition. 3-6 → VADER fit; 1-2 → bail-down candidate; 7+ → bail-up candidate.
+   - **Domain familiarity.** Is the domain well-known to both the human and the LLM, well-known to one but not the other, or novel to both? Mutual well-understanding favors lighter shapes; mismatched familiarity favors VADER (the artifacts transfer knowledge in one direction or the other); mutual novelty favors Full VADER.
+
+   Map signals to one of three verdicts:
+   - **Full VADER** — signals favor the cycle as shipped. No notes file produced.
+   - **VADER with notes** — signals favor the cycle with project-specific tunings. Draft `docs/<project-slug>-process-notes.md` per `references/process-notes-schema.md`. Notes can subtract overhead (skip a step that doesn't pay off) or add discipline (tighten a default rigor); they cannot eliminate invariants, redefine artifact shapes, or replace the cycle. Surface the draft to the user; iterate; commit alongside the architecture.
+   - **Bail** — VADER's envelope doesn't fit. Two directions:
+     - *Bail-down* — project is under VADER's envelope (low uncertainty, conventional decisions, 1-2 logical "waves"). Recommend a lighter alternative: flat task list against the architecture's modules, traditional checklist with verification matrix discipline lifted independently, or just-build-it. The vision and architecture remain as inputs.
+     - *Bail-up* — project is over VADER's envelope (cross-cutting concerns the wave model can't capture, compliance/certification needs the audit subagent doesn't satisfy, longitudinal validation requirements, research-before-spec, tight cross-component coupling that defeats wave isolation). Recommend a heavier alternative: formal specification (TLA+, Alloy), BDD/spec-driven development with detailed traceability, V&V framework appropriate to the regulatory regime, or decomposition into independent sub-projects each with its own VADER.
+
+   Present the verdict with reasoning and the named alternative (if Bail). Wait for user confirmation. Don't proceed to step 5 until verdict is settled.
+
+5. Save the doc(s):
+   - Always: the architecture doc.
+   - If verdict is "VADER with notes": also save `docs/<project-slug>-process-notes.md`.
+
+6. Hand off:
+   - **Full VADER** or **VADER with notes** → `wave-plan` is now unblocked.
+   - **Bail** → no further VADER skills run; tell the user which alternative was recommended and that the vision and architecture remain as inputs.
 
 **Note:** This mode is for *initial* seed entries only. Mid-cycle Proposed entries (those with `Drafted by wave-update review`) are not this skill's concern; wave-update ratifies them inline within its own invocation.
 
@@ -80,10 +100,15 @@ Before doing anything else, read `references/architecture-schema.md` in full. Th
 
 ## Handoff
 
-After draft mode, tell the user to review the proposed architecture and entries, then re-invoke this skill in `ratify` mode (or manually flip each `Status` field). After ratify mode, tell the user the next step is `wave-plan`.
+After draft mode, tell the user to review the proposed architecture and entries, then re-invoke this skill in `ratify` mode (or manually flip each `Status` field). After ratify mode, the next step depends on the process-fit verdict:
+
+- **Full VADER** or **VADER with notes** → `wave-plan`.
+- **Bail-down** or **bail-up** → no further VADER skills; the recommended alternative.
 
 **Git.** Check whether git is in use (`git rev-parse --is-inside-work-tree`). If yes, after the user approves the artifact, commit yourself:
 - Draft mode: `git commit -m "arch: initial draft, ADR-001 through ADR-NNN (proposed)" -m "Co-authored-by: Claude <noreply@anthropic.com>"`. No tag yet — the architecture is not yet ratified.
-- Ratify mode: `git commit -m "arch: ratify initial architecture, ADR-001 through ADR-NNN" -m "Co-authored-by: Claude <noreply@anthropic.com>"` then `git tag arch-v1`.
+- Ratify mode (Full VADER): `git commit -m "arch: ratify initial architecture, ADR-001 through ADR-NNN" -m "Co-authored-by: Claude <noreply@anthropic.com>"` then `git tag arch-v1`.
+- Ratify mode (VADER with notes): same commit, but `git add` also includes the new `docs/<project-slug>-process-notes.md`. Commit message: `git commit -m "arch: ratify initial architecture + process notes (VADER-with-notes)" -m "<details: which simplifications/additions and why>" -m "Co-authored-by: Claude <noreply@anthropic.com>"` then `git tag arch-v1`.
+- Ratify mode (bail): commit the architecture as in Full VADER (the architecture artifact is still ratified), but note in the body that the project will not run VADER's wave cycle and which alternative was recommended.
 
 Tell the user about each commit (sha, tag if any). Override with `git reset --soft HEAD~1` if amending is needed. If git is not in use, save normally and note no commit was made. See `../references/git-conventions.md`.

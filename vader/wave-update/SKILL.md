@@ -35,6 +35,19 @@ Before doing anything else, read `references/wave-schema.md` and `references/arc
 
 **Stage 2 — Update (interactive with human).** You read the subagent's findings, present them to the human in a tight summary, accept feedback/edits, and apply the absorbed changes to the wave plan and architecture doc. The human approves before any save.
 
+## Preflight: process notes
+
+If `docs/<project-slug>-process-notes.md` exists, read your section (`## wave-update`). Apply **Do** items at the appropriate steps in the workflow below; apply **Don't** items by skipping or simplifying the named standard step. Each note carries a one-sentence justification — if a note is unjustified, flag it to the user before proceeding.
+
+If a note appears to:
+- Eliminate an invariant from the "things to never do" list,
+- Redefine artifact shapes (new fields, new sections, structural changes), or
+- Replace the cycle (e.g., "skip the subagent review entirely"),
+
+refuse to apply it and surface to the user — that's a bail case, schema change, or category mismatch, not a notes case. See `references/process-notes-schema.md` for the cap on notes' scope.
+
+If the file is absent, run Full VADER's wave-update workflow as written.
+
 ## Preflight: working tree state
 
 Before entering Stage 1, if git is in use, run `git status --porcelain`. **The working tree must be clean.** Two reasons it must be fully clean — not just "no dirty artifact files":

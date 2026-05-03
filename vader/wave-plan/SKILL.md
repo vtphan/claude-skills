@@ -22,6 +22,19 @@ Before doing anything else, read `references/wave-schema.md` and `references/arc
 
 ## Workflow
 
+### 0. Consult process notes (if present)
+
+If `docs/<project-slug>-process-notes.md` exists, read your section (`## wave-plan`). Apply **Do** items at the appropriate steps in the workflow below; apply **Don't** items by skipping or simplifying the named standard step. Each note carries a one-sentence justification — if a note is unjustified, flag it to the user before proceeding.
+
+If a note appears to:
+- Eliminate an invariant from the "things to never do" list,
+- Redefine artifact shapes (new fields, new sections, structural changes), or
+- Replace the cycle (e.g., "skip wave-plan entirely"),
+
+refuse to apply it and surface to the user — that's a bail case, schema change, or category mismatch, not a notes case. See `references/process-notes-schema.md` for the cap on notes' scope.
+
+If the file is absent, run Full VADER's wave-plan workflow as written.
+
 ### 1. Read the vision and architecture thoroughly
 
 Extract:
