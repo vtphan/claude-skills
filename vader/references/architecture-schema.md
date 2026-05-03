@@ -50,9 +50,9 @@ The architecture doc carries YAML frontmatter:
 
 ```yaml
 ---
-architecture_version: 4                  # Incremented on body edit (including Decision Log changes)
+architecture_version: 4                  # Incremented on material architecture or Decision Log changes
 created: 2026-05-02                      # ISO date, never changes
-last_updated: 2026-06-15                 # ISO date, updated on body edit
+last_updated: 2026-06-15                 # ISO date, updated on any architecture doc edit
 status: active                           # active | pivoted
 adr_promoted_log: false                  # true once any entry has been promoted to a separate file
 ---

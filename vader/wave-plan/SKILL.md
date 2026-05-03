@@ -5,7 +5,7 @@ description: Use this skill when a vision doc and a ratified architecture doc ex
 
 # Wave Plan
 
-Produce the first version of the unified wave plan from the vision and architecture. The wave plan unifies requirements (stories, journeys, features) and plan (waves, tasks) into a single rolling document. W1 defaults to a **walking skeleton** — a thin vertical slice that exercises every module in the architecture with minimal functional content.
+Produce the first version of the unified wave plan from the vision and architecture. The wave plan unifies requirements (stories, journeys, features) and plan (waves, tasks) into a single rolling document. W1 defaults to a **walking skeleton** — a thin vertical slice that exercises every architecture module marked `W1: required` with minimal functional content.
 
 This is a one-time skill at project start. Subsequent edits to the wave plan are made by `wave-update`.
 
@@ -38,7 +38,7 @@ Walk the architecture doc's Decision Log section. If any entry has `Status: Prop
 
 Aim for 3-6 waves. Four principles, in priority order:
 
-**Walking skeleton first.** W1 is a vertical slice that exercises *every module* in the architecture, with minimal functional content. The point is to surface integration risk in W1, when the plan is still flexible. Horizontal-foundation W1s ("set up auth first") are allowed only with explicit justification in the Goal section.
+**Walking skeleton first.** W1 is a vertical slice that exercises every architecture module marked `W1: required`, with minimal functional content. Modules marked `deferred (W<N>)` are preserved in the architecture but are not forced into W1. The point is to surface active integration risk in W1, when the plan is still flexible. Horizontal-foundation W1s ("set up auth first") are allowed only with explicit justification in the Goal section.
 
 **Risk-first ordering.** Among candidate post-W1 waves, order them so the scariest unknowns are tackled earliest. Scariness = technical uncertainty + requirements uncertainty + how many later waves depend on the answer.
 

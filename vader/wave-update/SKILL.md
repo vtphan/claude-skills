@@ -73,7 +73,7 @@ Audit verdict: pass-with-findings
 - Task verification: T2.4 marked [x] but admits partial coverage.
 - ADR-004 violated by T2.3 (recommend supersede with proposed ADR-007).
 - One scope finding: tests/perf/ added without a declared task.
-- Discoveries: A2 broken (recommend A6); proposed ADR-007 (full body in subagent output).
+- Discoveries: A2 broken (recommend A6); proposed ADR-007 (if approved, write the full accepted entry to architecture.md Section 8).
 - Next-wave entry criteria: satisfied.
 
 Proposed absorption:
@@ -135,7 +135,7 @@ For each supersession the human approved:
 
 For each architecture-doc body edit the human approved:
 1. Apply the edit to the architecture doc.
-2. Bump the architecture doc's `architecture_version` and `last_updated`.
+2. If the edit is material (modules, boundaries, interfaces, data, dependencies, deployment, guardrails, or a Decision Log change), bump `architecture_version` and `last_updated`. For non-material edits, bump only `last_updated`.
 
 ### E. Update registers
 
@@ -199,6 +199,8 @@ Decisions absorbed:
 Severity values: `low` | `medium` | `high`. Disposition values: `accepted` | `rejected (user override: <reason>)` | `deferred to W<N+M>`. The optional `action` slot in the parens captures the most consequential downstream effect ("ratified ADR-007", "opened A6", "carried to W3").
 
 The findings list is the durable review record — it preserves what the subagent surfaced (including findings the human rejected), with disposition AND evidence. A reader six months later can reconstruct both what was found and what was done with it from this single entry, *without* opening the (ephemeral) subagent conversation.
+
+Do not refer to the subagent conversation as the only place where evidence or proposed ADR content exists. Any finding important enough to affect the update must be summarized with evidence in the change log. Any ADR important enough to ratify must be written into the architecture Decision Log before save.
 
 For `blocked-update` entries, the Decisions Absorbed list names the recovery path explicitly (loop back / renegotiate / pause) and what triggered each choice. No "Closed W<N>" or "Expanded W<N+1>" bullets appear — those steps were skipped.
 
@@ -275,7 +277,7 @@ Stage 1 — Review subagent:
 - Verdict: pass-with-findings.
 - Exit criteria: 3/3 met by repro.
 - T2.4 partial; otherwise tasks verified.
-- ADR-004 violated; proposes ADR-007 (row-per-rank, full body provided); proposes architecture.md Section 3 edit.
+- ADR-004 violated; proposes ADR-007 (row-per-rank); if approved, write the full accepted entry to architecture.md Section 8. Proposes architecture.md Section 3 edit.
 - Discoveries: A2 broken with concrete evidence; recommends A6.
 - One scope finding: tests/perf/ added without task; subagent flags as benign-but-undeclared.
 - Next-wave entry criteria satisfied.

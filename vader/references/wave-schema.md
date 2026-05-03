@@ -266,7 +266,8 @@ Review findings (from subagent):
   by T2.3.
   Evidence: T2.3's implementation (`db/migrations/004_votes.sql`) adds a `rank`
   column inconsistent with the flat-column shape ADR-004 mandated. Subagent
-  proposed ADR-007 (row-per-rank); full body in proposed-ADR section below.
+  proposed ADR-007 (row-per-rank); wave-update ratified it and embedded the
+  accepted entry in `architecture.md` Section 8.
 - F3 (low, accepted as plumbing): tests/perf/ added without a planned task.
   Evidence: 4 perf tests under tests/perf/voting/ — diff scope leakage but
   benign; treat as undeclared-but-aligned plumbing.
@@ -277,7 +278,7 @@ Review findings (from subagent):
 Decisions absorbed:
 - Closed W2 with T2.4 partial; tie-break E2E carried to W3 scope (per F4).
 - A2 marked broken; A6 (ranked-choice) opened (per F1).
-- ADR-007 added (Accepted), supersedes ADR-004 (per F2).
+- ADR-007 added to architecture.md Section 8 Decision Log (Accepted), supersedes ADR-004 (per F2). Context, decision, and consequences are recorded in the ADR-007 entry.
 - Architecture doc Section 3 (Data and state) edited to reference row-per-rank schema; architecture v3 → v4.
 - Expanded W3 from sketch.
 - Re-sketched W4 to account for ranked-voting data shape.
@@ -453,13 +454,13 @@ Review findings (from subagent):
 - F2 (medium, accepted, ratified ADR-004): Tag namespace needs a structural
   decision.
   Evidence: T1.4 introduced ad-hoc string prefixes (`work:`, `personal:`) without
-  a Decision Log entry; subagent proposed ADR-004 (string-prefixed namespace) to
-  formalize. Full body in subagent's proposed-ADR section.
+  a Decision Log entry; wave-update ratified ADR-004 (string-prefixed namespace)
+  and embedded the accepted entry in `architecture.md` Section 8.
 
 Decisions absorbed:
 - Closed W1 (walking skeleton). All exit criteria met.
 - A2 marked broken; A3 (string-prefixed namespace) opened and validated in same wave (per F1).
-- ADR-004 (tag namespace: string-prefixed) added (Accepted), no supersession (per F2).
+- ADR-004 added to architecture.md Section 8 Decision Log (Accepted), no supersession (per F2). Context, decision, and consequences are recorded in the ADR-004 entry.
 - Expanded W2 sketch into full detail. current_wave advanced to W2.
 - Re-sketched W3 briefly to confirm re-scan against the prefixed namespace.
 

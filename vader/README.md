@@ -63,7 +63,7 @@ Most attempts to use LLMs for software development trip on the same step: the ag
 - *ratify mode* — flips Proposed seed entries to Accepted after human review. Then `architect` is essentially idle for the rest of the project; mid-cycle architectural change goes through `wave-update`.
 
 **`wave-plan`**
-- One-time. Produces the wave plan from the vision and architecture. W1 defaults to a walking skeleton that exercises every module. Future waves are sketched as themes; no premature detail. Refuses to run if any cited Decision Log entry is still Proposed.
+- One-time. Produces the wave plan from the vision and architecture. W1 defaults to a walking skeleton that exercises every architecture module marked `W1: required`; modules marked `deferred (W<N>)` come online in their named wave. Future waves are sketched as themes; no premature detail. Refuses to run if any cited Decision Log entry is still Proposed.
 
 **`wave-execute`**
 - Per wave. Implements the current wave's tasks, flips checkboxes, runs the repro, produces an execution report. Does not modify the wave plan structurally; does not build future-wave work; does not silently violate Decision Log entries. Captures `wave_start_ref` and `wave_end_ref` (when git is in use) for the review subagent's diff scoping.
@@ -100,7 +100,7 @@ Initial Decision Log entries from `architect draft` start as `Proposed`. They be
 
 ### Walking skeleton as W1
 
-W1 defaults to a vertical slice that exercises the whole architecture with trivial functional content. This forces the scariest handoffs (auth, persistence, deployment) into the first wave, when the plan is still flexible.
+W1 defaults to a vertical slice through the architecture needed for the first real integration path, with trivial functional content. It must exercise every module marked `W1: required`; deferred modules are preserved in the architecture but not forced into W1. This forces the scariest active handoffs (auth, persistence, deployment) into the first wave, when the plan is still flexible.
 
 ### Independent review by fresh-context subagent
 
