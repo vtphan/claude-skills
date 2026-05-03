@@ -155,3 +155,12 @@ On review/update:
 - route to `intent` only when implementation has invalidated the project's goal or success criteria (rare)
 - commit explicit paths
 - tag `accord-review-<unit-id>`
+
+## Before Approval Checklist
+
+- Does `Rationale for Shape` cite concrete facts from the approved `design.md`, not generic planning wisdom?
+- Is `Current Approved Unit.Acceptance` checkable against a diff without relying on the executor's narrative?
+- Is `Expected scope` narrow enough to tell the executor what is out of bounds?
+- Are verification expectations tied to `commands.md` or `design.md` when those artifacts exist?
+- Does each advanceable `Later Work` item already include a diff-checkable acceptance criterion, and are unknowns marked `Acceptance: TBD by plan`?
+- Is `Review mode` appropriate for the unit's risk?

@@ -106,3 +106,11 @@ On approval:
 - create or update `docs/accord/commands.md` when concrete commands are known
 - commit explicit paths
 - tag `accord-design-v<N>`
+
+## Before Approval Checklist
+
+- Does the design preserve the approved `intent.md` goal, users, non-goals, constraints, and quality bar?
+- Are boundaries, ownership, interfaces, data/state, UX, and verification expectations specific enough for planning without conversation context?
+- Are durable tradeoffs captured as decision entries, while cheap tactical choices are left out?
+- Does `Project Commands` point to `docs/accord/commands.md` when concrete commands are known?
+- Does `Handoff to Plan` name the planning risks, sequencing constraints, or first-unit implications created by this design?

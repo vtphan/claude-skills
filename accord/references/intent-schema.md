@@ -75,3 +75,11 @@ On approval:
 - update `docs/accord/accord-state.md` with source draft and tag
 - commit explicit paths
 - tag `accord-intent-v<N>`
+
+## Before Approval Checklist
+
+- Does `Goal` name the actual project direction, not just the next implementation task?
+- Are `Users / Operators`, `Success Criteria`, `Non-Goals`, and `Constraints` concrete enough for design to make tradeoffs?
+- Are success criteria observable or testable enough to guide later review?
+- Are open questions limited to issues that can remain open without blocking design?
+- Does `Handoff to Design` tell the next agent what design must preserve or decide?

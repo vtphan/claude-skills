@@ -145,3 +145,11 @@ In all cases: set `review_tag = accord-review-<unit-id>`, write the Review and U
 Add fields only when a project genuinely needs them (e.g., optional separate review reports, non-git baseline tracking, blocked states with recovery instructions).
 
 Do not use `accord-state.md` to carry full execution history. Project flow lives in `plan.md` and git.
+
+## Before Approval Checklist
+
+- Do `status` and `Next.recommended_skill` agree on what should run next?
+- Do approved artifact paths and latest boundary tags match the phase just approved?
+- Is `Current Unit` populated when execution or review has a current unit, including `review_mode`?
+- Is `latest_execution_report` set only after an approved execute phase?
+- Are blockers recorded in `Next.notes` instead of hidden in conversation context?

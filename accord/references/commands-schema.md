@@ -34,3 +34,10 @@ Use `n/a` with a reason when a category does not apply.
 Ask the human when a command change implies a new dependency, deployment model, CI requirement, or quality gate.
 
 Do not ask for mechanical command-name updates that follow directly from accepted project changes.
+
+## Before Approval Checklist
+
+- Can a fresh agent set up, run, test, lint/typecheck, build, and demo or reproduce from this file alone?
+- Does each non-applicable category say `n/a` with a reason?
+- Are command changes tactical, or do they imply a design-level change that should route through `design`?
+- Are environment assumptions, generated artifacts, or known command limitations recorded in `Notes`?

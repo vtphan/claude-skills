@@ -86,3 +86,11 @@ On approval:
 - update `docs/accord/accord-state.md`
 - commit code, report, and state with explicit paths
 - tag `accord-exec-<unit-id>`
+
+## Before Approval Checklist
+
+- Does the report use the exact approved unit ID from `plan.md`?
+- Does each acceptance criterion have concrete evidence: file paths, function names, behavior, or test names?
+- Are verification commands copied from `commands.md` when present, with outcomes and skipped checks recorded?
+- Are deviations, surprises, debt, and suggested plan updates explicit instead of buried in the summary?
+- Could a fresh reviewer compare the report to the diff without executor conversation context?

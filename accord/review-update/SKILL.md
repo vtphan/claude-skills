@@ -87,6 +87,15 @@ If a plan-revision tag (`accord-plan-v<N+1>`) sits inside the range, include tho
 
 Read `accord-state.md`'s `Latest Boundaries` for the latest `review_tag` and `plan_tag`. For chained recovery cases, list `git tag --list "accord-review-u-NNN-slug*"` (replacing `u-NNN-slug` with the family root) to find all prior reviews in the family.
 
+### Mechanical Examples
+
+These examples show tag mechanics only; they are not content guidance.
+
+- Plain unit: reviewing `u-002-example` after prior review tag `accord-review-u-001-example` means the diff is `accord-review-u-001-example..accord-exec-u-002-example`.
+- First unit: reviewing `u-001-example` with no prior review tag means the diff is the most recent plan tag, such as `accord-plan-v1..accord-exec-u-001-example`.
+- Repair unit: reviewing `u-002-example-repair-01` after the original unit was reviewed at `accord-review-u-002-example` means the diff is `accord-review-u-002-example..accord-exec-u-002-example-repair-01`.
+- Retry unit: reviewing `u-002-example-r02` after the original unit was reviewed at `accord-review-u-002-example` means the diff is `accord-review-u-002-example..accord-exec-u-002-example-r02`.
+
 ## Verdicts
 
 - `pass` — acceptance met, no findings.

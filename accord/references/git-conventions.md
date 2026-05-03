@@ -110,3 +110,11 @@ review: complete ACCORD project
 Closes the final approved unit and sets docs/accord/accord-state.md to complete.
 Tag: accord-complete-v1
 ```
+
+## Before Commit / Tag Checklist
+
+- Has the human approved this phase boundary or recovery direction?
+- Are only explicit, relevant paths staged for the phase commit?
+- Have unrelated dirty files been left out, and do they not obscure verification or review?
+- Does the commit body name the artifact, source draft or unit ID, evidence, and intended tag?
+- Does the target tag not already exist?
