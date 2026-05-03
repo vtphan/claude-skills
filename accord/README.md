@@ -34,8 +34,8 @@ In `plan`, the agent must inform the human *why* the chosen plan shape fits *thi
 
 ## Skills
 
-- `intent` — codesign project intent. Brainstorm-this draft rounds, then promote to `intent.md`.
-- `design` — codesign architecture and consequential decisions. Brainstorm-this draft rounds, then promote to `design.md`.
+- `intent` — codesign project intent. Codesign draft rounds, then promote to `intent.md`.
+- `design` — codesign architecture and consequential decisions. Codesign draft rounds, then promote to `design.md`.
 - `plan` — agent-led planning. The agent picks the plan shape, explains why it fits the design, defines the next approved unit, and informs the human. Lightweight drafts.
 - `execute` — agent-led implementation of the approved unit. Writes code and an execution report.
 - `review-update` — fresh-context verification, typically in a new conversation and possibly with a different LLM. Reads the executed work against artifacts, issues a verdict, decides recovery direction, and advances `plan.md` and state.

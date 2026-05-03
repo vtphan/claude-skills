@@ -36,6 +36,19 @@ Read:
 10. Ask for human approval; advise consequential vs procedural.
 11. Commit explicit paths and tag `accord-exec-<unit-id>` using the approved unit ID, including any repair/redo suffix.
 
+## Rejection Before Approval
+
+If the human declines approval at the execute gate, the work is recoverable without git surgery: code is modified but uncommitted, and the `accord-exec-<unit-id>` tag has not been created. The agent does not write to `accord-state.md` or update `Current Unit.status` until approval, so state stays in `executing` (or `repairing` / `redoing` for recovery units) throughout the rejection loop.
+
+Rejection paths the agent should support:
+
+- **Revise.** The human points to specific issues. The agent fixes them, re-verifies, updates the report, asks again. May iterate several times. The execution report is a living document during this loop; it is finalized and committed once on approval, not versioned per attempt.
+- **Trim scope.** The human says implementation expanded beyond the approved unit. The agent reverts the out-of-scope changes (`git restore <path>` or targeted edits), updates the report, asks again.
+- **Route to `plan`.** If the rejection implies the approved unit was wrong (acceptance criteria missed the point, scope was incoherent, the design assumption broke during implementation), the agent stops revising and routes to `plan` for a new draft. Set `accord-state.md` `status: replanning` and tell the human. Do not commit the work-in-progress.
+- **Discard.** If the human asks to abandon the unit, use `git restore` to discard uncommitted changes. The unit remains approved in `plan.md` and can be retried later as a normal `execute` invocation — no exec tag exists yet, so no formal `redo` is needed.
+
+Pre-commit rejection is not the same as `review-update`'s `redo` verdict. `redo` is post-commit, after `accord-exec-<unit-id>` has been created and tagged; it requires reverting or superseding the tagged commit. Pre-commit rejection has no exec tag yet, so iteration in place is the correct response.
+
 ## Stop For Human Approval — Examples
 
 The agent stops when its judgment says the change is consequential. Examples:

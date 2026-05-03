@@ -61,7 +61,7 @@ Use `paused` when the human lead explicitly stops ACCORD work. Use `blocked` whe
 - Record latest canonical artifact paths and latest tags.
 - Record source draft paths when promoting `intent`, `design`, or `plan`.
 - Record the latest execution report path when `execute` completes.
-- Record `review_mode` for the current approved unit when it is `fresh-required`.
+- Record `Current Unit.review_mode` for every approved unit. Default is `same-session-ok`; set `fresh-required` per the criteria in `plan-schema.md`. The field is always populated when a current unit exists, not only when `fresh-required` applies.
 - Record the next recommended skill.
 - Do not silently overwrite manual edits in a dirty working tree.
 

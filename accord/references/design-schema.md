@@ -11,7 +11,7 @@ The agent's posture is **elicitive and generative** (same as intent). For design
 - boundary and ownership reframings
 - **UI/UX**: interaction model, information architecture, accessibility, error/empty/loading states. The agent proposes these rather than waiting to be asked. UI/UX is part of design, not an afterthought.
 
-Brainstorm-this discipline applies. See `draft-conventions.md`.
+Codesign discipline applies. See `draft-conventions.md`.
 
 ## Draft Rounds
 
