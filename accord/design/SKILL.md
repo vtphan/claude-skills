@@ -1,15 +1,26 @@
 ---
 name: design
-description: Use this ACCORD skill when an approved intent exists and the human lead wants to codesign or revise architecture, boundaries, project commands, verification expectations, and consequential decisions. Triggers include "accord design", "draft the design", "revise architecture", "pivot design", or when implementation learning requires a new design version. This skill uses monotonic draft rounds, promotes an approved draft to docs/accord/design/design.md, updates accord-state.md, then commits and tags after human approval.
+description: Use this ACCORD skill when an approved intent exists and the human lead wants to codesign architecture, boundaries, UI/UX, project commands, verification expectations, and consequential decisions. Triggers include "accord design", "draft the design", "revise architecture", or "pivot design". This skill uses brainstorm-this-style draft rounds, promotes an approved draft to docs/accord/design/design.md, updates accord-state.md, then commits and tags after human approval.
 ---
 
 # ACCORD Design
 
-Codesign architecture and consequential decisions with the human lead. Drafts carry proposed thinking. Canonical `design.md` is accepted by human approval; there is no separate ratify mode by default.
+Codesign architecture, UI/UX, and consequential decisions with the human lead. Drafts carry proposed thinking. Canonical `design.md` is accepted by human approval.
 
-ACCORD assumes a capable LLM. Preserve VADER's useful design pressure while keeping the artifact lighter and independent of a fixed wave model.
+## Posture
 
-At first use in a session/project, read:
+The agent's posture is **elicitive and generative** (same as intent). For design, this especially applies to:
+
+- architectural alternatives and tradeoffs
+- dependency and platform choices
+- boundary and ownership reframings
+- **UI/UX**: interaction model, information architecture, accessibility, error/empty/loading states. The agent proposes these rather than waiting to be asked. UI/UX is part of design, not an afterthought.
+
+Brainstorm-this discipline applies (round stances, immutable Design Brief after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite). See `brainstorm-this/SKILL.md`.
+
+## At First Use In A Session
+
+Read:
 
 - `../references/draft-conventions.md`
 - `../references/design-schema.md`
@@ -18,90 +29,37 @@ At first use in a session/project, read:
 - `../references/state-schema.md`
 - `../references/git-conventions.md`
 
-Re-read these references when schema behavior is uncertain or the files changed.
+Re-read when schema behavior is uncertain or files changed.
 
-## Operating Contract
+## Operating Approach
 
 1. Read `docs/accord/accord-state.md` if present.
 2. Read canonical `docs/accord/intent/intent.md`.
-3. Read current `docs/accord/design/design.md` if this is a revision.
-4. If revising after implementation, read current `plan.md`, recent review/update log entries, execution reports, and inspect current implementation enough to avoid greenfield drift.
-5. For brownfield projects, orient to existing code before drafting.
-6. Find the highest existing `docs/accord/design/draft_NN.md`.
-7. Create the next monotonic draft. Never overwrite.
-8. Surface consequential human decisions; choose routine implementation conventions yourself.
-9. On approval, promote the approved draft to `design.md`, update state, commit, and tag.
+3. Read current `docs/accord/design/design.md` if revising.
+4. If revising mid-project, also read current `plan.md`, recent review/update entries, execution reports, and inspect implementation enough to avoid greenfield drift.
+5. Find the highest existing draft and create the next monotonic one. Never overwrite.
+6. Apply brainstorm-this discipline with the elicitive/generative posture; treat UI/UX with the same rigor as architecture.
+7. On approval, promote to `design.md`, update state, commit, and tag.
 
-## Draft Rounds
+## Consider This Tagging
 
-Useful default draft structure:
+Three tags: `[from user]`, `[Q from LLM]`, `[suggestion from LLM]`. See `draft-conventions.md`.
 
-```text
-## Round Stance
-## Design Brief
-## Architecture Summary
-## Boundaries and Ownership
-## Key Interfaces
-## Data and State
-## Project Commands
-## Verification Expectations
-## Decisions
-## Human Decisions Needed
-## LLM Defaults Chosen
-## Consider This
-## Perspective I'm Contributing From
-## Notes
-```
+## Approval Advisory
 
-Draft decisions are proposed thinking. Approved canonical decisions are accepted by definition.
+At each approval gate, advise whether consequential or procedural. Design gates are usually consequential (architecture, dependencies, UI commitments) — say so directly.
 
 ## Canonical Artifact
 
-On approval, promote into `docs/accord/design/design.md` using:
+On approval, promote into `docs/accord/design/design.md` per the schema in `references/design-schema.md`. The canonical artifact must be self-sufficient for cross-LLM handoff (principle 9): an unfamiliar reviewing agent should verify implementation against this file without conversational context.
 
-```text
-## Architecture Summary
-## Boundaries and Ownership
-## Key Interfaces
-## Data and State
-## Project Commands
-## Verification Expectations
-## Decisions
-## Handoff to Plan
-```
+Use `docs/accord/commands.md` for concrete project commands. `design.md` may summarize verification strategy and reference `commands.md`. Routine command changes should not force a new design version.
 
-Use `docs/accord/commands.md` for concrete project commands when they are known. `design.md` may summarize the verification strategy and reference `commands.md`; routine command changes should not force a new design version.
+Decision entries record consequential choices; tactical choices stay out of decision records.
 
-Minimum decision entry:
+## Scale Up
 
-```text
-### D-001: <decision title>
-Decision:
-Rationale:
-Consequences:
-Revisability:
-```
-
-Add status, supersession, or evidence fields only when the project earns that detail.
-
-## Scale-Up Triggers
-
-Add detail when architecture choices are expensive to reverse, dependencies carry consequences, state ownership is unclear, persistence/auth/security/deployment matters, brownfield code conflicts with the design, or implementation learning invalidates prior decisions.
-
-## Human Decisions
-
-Ask for human judgment on durable architecture tradeoffs, dependencies with consequences, data model commitments, deployment, security posture, and accepted risk/debt.
-
-Do not ask about conventional layout, local naming, routine tests, or ordinary adapter/glue patterns unless they have durable consequences.
-
-## Preserve From VADER
-
-- Brownfield orientation before architecture drafting.
-- Explicit project commands.
-- Durable decision records for consequential decisions.
-- Consequences, including negatives, for material decisions.
-- Refusal to over-commit to cheap-to-reverse details.
-- Clear separation between design and code.
+See `references/design-schema.md` Scale Up When.
 
 ## Git
 

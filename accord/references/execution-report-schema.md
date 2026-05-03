@@ -1,22 +1,22 @@
 # ACCORD Execution Report Contract
 
-`execute` writes an execution report for the approved unit. The report should provide enough evidence for `review-update` to verify what happened. It should not become a heavyweight audit template by default.
+`execute` writes an execution report for the approved unit. The report is the executor's only narrative to a reviewing agent that may be running in a fresh conversation, possibly with a different LLM (per principle 9). It must be self-sufficient for that handoff.
 
 Reports live at:
 
-```text
+```
 docs/accord/reports/exec-<unit-id>.md
 ```
 
-Use the approved unit ID from `plan.md`, such as:
+Use the approved unit ID from `plan.md`:
 
-```text
+```
 docs/accord/reports/exec-u-001-auth-login.md
 ```
 
 ## Minimum Contract
 
-```text
+```
 ## Executed Unit
 ID:
 Summary:
@@ -28,6 +28,14 @@ Summary:
 ## Suggested Plan Updates
 ```
 
+### Acceptance Evidence
+
+For each acceptance criterion in the unit, name where in the diff the criterion is satisfied — file paths, function names, behavior surfaced in tests. The reviewer reads this against the diff and `plan.md`'s `Current Approved Unit / Acceptance`. Vague claims ("auth flow now works") are insufficient for fresh-context review; concrete pointers ("`auth/login.ts:handleSubmit`; test in `auth/login.test.ts:happy_path`") are.
+
+### Verification Evidence
+
+Name the commands run, their outcomes, and any skipped checks with reasons. The reviewer should be able to re-run them. Use `commands.md` first, then `design.md` Verification Expectations, else infer and state the inference.
+
 ## Scale Up When
 
 - the diff is broad
@@ -36,11 +44,11 @@ Summary:
 - tests are missing or weak
 - work deviates from the approved unit
 - meaningful plan updates are proposed
-- a fresh-context review is likely
+- `Review mode: fresh-required`
 
 Possible scale-up additions:
 
-```text
+```
 ## Files Changed
 ## Commands Run
 ## Test Gaps
@@ -49,14 +57,18 @@ Possible scale-up additions:
 ## Recovery Path
 ```
 
-## Human Decision Points
+## Human Decision Points (during execute)
 
-- scope expansion
-- design change
-- dependency addition with consequences
-- accepted debt
-- weakened acceptance
-- repair versus redo when blocked
+The agent stops when its judgment says the change is consequential. Examples:
+
+- expanding scope beyond the approved unit
+- changing design decisions
+- adding consequential dependencies
+- accepting meaningful debt
+- weakening acceptance criteria
+- choosing repair versus redo after a blocker
+
+These are not a checklist; the agent applies judgment.
 
 ## LLM Discretion Zone
 

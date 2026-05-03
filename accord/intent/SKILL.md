@@ -1,91 +1,60 @@
 ---
 name: intent
-description: Use this ACCORD skill when the human lead wants to codesign or revise project intent before architecture/design work. Triggers include "accord intent", "draft project intent", "revise intent", "pivot intent", or when a project needs a lightweight approved intent artifact for downstream design and planning. This skill uses monotonic draft rounds, promotes an approved draft to docs/accord/intent/intent.md, updates accord-state.md, then commits and tags after human approval.
+description: Use this ACCORD skill when the human lead wants to codesign or revise project intent. Triggers include "accord intent", "draft project intent", "revise intent", or "pivot intent". This skill uses brainstorm-this-style draft rounds, promotes an approved draft to docs/accord/intent/intent.md, updates accord-state.md, then commits and tags after human approval.
 ---
 
 # ACCORD Intent
 
-Codesign the project's intent with the human lead. Use draft rounds for collaborative thinking, then promote the approved draft into a clean canonical `docs/accord/intent/intent.md`.
+Codesign the project's intent with the human lead. Use brainstorm-this draft rounds for collaborative thinking, then promote the approved draft into a clean canonical `docs/accord/intent/intent.md`.
 
-ACCORD assumes a capable LLM. Use the schema to protect handoff to `design`, not to micromanage the conversation.
+## Posture
 
-At first use in a session/project, read:
+The agent's posture is **elicitive and generative**. Draw out aspects of the project the human hasn't articulated (stakeholders, success states, implicit non-goals, domain constraints). Propose transformative alternatives the human can absorb, redirect, or reject. Sycophantic refinement is the failure mode to avoid.
+
+The brainstorm-this discipline (round stances, immutable Idea after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite) is the guardrail against premature consensus. See `brainstorm-this/SKILL.md` for the full discipline.
+
+## At First Use In A Session
+
+Read:
 
 - `../references/draft-conventions.md`
 - `../references/intent-schema.md`
 - `../references/state-schema.md`
 - `../references/git-conventions.md`
 
-Re-read these references when schema behavior is uncertain or the files changed.
+Re-read when schema behavior is uncertain or files changed.
 
-## Operating Contract
+## Operating Approach
+
+The agent uses judgment about round mechanics. Expected behavior:
 
 1. Read current ACCORD state if `docs/accord/accord-state.md` exists.
-2. Detect whether this is initial intent drafting or a revision after prior approval.
-3. For brownfield projects, briefly orient to existing code before drafting.
-4. Find the highest existing `docs/accord/intent/draft_NN.md`.
-5. Create the next monotonic draft. Never overwrite.
-6. Treat user edits and comments as high-priority signal.
-7. Surface consequential human decisions; make obvious LLM-owned choices without burdening the human.
-8. When the human approves, promote the approved draft to `intent.md`.
-9. Update `accord-state.md`.
-10. Commit explicit paths and tag `accord-intent-v<N>` after approval.
+2. Find the highest existing `docs/accord/intent/draft_NN.md` and create the next monotonic draft. Never overwrite.
+3. Apply brainstorm-this draft structure, with the elicitive/generative posture.
+4. Surface consequential human decisions; make routine choices independently.
+5. On approval, promote the approved draft to `intent.md`, update `accord-state.md`, commit, and tag.
 
-## Draft Rounds
+## Consider This Tagging
 
-Drafts should include enough structure to support codesign. A useful default:
+`Consider This` carries three kinds of items:
 
-```text
-## Round Stance
-## Project Frame
-## Goal
-## Users / Operators
-## Success Criteria
-## Non-Goals
-## Constraints
-## Open Questions
-## Human Decisions Needed
-## LLM Defaults Chosen
-## Consider This
-## Perspective I'm Contributing From
-## Notes
-```
+- `[from user]` — user contributions and corrections.
+- `[Q from LLM]` — questions about ambiguity in the user's input.
+- `[suggestion from LLM]` — proactive transformative proposals.
 
-After the first draft, do not casually rewrite `Project Frame`. If the frame appears wrong, ask or propose a human-approved revision.
+If a `[suggestion from LLM]` item implies the Idea itself was misframed, surface that as `[Q from LLM]` instead. The Idea is immutable after round 0.
 
-## Canonical Artifact
+## Approval Advisory
 
-On approval, promote into `docs/accord/intent/intent.md` using the minimum canonical contract:
+At each approval gate, advise whether the moment is consequential (real choice for the human) or procedural (rubber stamp; here is what changed). Most intent gates are consequential by nature; say so directly when they are.
 
-```text
-## Goal
-## Users / Operators
-## Success Criteria
-## Non-Goals
-## Constraints
-## Open Questions
-## Handoff to Design
-```
+## Cross-LLM Handoff
 
-Add optional sections only when they help downstream work.
+`intent.md` must be self-sufficient (principle 9). A future agent reading it cold — in a fresh conversation, possibly with a different LLM — should understand the project's direction without conversational context. The promotion step is where this gets enforced: the canonical artifact is a clean rewrite, not draft scaffolding.
 
-## Scale-Up Triggers
+## Scale Up
 
-Add more structure or ask more questions when:
-
-- the value hypothesis is vague
-- users/operators conflict
-- non-goals are weak
-- success criteria are not testable
-- brownfield code constrains intent
-- the human lead expresses uncertainty
-- implementation learning invalidates accepted intent
-
-## Human Decisions
-
-Ask for human judgment on goal, users/operators, success criteria, non-goals, constraints, and risk/quality bar.
-
-Do not ask for routine wording, grouping, or schema mechanics unless the choice changes meaning.
+See `references/intent-schema.md` Scale Up When. The agent uses judgment about depth.
 
 ## Git
 
@@ -95,4 +64,4 @@ After approval, commit:
 - `docs/accord/intent/intent.md`
 - `docs/accord/accord-state.md`
 
-Use an `intent:` commit prefix and tag `accord-intent-v<N>`. If git is unavailable, save the artifacts and tell the user the baseline is weaker.
+Use an `intent:` commit prefix and tag `accord-intent-v<N>`. If git is unavailable, save artifacts and tell the human that recovery and review have a weaker baseline.

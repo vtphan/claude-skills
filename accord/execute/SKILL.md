@@ -1,15 +1,19 @@
 ---
 name: execute
-description: Use this ACCORD skill when canonical intent, design, and plan artifacts exist and the human lead wants the current approved unit implemented. Triggers include "accord execute", "execute the current unit", "implement the approved unit", "build the next unit", or "go ahead" after an approved ACCORD plan. This skill writes code, writes docs/accord/reports/exec-<unit-id>.md using the approved u-NNN-slug ID, updates accord-state.md, then commits and tags after human approval.
+description: Use this ACCORD skill when canonical intent, design, and plan artifacts exist and the human lead wants the current approved unit implemented. Triggers include "accord execute", "execute the current unit", "implement the approved unit", "build the next unit", or "go ahead". This skill writes code, writes docs/accord/reports/exec-<unit-id>.md using the approved u-NNN-slug ID, updates accord-state.md, then commits and tags after human approval.
 ---
 
 # ACCORD Execute
 
-Implement the current approved unit from `plan.md` and write a minimal execution report with enough evidence for `review-update`.
+Implement the current approved unit from `plan.md` and write a self-sufficient execution report.
 
-ACCORD assumes a capable LLM. Execute with professional judgment inside approved boundaries; stop for consequential changes.
+## Posture
 
-At first use in a session/project, read:
+`execute` is **agent-led**. The agent implements with professional judgment inside approved boundaries. It stops only for genuinely consequential changes — the list below is examples of when to stop, not a checklist to traverse.
+
+## At First Use In A Session
+
+Read:
 
 - `../references/execution-report-schema.md`
 - `../references/plan-schema.md`
@@ -18,24 +22,22 @@ At first use in a session/project, read:
 - `../references/state-schema.md`
 - `../references/git-conventions.md`
 
-Re-read these references when schema behavior is uncertain or the files changed.
-
-## Operating Contract
+## Operating Approach
 
 1. Read `docs/accord/accord-state.md`.
-2. Read canonical `intent.md`, `design.md`, and `plan.md`.
+2. Read canonical `intent.md`, `design.md`, `plan.md`.
 3. Identify the current approved unit ID, acceptance criteria, verification expectations, expected scope, and review mode.
 4. Inspect the repo enough to execute in the existing style.
-5. If git is in use, inspect dirty files before editing. Continue around unrelated dirty files only when explicit path commits and verification remain safe; stop and ask when dirty files overlap the approved unit, affect verification, obscure the diff, or make explicit-path commits unsafe.
+5. If git is in use, inspect dirty files. Continue around unrelated dirty files only when explicit-path commits and verification remain safe; stop and ask when dirty files overlap the approved unit, affect verification, obscure the diff, or make explicit-path commits unsafe.
 6. Implement the approved unit.
-7. Run appropriate verification.
-8. Write `docs/accord/reports/exec-<unit-id>.md`.
-9. Ask for human approval of implementation and report.
+7. Run appropriate verification (use `commands.md` first, then `design.md` Verification Expectations, else infer and state the inference).
+8. Write `docs/accord/reports/exec-<unit-id>.md` as a self-sufficient report (see below).
+9. Ask for human approval; advise consequential vs procedural.
 10. Commit explicit paths and tag `accord-exec-<unit-id>` using the approved unit ID, including any repair/redo suffix.
 
-## Stop For Human Approval
+## Stop For Human Approval — Examples
 
-Stop before:
+The agent stops when its judgment says the change is consequential. Examples:
 
 - expanding scope beyond the approved unit
 - changing design decisions
@@ -44,29 +46,22 @@ Stop before:
 - weakening acceptance criteria
 - choosing repair versus redo after a blocker
 
-Do not stop for routine implementation tactics inside the approved scope.
+These are not a checklist; the agent applies judgment. Routine implementation tactics inside approved scope do not require stopping.
 
-## Execution Report
+## Cross-LLM Handoff: The Report Is Load-Bearing
 
-Minimum report:
+The execution report is the executor's only narrative to a reviewing agent that may be running in a fresh conversation, possibly with a different LLM (per principle 9). The report must be self-sufficient.
 
-```text
-## Executed Unit
-## Summary of Changes
-## Acceptance Evidence
-## Verification Evidence
-## Deviations / Surprises
-## Suggested Plan Updates
-```
+For each acceptance criterion, name where in the diff it is satisfied — file paths, function names, test names. Vague claims ("auth works") fail fresh-context review; concrete pointers ("`auth/login.ts:handleSubmit`; test: `auth/login.test.ts:happy_path`") succeed.
 
-Scale up the report when the diff is broad, risky, architecture-touching, security-sensitive, weakly tested, or deviates from the approved unit.
+For verification, name commands run and outcomes. The reviewer should be able to re-run them.
 
-## Verification
+See `references/execution-report-schema.md` for the contract.
 
-Use `docs/accord/commands.md` first when present, then `design.md` Verification Expectations. If absent or incomplete, infer from project files and state the inference.
+## Approval Advisory
 
-Record command-level evidence. If a relevant check is skipped, give a reason.
+At the execute gate, advise whether the unit is procedural (clean implementation, evidence aligned) or consequential (deviations, accepted debt, design questions). For `fresh-required` units, the gate is more often consequential.
 
 ## Git
 
-After approval, commit code changes, the execution report, `accord-state.md`, and `commands.md` if it changed, using explicit paths. Use an `exec:` prefix and tag `accord-exec-<unit-id>`.
+After approval, commit code changes, the execution report, `accord-state.md`, and `commands.md` if changed, using explicit paths. Use an `exec:` prefix and tag `accord-exec-<unit-id>`.

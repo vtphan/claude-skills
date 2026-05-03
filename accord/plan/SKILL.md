@@ -1,109 +1,56 @@
 ---
 name: plan
-description: Use this ACCORD skill when approved intent and design artifacts exist and the human lead wants an adaptive implementation plan or a revised plan. Triggers include "accord plan", "draft the plan", "choose the next unit", "revise the plan", or when planning needs to adapt after review. The skill may use monotonic draft rounds, promotes an approved draft to docs/accord/plan/plan.md, updates accord-state.md, then commits and tags after human approval.
+description: Use this ACCORD skill when approved intent and design artifacts exist and the human lead wants the next implementation plan or unit. Triggers include "accord plan", "draft the plan", "choose the next unit", or "revise the plan". This skill is agent-led; the agent picks the plan shape, justifies it against the approved design, defines the next approved unit, and informs the human. Lightweight drafts (default 1 round). Promotes to docs/accord/plan/plan.md, updates accord-state.md, then commits and tags after human approval.
 ---
 
 # ACCORD Plan
 
-Create or revise the adaptive implementation plan. The LLM chooses the plan shape and explains why. The schema protects handoff to `execute`; it does not prescribe waves, milestones, task trees, or any other form.
+Create or revise the implementation plan. The agent leads: it picks the plan shape, justifies it against the approved design, defines the next approved unit, and informs the human. The human reviews and approves at the gate.
 
-At first use in a session/project, read:
+## Posture
 
-- `../references/draft-conventions.md`
+`plan` is **agent-led**, not codesigned. Per principle 8, the agent leads and the human approves. Drafts use the brainstorm-this draft mechanism for consistency with intent and design, but the discipline is lighter: the **default is one round**. The agent produces `draft_00.md`, the human approves, it becomes `plan.md`. Multiple rounds happen only when the human pushes back via `Consider This` items.
+
+## At First Use In A Session
+
+Read:
+
 - `../references/plan-schema.md`
+- `../references/draft-conventions.md`
 - `../references/design-schema.md`
 - `../references/state-schema.md`
 - `../references/git-conventions.md`
 
-Re-read these references when schema behavior is uncertain or the files changed.
-
-## Operating Contract
+## Operating Approach
 
 1. Read `docs/accord/accord-state.md`.
 2. Read canonical `intent.md` and `design.md`.
 3. Read current `plan.md` if revising.
-4. If planning after execution/review, read relevant execution reports and review/update log entries.
-5. Decide whether draft rounds are useful. Use drafts when the strategy is still being codesigned; update canonical `plan.md` directly only when `review-update` owns the update.
-6. Choose an adaptive plan shape and justify it.
-7. Define the current approved unit with a stable `u-<three digits>-<slug>` ID, acceptance criteria, expected scope, verification expectations, and review mode.
-8. Surface human decisions and acceptance criteria for approval.
-9. On approval, promote/update `plan.md`, update state, commit, and tag.
+4. If planning after execution, read relevant execution reports and review/update log entries.
+5. Choose a plan shape and justify it explicitly against the design (see below).
+6. Define the current approved unit with stable `u-NNN-slug` ID, diff-checkable acceptance, expected scope, verification expectations, and review mode.
+7. Inform the human; advise consequential vs procedural.
+8. On approval, promote/update `plan.md`, update state, commit, tag.
 
-## Draft Rounds
+## Plan Rationale Must Reference Design
 
-Use monotonic drafts in `docs/accord/plan/` when planning is exploratory:
+The plan's `Rationale for Shape` must explicitly reference the approved `design.md` — what scope, structure, dependencies, or risk in *this* design make *this* plan shape the fit. Generic shape justifications are insufficient. This is the single most important section for preventing redundancy and contradiction (principle 7).
 
-```text
-draft_00.md
-draft_01.md
-plan.md
-draft_02.md
-```
+## Acceptance Must Be Diff-Checkable
 
-Useful default draft structure:
+Acceptance criteria in `Current Approved Unit` must be checkable against a diff. A reviewing agent in fresh context (per principle 9) reads the criteria and the diff to verify the unit. Vague criteria fail this test.
 
-```text
-## Round Stance
-## Planning Stance
-## Plan Shape
-## Rationale for Shape
-## Current Approved Unit
-## Later Work
-## Assumptions / Risks
-## Human Decisions Needed
-## LLM Defaults Chosen
-## Consider This
-## Notes
-```
+## Approval Advisory
 
-## Canonical Artifact
+At each plan gate, advise whether consequential or procedural. Plan approvals are often procedural (the agent has chosen and the human waves it through), but unit approvals with subtle acceptance criteria, broad scope, or `fresh-required` review mode are consequential — say so directly.
 
-`docs/accord/plan/plan.md` must include:
+## Cross-LLM Handoff
 
-```text
-## Planning Stance
-## Plan Shape
-## Current Approved Unit
-## Later Work
-## Assumptions / Risks
-## Review and Update Log
-```
+`plan.md` must be self-sufficient for fresh-context review. The reviewing agent reads `plan.md`, `design.md`, `intent.md`, the execution report, and the diff — together they must be enough.
 
-`Plan Shape` may be a milestone list, task tree, dependency graph, wave-like plan, vertical slice sequence, one-shot plan, or another form. State why it fits.
+## Scale Up
 
-Put unit ID, summary, acceptance, expected scope, verification, and review mode inside `## Current Approved Unit` in both drafts and canonical `plan.md`. Do not duplicate those fields as separate top-level sections.
-
-Use `one-shot` for trivial small work. Use `fresh-required` review mode for high-risk, architecture-touching, security-sensitive, broad-scope, or surprising units.
-
-## Scale-Up Triggers
-
-Add detail when multiple plan shapes are plausible, the next unit is broad/risky, acceptance is hard to verify, design assumptions are unresolved, later dependencies make vague sketches dangerous, or the human asks for more detail.
-
-## Human Decisions
-
-Ask for human judgment on plan shape when strategy matters, scope cuts, sequencing tradeoffs, acceptance criteria, current-unit approval, and risk acceptance.
-
-## LLM Discretion
-
-Choose straightforward plan shapes, task IDs, low-risk sequencing, internal organization, and future detail level when the choice is not consequential.
-
-## Review Log
-
-`review-update` records completed-unit outcomes in `plan.md`:
-
-```text
-### <date> - Review after <unit-id>
-Verdict:
-Execution report:
-Exec tag:
-Review tag:
-Findings:
-Plan updates:
-Next approved unit:
-Human decisions:
-```
-
-For `repair`, `redo`, or `replan`, include a `Recovery:` line naming the next action.
+See `references/plan-schema.md` Scale Up When.
 
 ## Git
 

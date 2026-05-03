@@ -2,11 +2,17 @@
 
 `intent` codesigns project intent with the human lead. Draft rounds support thinking; canonical `intent.md` supports downstream design and planning.
 
+## Posture
+
+The agent's posture is **elicitive and generative**: drawing out aspects of the project the human hasn't articulated yet (stakeholders, success states, implicit non-goals, domain constraints), and proposing transformative alternatives the human can absorb, redirect, or reject. Sycophantic refinement is the failure mode to avoid.
+
+The brainstorm-this discipline (round stances, immutable Idea after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite) protects against premature consensus. See `draft-conventions.md`.
+
 ## Draft Rounds
 
 Use one monotonic draft sequence in `docs/accord/intent/`:
 
-```text
+```
 draft_00.md
 draft_01.md
 intent.md
@@ -15,13 +21,13 @@ draft_02.md
 
 Drafts are never overwritten. A draft after `intent.md` is a proposed revision. It becomes accepted only when promoted, committed, and tagged.
 
-Drafts should borrow the `brainstorm-this` pattern: round stance, protected project frame, user signal, open questions, and sparse notes. The exact draft shape may adapt, but it should preserve the user's core framing unless the human explicitly approves a revision.
+`Consider This` uses three-tag convention: `[from user]`, `[Q from LLM]`, `[suggestion from LLM]`. See `draft-conventions.md`.
 
 ## Minimum Canonical Contract
 
 `intent.md` must include:
 
-```text
+```
 ## Goal
 ## Users / Operators
 ## Success Criteria
@@ -31,14 +37,9 @@ Drafts should borrow the `brainstorm-this` pattern: round stance, protected proj
 ## Handoff to Design
 ```
 
-Optional when useful:
+Optional when useful: `## Context`, `## Risks`, `## Prior Art`, `## Glossary`.
 
-```text
-## Context
-## Risks
-## Prior Art
-## Glossary
-```
+`intent.md` must be self-sufficient for cross-LLM handoff (principle 9). A future agent reading it cold should understand the project's direction without conversational context from the codesign session.
 
 ## Scale Up When
 
@@ -46,14 +47,13 @@ Optional when useful:
 - multiple users/operators have conflicting needs
 - non-goals are unclear
 - success criteria are not testable
-- brownfield code constrains intent
 - the human lead expresses uncertainty or disagreement
-- later implementation invalidates accepted intent
+- mid-project implementation invalidates accepted intent
 
 ## Human Decision Points
 
 - goal and priority
-- users/operators
+- users / operators
 - success criteria
 - non-goals
 - constraints
@@ -61,27 +61,17 @@ Optional when useful:
 
 ## LLM Discretion Zone
 
-- wording
-- grouping
-- obvious implications
-- draft organization
+- wording and grouping
 - candidate open questions
+- candidate `[suggestion from LLM]` items
+- draft organization
 - concise handoff wording
-
-## Preserve From VADER
-
-- pressure-test the value hypothesis
-- make non-goals load-bearing
-- orient to existing code in brownfield projects
-- keep canonical intent short
-- surface open questions instead of hiding uncertainty
 
 ## Promotion
 
 On approval:
 
 - promote the approved draft into `docs/accord/intent/intent.md`
-- do not include a canonical change log
 - update `docs/accord/accord-state.md` with source draft and tag
 - commit explicit paths
 - tag `accord-intent-v<N>`

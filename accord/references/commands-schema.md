@@ -4,9 +4,11 @@
 
 This file prevents routine command drift from forcing a new `design.md` version. `design.md` should reference `commands.md` for operational commands. Bump `design.md` only when command changes reflect a material architecture or verification-strategy change.
 
+`commands.md` must be self-sufficient for cross-LLM handoff (principle 9). A reviewing agent in fresh context should be able to re-run verification from this file alone.
+
 ## Minimum Contract
 
-```text
+```
 ## Setup
 ## Run
 ## Test
@@ -25,7 +27,7 @@ Use `n/a` with a reason when a category does not apply.
 - `review-update` may update `commands.md` when review verifies that command documentation drifted.
 - The human lead may edit `commands.md` directly between approved units; commit with a `commands:` prefix or fold the edit into the next unit's commit.
 - Tactical command updates do not require `accord-design-v<N>`.
-- Material changes to architecture, deployment, or verification strategy should still route through `design` or a human-approved design update.
+- Material changes to architecture, deployment, or verification strategy should still route through `design`.
 
 ## Human Decision Points
 
