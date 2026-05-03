@@ -71,7 +71,7 @@ u-002-profile-cache
 u-003-docs-typos
 ```
 
-Do not reuse unit IDs. If work is repaired or redone, use suffixes such as `u-001-auth-login-r02` or `u-001-auth-login-repair-02`.
+Do not reuse unit IDs. If work is repaired or redone, use suffixes such as `u-001-auth-login-r02` or `u-001-auth-login-repair-01`.
 
 ## Versioning
 

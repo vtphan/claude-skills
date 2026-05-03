@@ -46,7 +46,7 @@ Rules:
 - never reuse IDs
 - keep slugs short and descriptive
 - use retry suffixes for redo attempts, such as `u-001-auth-login-r02`
-- use repair suffixes for targeted repair units when clearer, such as `u-001-auth-login-repair-02`
+- use repair suffixes for targeted repair units when clearer, such as `u-001-auth-login-repair-01`
 
 ## Current Approved Unit
 
@@ -149,9 +149,11 @@ On initial approval:
 
 On review/update:
 
-- update `plan.md` directly
+- update `plan.md` directly only when the next step is a straightforward continuation of the approved plan
 - record execution report path and tags in `Review and Update Log`
-- set the next approved unit when applicable
+- set the next approved unit when it is already anticipated by the approved plan, is a targeted repair, or is an approved redo
+- route to `plan` when findings change sequencing, plan shape, acceptance criteria, risk posture, or later-work boundaries
+- route to `design` before further execution when findings invalidate architecture decisions, boundaries, data/state ownership, dependencies, deployment assumptions, security posture, or verification strategy
 - commit explicit paths
 - tag `accord-review-<unit-id>`
 

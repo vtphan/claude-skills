@@ -26,7 +26,7 @@ Re-read these references when schema behavior is uncertain or the files changed.
 2. Read canonical `intent.md`, `design.md`, and `plan.md`.
 3. Identify the current approved unit ID, acceptance criteria, verification expectations, expected scope, and review mode.
 4. Inspect the repo enough to execute in the existing style.
-5. If git is in use and the working tree has unrelated dirty changes, stop and ask how to proceed.
+5. If git is in use, inspect dirty files before editing. Continue around unrelated dirty files only when explicit path commits and verification remain safe; stop and ask when dirty files overlap the approved unit, affect verification, obscure the diff, or make explicit-path commits unsafe.
 6. Implement the approved unit.
 7. Run appropriate verification.
 8. Write `docs/accord/reports/exec-<unit-id>.md`.

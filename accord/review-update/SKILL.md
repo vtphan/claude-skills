@@ -39,6 +39,23 @@ Same-session review is acceptable for small or low-risk units. Fresh-context rev
 9. After approval, update `plan.md` and `accord-state.md`.
 10. Commit explicit paths and tag `accord-review-<unit-id>`.
 
+## Routing Authority
+
+`review-update` may update `plan.md` directly when the next step is a straightforward continuation of the approved plan:
+
+- marking the reviewed unit complete
+- recording compact findings and accepted debt
+- approving the next already-anticipated unit
+- approving a targeted repair unit
+- approving a redo unit after naming the rejected exec tag and any required revert
+- carrying forward non-blocking watch items
+
+Route to `plan` instead of updating the next unit directly when findings change sequencing, plan shape, acceptance criteria, risk posture, or the boundary of later work.
+
+Route to `design` before further execution when findings invalidate architecture decisions, boundaries, data/state ownership, dependencies, deployment assumptions, security posture, or verification strategy.
+
+Use `blocked` state when the correct route is known but depends on a human decision, unavailable command, missing environment, unresolved dirty working tree, or external dependency.
+
 ## Minimum Review Entry
 
 Add an entry to `plan.md` under `## Review and Update Log`:
@@ -78,11 +95,13 @@ If embedding findings would make `plan.md` hard to use, create `docs/accord/repo
 
 ## Recovery Procedures
 
-`repair`: approve a targeted repair unit, usually `u-NNN-slug-repair-02`. Keep the original exec tag unless the faulty code must be removed before repair.
+`repair`: approve a targeted repair unit, usually `u-NNN-slug-repair-01`. Keep the original exec tag unless the faulty code must be removed before repair.
 
 `redo`: identify the rejected exec tag. If the bad changes should not remain on the branch, use a new revert commit rather than rewriting history. Approve a retry unit such as `u-NNN-slug-r02`.
 
 `replan`: update the plan shape or route to `design` when implementation learning invalidates architecture or decisions.
+
+For `pass-with-findings`, distinguish accepted residual findings from required follow-up. If follow-up is small and already inside the approved plan shape, `review-update` may approve the next unit directly. If follow-up changes the plan or design contract, route accordingly.
 
 ## Human Decisions
 

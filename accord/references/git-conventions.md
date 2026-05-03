@@ -11,6 +11,7 @@ If git is unavailable, save artifacts normally and warn that later review has a 
 - `plan:`
 - `exec:`
 - `review:`
+- `commands:`
 
 ## Tags
 
@@ -30,7 +31,7 @@ Increment version tags when canonical `intent.md`, `design.md`, or `plan.md` is 
 - Commit only after human approval.
 - Commit explicit paths only.
 - Never sweep unrelated user work into a phase commit.
-- If the working tree has unrelated dirty files, stop and ask how to proceed.
+- If the working tree has unrelated dirty files, continue only when explicit path commits and verification remain safe. Stop and ask how to proceed when dirty files overlap the intended edit set, affect verification, obscure the diff under review, or make explicit-path commits unsafe.
 - Include enough commit body detail to name the approved artifact, source draft if applicable, decisions, scope, and evidence.
 - Do not create or move tags silently if a target tag already exists.
 - Prefer new commits over history rewriting after an approved ACCORD tag exists.
@@ -72,9 +73,9 @@ Use these paths:
 Use when the implementation is mostly valid but needs targeted follow-up work.
 
 1. `review-update` records verdict `repair`.
-2. `plan.md` creates a targeted repair unit, such as `u-001-auth-login-repair-02`.
+2. `plan.md` creates a targeted repair unit, such as `u-001-auth-login-repair-01`.
 3. `execute` implements the repair in a new commit.
-4. Tag the repair execution, such as `accord-exec-u-001-auth-login-repair-02`.
+4. Tag the repair execution, such as `accord-exec-u-001-auth-login-repair-01`.
 5. `review-update` verifies and tags the repair review.
 
 Do not revert the original exec commit unless the faulty code must be removed before repair can proceed.
