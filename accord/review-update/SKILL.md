@@ -40,15 +40,16 @@ Read:
 
 ## Operating Approach
 
+The order of reads matters. Read the *requirements* (what should have happened) and the *diff* (what actually happened) **before** reading the execution report (the executor's narrative). The diff is evidence; the report is interpretation. Forming an independent view from the evidence first prevents the report from anchoring the review — a real bias risk even for fresh-context review by a different LLM.
+
 1. Read `docs/accord/accord-state.md` to identify the unit being reviewed.
-2. Read canonical `intent.md`, `design.md`, `plan.md`.
-3. Read the execution report for the current unit.
-4. Inspect the relevant diff or committed range when git is available.
-5. Verify execution against the approved unit, acceptance criteria, expected scope, and design decisions. Verification is against the *artifacts*, not the report's narrative.
-6. Decide verdict.
-7. Present findings, verdict, and any recovery path; advise consequential vs procedural.
-8. After approval, update `plan.md` and `accord-state.md`.
-9. Commit explicit paths and tag `accord-review-<unit-id>`.
+2. Read canonical `intent.md`, `design.md`, and `plan.md` — the requirements.
+3. Inspect the relevant diff or committed range — the evidence. Form an independent assessment of whether the diff satisfies the unit's acceptance criteria and respects design decisions, before loading the executor's narrative.
+4. Read the execution report. Cross-check: does the report's account match the diff? Are there discrepancies in scope, evidence, or claimed verification?
+5. Synthesize the final verdict from your independent assessment plus the report's information.
+6. Present findings, verdict, and any recovery path; advise consequential vs procedural.
+7. After approval, update `plan.md` and `accord-state.md`.
+8. Commit explicit paths and tag `accord-review-<unit-id>`.
 
 ## Verdicts
 
