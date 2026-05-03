@@ -9,19 +9,22 @@ Verify the executed unit, record findings in `plan.md`, and approve the next uni
 
 The default output is an update to `docs/accord/plan/plan.md`, not a separate review report. Create a separate review report only when findings are too complex to fit cleanly in the plan log.
 
-Before doing anything else, read:
+At first use in a session/project, read:
 
 - `../references/plan-schema.md`
 - `../references/execution-report-schema.md`
 - `../references/design-schema.md`
+- `../references/commands-schema.md`
 - `../references/state-schema.md`
 - `../references/git-conventions.md`
+
+Re-read these references when schema behavior is uncertain or the files changed.
 
 ## Review Posture
 
 Review from artifacts and evidence, not from the executor's confidence.
 
-Same-session review is acceptable for small or low-risk units. Fresh-context review is recommended for high-risk, architecture-touching, security-sensitive, broad-scope, or surprising units. The human lead controls whether to invoke this skill in the same conversation or a new one.
+Same-session review is acceptable for small or low-risk units. Fresh-context review is recommended for high-risk, architecture-touching, security-sensitive, broad-scope, or surprising units. If `plan.md` marks the unit `Review mode: fresh-required`, stop and tell the human lead to invoke this skill from fresh context unless they explicitly override the requirement.
 
 ## Operating Contract
 
@@ -32,8 +35,9 @@ Same-session review is acceptable for small or low-risk units. Fresh-context rev
 5. Verify execution against approved unit, acceptance criteria, expected scope, and design decisions.
 6. Decide verdict: `pass`, `pass-with-findings`, `repair`, `redo`, or `replan`.
 7. Present findings and proposed plan updates to the human lead.
-8. After approval, update `plan.md` and `accord-state.md`.
-9. Commit explicit paths and tag `accord-review-<unit-id>`.
+8. For `repair`, `redo`, or `replan`, present the recovery path before updating artifacts.
+9. After approval, update `plan.md` and `accord-state.md`.
+10. Commit explicit paths and tag `accord-review-<unit-id>`.
 
 ## Minimum Review Entry
 
@@ -51,6 +55,12 @@ Next approved unit:
 Human decisions:
 ```
 
+For recovery verdicts, add:
+
+```text
+Recovery:
+```
+
 Keep entries compact. Include report path and tags rather than duplicating execution report content.
 
 ## Scale-Up Triggers
@@ -66,6 +76,14 @@ Scale up the review when:
 
 If embedding findings would make `plan.md` hard to use, create `docs/accord/reports/review-<unit-id>.md` and reference it in the log.
 
+## Recovery Procedures
+
+`repair`: approve a targeted repair unit, usually `u-NNN-slug-repair-02`. Keep the original exec tag unless the faulty code must be removed before repair.
+
+`redo`: identify the rejected exec tag. If the bad changes should not remain on the branch, use a new revert commit rather than rewriting history. Approve a retry unit such as `u-NNN-slug-r02`.
+
+`replan`: update the plan shape or route to `design` when implementation learning invalidates architecture or decisions.
+
 ## Human Decisions
 
 Ask for human judgment on accepting findings, accepting debt, approving plan changes, choosing repair/redo/replan, changing design, and approving the next unit.
@@ -78,6 +96,7 @@ After approval, commit:
 
 - `docs/accord/plan/plan.md`
 - `docs/accord/accord-state.md`
+- `docs/accord/commands.md` when changed
 - optional `docs/accord/reports/review-<unit-id>.md`
 
 Use a `review:` prefix and tag `accord-review-<unit-id>`.

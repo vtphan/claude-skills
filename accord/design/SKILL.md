@@ -9,12 +9,16 @@ Codesign architecture and consequential decisions with the human lead. Drafts ca
 
 ACCORD assumes a capable LLM. Preserve VADER's useful design pressure while keeping the artifact lighter and independent of a fixed wave model.
 
-Before doing anything else, read:
+At first use in a session/project, read:
 
+- `../references/draft-conventions.md`
 - `../references/design-schema.md`
 - `../references/intent-schema.md`
+- `../references/commands-schema.md`
 - `../references/state-schema.md`
 - `../references/git-conventions.md`
+
+Re-read these references when schema behavior is uncertain or the files changed.
 
 ## Operating Contract
 
@@ -66,6 +70,8 @@ On approval, promote into `docs/accord/design/design.md` using:
 ## Handoff to Plan
 ```
 
+Use `docs/accord/commands.md` for concrete project commands when they are known. `design.md` may summarize the verification strategy and reference `commands.md`; routine command changes should not force a new design version.
+
 Minimum decision entry:
 
 ```text
@@ -103,6 +109,7 @@ After approval, commit:
 
 - `docs/accord/design/draft_NN.md`
 - `docs/accord/design/design.md`
+- `docs/accord/commands.md` when created or changed
 - `docs/accord/accord-state.md`
 
 Use a `design:` commit prefix and tag `accord-design-v<N>`.

@@ -7,12 +7,15 @@ description: Use this ACCORD skill when approved intent and design artifacts exi
 
 Create or revise the adaptive implementation plan. The LLM chooses the plan shape and explains why. The schema protects handoff to `execute`; it does not prescribe waves, milestones, task trees, or any other form.
 
-Before doing anything else, read:
+At first use in a session/project, read:
 
+- `../references/draft-conventions.md`
 - `../references/plan-schema.md`
 - `../references/design-schema.md`
 - `../references/state-schema.md`
 - `../references/git-conventions.md`
+
+Re-read these references when schema behavior is uncertain or the files changed.
 
 ## Operating Contract
 
@@ -22,7 +25,7 @@ Before doing anything else, read:
 4. If planning after execution/review, read relevant execution reports and review/update log entries.
 5. Decide whether draft rounds are useful. Use drafts when the strategy is still being codesigned; update canonical `plan.md` directly only when `review-update` owns the update.
 6. Choose an adaptive plan shape and justify it.
-7. Define the current approved unit clearly enough for `execute`.
+7. Define the current approved unit with a stable `u-<three digits>-<slug>` ID, acceptance criteria, expected scope, verification expectations, and review mode.
 8. Surface human decisions and acceptance criteria for approval.
 9. On approval, promote/update `plan.md`, update state, commit, and tag.
 
@@ -45,9 +48,6 @@ Useful default draft structure:
 ## Plan Shape
 ## Rationale for Shape
 ## Current Approved Unit
-## Acceptance Criteria
-## Verification Expectations
-## Expected Scope
 ## Later Work
 ## Assumptions / Risks
 ## Human Decisions Needed
@@ -64,15 +64,16 @@ Useful default draft structure:
 ## Planning Stance
 ## Plan Shape
 ## Current Approved Unit
-## Acceptance Criteria
-## Verification Expectations
-## Expected Scope
 ## Later Work
 ## Assumptions / Risks
 ## Review and Update Log
 ```
 
 `Plan Shape` may be a milestone list, task tree, dependency graph, wave-like plan, vertical slice sequence, one-shot plan, or another form. State why it fits.
+
+Put unit ID, summary, acceptance, expected scope, verification, and review mode inside `## Current Approved Unit` in both drafts and canonical `plan.md`. Do not duplicate those fields as separate top-level sections.
+
+Use `one-shot` for trivial small work. Use `fresh-required` review mode for high-risk, architecture-touching, security-sensitive, broad-scope, or surprising units.
 
 ## Scale-Up Triggers
 
@@ -101,6 +102,8 @@ Plan updates:
 Next approved unit:
 Human decisions:
 ```
+
+For `repair`, `redo`, or `replan`, include a `Recovery:` line naming the next action.
 
 ## Git
 

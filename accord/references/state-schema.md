@@ -13,13 +13,17 @@ status:
 
 ## Approved Artifacts
 intent:
+intent_source_draft:
 design:
+design_source_draft:
 plan:
+plan_source_draft:
 
 ## Current Unit
 id:
 summary:
 status:
+review_mode:
 
 ## Latest Boundaries
 intent_tag:
@@ -27,6 +31,7 @@ design_tag:
 plan_tag:
 exec_tag:
 review_tag:
+latest_execution_report:
 
 ## Next
 recommended_skill:
@@ -64,5 +69,6 @@ Do not use `accord-state.md` to carry full execution history. Put historical pro
 - Record latest canonical artifact paths and latest tags.
 - Record source draft paths when promoting `intent`, `design`, or `plan`.
 - Record the latest execution report path when `execute` completes.
+- Record `review_mode` for the current approved unit when it is `fresh-required`.
 - Record the next recommended skill.
 - Do not silently overwrite manual edits in a dirty working tree.

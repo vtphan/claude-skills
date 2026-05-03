@@ -1,6 +1,6 @@
 ---
 name: execute
-description: Use this ACCORD skill when canonical intent, design, and plan artifacts exist and the human lead wants the current approved unit implemented. Triggers include "accord execute", "execute the current unit", "implement the approved unit", "build the next unit", or "go ahead" after an approved ACCORD plan. This skill writes code, writes docs/accord/reports/exec-<unit-id>.md, updates accord-state.md, then commits and tags after human approval.
+description: Use this ACCORD skill when canonical intent, design, and plan artifacts exist and the human lead wants the current approved unit implemented. Triggers include "accord execute", "execute the current unit", "implement the approved unit", "build the next unit", or "go ahead" after an approved ACCORD plan. This skill writes code, writes docs/accord/reports/exec-<unit-id>.md using the approved u-NNN-slug ID, updates accord-state.md, then commits and tags after human approval.
 ---
 
 # ACCORD Execute
@@ -9,26 +9,29 @@ Implement the current approved unit from `plan.md` and write a minimal execution
 
 ACCORD assumes a capable LLM. Execute with professional judgment inside approved boundaries; stop for consequential changes.
 
-Before doing anything else, read:
+At first use in a session/project, read:
 
 - `../references/execution-report-schema.md`
 - `../references/plan-schema.md`
 - `../references/design-schema.md`
+- `../references/commands-schema.md`
 - `../references/state-schema.md`
 - `../references/git-conventions.md`
+
+Re-read these references when schema behavior is uncertain or the files changed.
 
 ## Operating Contract
 
 1. Read `docs/accord/accord-state.md`.
 2. Read canonical `intent.md`, `design.md`, and `plan.md`.
-3. Identify the current approved unit, acceptance criteria, verification expectations, and expected scope.
+3. Identify the current approved unit ID, acceptance criteria, verification expectations, expected scope, and review mode.
 4. Inspect the repo enough to execute in the existing style.
 5. If git is in use and the working tree has unrelated dirty changes, stop and ask how to proceed.
 6. Implement the approved unit.
 7. Run appropriate verification.
 8. Write `docs/accord/reports/exec-<unit-id>.md`.
 9. Ask for human approval of implementation and report.
-10. Commit explicit paths and tag `accord-exec-<unit-id>`.
+10. Commit explicit paths and tag `accord-exec-<unit-id>` using the approved unit ID, including any repair/redo suffix.
 
 ## Stop For Human Approval
 
@@ -60,10 +63,10 @@ Scale up the report when the diff is broad, risky, architecture-touching, securi
 
 ## Verification
 
-Use `design.md` Project Commands and Verification Expectations first. If absent or incomplete, infer from project files and state the inference.
+Use `docs/accord/commands.md` first when present, then `design.md` Verification Expectations. If absent or incomplete, infer from project files and state the inference.
 
 Record command-level evidence. If a relevant check is skipped, give a reason.
 
 ## Git
 
-After approval, commit code changes, the execution report, and `accord-state.md` using explicit paths. Use an `exec:` prefix and tag `accord-exec-<unit-id>`.
+After approval, commit code changes, the execution report, `accord-state.md`, and `commands.md` if it changed, using explicit paths. Use an `exec:` prefix and tag `accord-exec-<unit-id>`.

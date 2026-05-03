@@ -30,6 +30,8 @@ Drafts are never overwritten. A draft after `design.md` is a proposed revision. 
 ## Handoff to Plan
 ```
 
+`Project Commands` may be a short pointer to `docs/accord/commands.md`. Prefer `commands.md` for concrete setup/run/test/lint/typecheck/build/repro commands so routine command drift does not force a new `design.md` version.
+
 ## Decision Entries
 
 Human approval of canonical `design.md` makes listed decisions accepted by default. Do not require a separate ratify mode.
@@ -98,5 +100,6 @@ On approval:
 - promote the approved draft into `docs/accord/design/design.md`
 - do not include a canonical change log
 - update `docs/accord/accord-state.md` with source draft and tag
+- create or update `docs/accord/commands.md` when concrete commands are known
 - commit explicit paths
 - tag `accord-design-v<N>`

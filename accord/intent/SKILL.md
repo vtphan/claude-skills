@@ -9,11 +9,14 @@ Codesign the project's intent with the human lead. Use draft rounds for collabor
 
 ACCORD assumes a capable LLM. Use the schema to protect handoff to `design`, not to micromanage the conversation.
 
-Before doing anything else, read:
+At first use in a session/project, read:
 
+- `../references/draft-conventions.md`
 - `../references/intent-schema.md`
 - `../references/state-schema.md`
 - `../references/git-conventions.md`
+
+Re-read these references when schema behavior is uncertain or the files changed.
 
 ## Operating Contract
 

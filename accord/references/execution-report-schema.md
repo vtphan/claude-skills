@@ -8,10 +8,19 @@ Reports live at:
 docs/accord/reports/exec-<unit-id>.md
 ```
 
+Use the approved unit ID from `plan.md`, such as:
+
+```text
+docs/accord/reports/exec-u-001-auth-login.md
+```
+
 ## Minimum Contract
 
 ```text
 ## Executed Unit
+ID:
+Summary:
+
 ## Summary of Changes
 ## Acceptance Evidence
 ## Verification Evidence
