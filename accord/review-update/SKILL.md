@@ -45,12 +45,25 @@ The order of reads matters. Read the *requirements* (what should have happened) 
 1. Read `docs/accord/accord-state.md` to identify the unit being reviewed.
 2. Read canonical `intent.md`, `design.md`, and `plan.md` — the requirements.
 3. Read `docs/accord/commands.md` if it exists. The reviewer needs to know the project's verification commands to assess what the executor reports.
-4. Inspect the relevant diff or committed range — the evidence. Form an independent assessment of whether the diff satisfies the unit's acceptance criteria and respects design decisions, before loading the executor's narrative.
+4. Inspect the review diff (see Review Diff Baseline below) — the evidence. Form an independent assessment of whether the diff satisfies the unit's acceptance criteria and respects design decisions, before loading the executor's narrative.
 5. Read the execution report. Cross-check: does the report's account match the diff? Are there discrepancies in scope, evidence, or claimed verification?
 6. Synthesize the final verdict from your independent assessment plus the report's information.
 7. Present findings, verdict, and any recovery path; advise consequential vs procedural.
 8. After approval, update `plan.md` and `accord-state.md`.
 9. Commit explicit paths and tag `accord-review-<unit-id>`.
+
+## Review Diff Baseline
+
+The review diff is `<base>..accord-exec-<unit-id>` where `<base>` is determined by ACCORD tag conventions:
+
+- **First unit reviewed in a project**: `<base>` is the most recent `accord-plan-v<N>` tag.
+- **Subsequent units**: `<base>` is the most recent `accord-review-<previous-unit-id>` tag.
+- **Repair units** (`u-NNN-slug-repair-NN`): `<base>` is `accord-review-<original-unit-id>` — the review whose verdict triggered the repair. The diff shows only the repair work.
+- **Retry units** (`u-NNN-slug-rNN`): `<base>` is the same boundary as the original rejected unit (most recent prior `accord-review-*` or `accord-plan-v<N>`). The diff includes any revert commit plus the retry, showing the full net effect of the redo.
+
+Read the baseline from `accord-state.md`'s `Latest Boundaries` (`review_tag`, `plan_tag`); the rule above resolves which one applies for the unit being reviewed.
+
+Concretely: `git diff <base>..accord-exec-<unit-id>` is the review diff. `git log <base>..accord-exec-<unit-id>` shows the commits being reviewed. If a plan revision tag (`accord-plan-v<N+1>`) sits between the base and the exec tag, include the plan revision commits in the diff but do not treat them as part of the unit's implementation evidence — they are framework state changes, not code under review.
 
 ## Verdicts
 
@@ -66,9 +79,9 @@ The order of reads matters. Read the *requirements* (what should have happened) 
 
 **`review-update` may advance the next unit directly when ALL of:**
 
-1. The next unit is already named in `Later Work` with at least an id and summary, OR it is a targeted repair unit (`u-NNN-slug-repair-NN`) or retry unit (`u-NNN-slug-rNN`).
+1. The next unit is already named in `Later Work` with at least an id, summary, AND at least one diff-checkable acceptance criterion already written, OR it is a targeted repair unit (`u-NNN-slug-repair-NN`) or retry unit (`u-NNN-slug-rNN`).
 2. The current `Plan Shape` does not change.
-3. Acceptance criteria can be written by inference from `design.md` and the unit's stated summary — no fresh substantive judgment about what "done" means is required.
+3. `review-update` does **not** infer or extend acceptance criteria. Acceptance comes from what `Later Work` already says; if it is missing, vague, or marked `TBD by plan`, route to `plan` instead. Writing acceptance is `plan`'s job, not `review-update`'s.
 4. Sequencing in `Later Work` does not change.
 5. `Review mode` follows the established convention for this project (default `same-session-ok`; `fresh-required` only when the unit fits the existing fresh-required criteria).
 

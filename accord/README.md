@@ -4,7 +4,7 @@ ACCORD is a lightweight process for a human lead and a capable LLM to develop a 
 
 ## Principles
 
-1. **Five skills.** `intent`, `design`, `plan`, `execute`, `review-update`. No additional skills.
+1. **Five ACCORD skills.** The framework comprises exactly five skills: `intent`, `design`, `plan`, `execute`, `review-update`. ACCORD itself does not grow additional skills. Users remain free to invoke unrelated tools (e.g., a sibling `layered-review` skill for whole-framework critique) outside the ACCORD loop; the principle bounds ACCORD's surface, not the user's toolkit.
 2. **Codesign discipline.** `intent` and `design` use a strict codesign discipline: numbered drafts, round stances, immutable core after round 0, required critique pass before convergence, strict non-overwrite. The discipline protects against premature consensus and sycophantic refinement; it is fully described in `references/draft-conventions.md`.
 3. **Greenfield only.** ACCORD assumes the project starts under ACCORD. There is no brownfield adoption path.
 4. **Auto-git.** Approved phase boundaries become commits and lightweight tags. Git history is the framework's durable state.
@@ -77,7 +77,15 @@ The same pattern applies to `design`. The work eventually lands at `plan`, which
 
 Every feature addition or revision is *checked* against intent and design before reaching execution. Most checks converge fast; the discipline catches the cases where a change quietly shifts the project's direction. Skipping the check is what produces contradiction and debt over time.
 
-The boundary between "new unit within the existing plan" and "feature revision that re-enters intent" is the agent's first call, declared with an advisory; the human can disagree.
+#### Within-plan unit vs. feature re-entry — how to tell
+
+The agent advises which of the following applies; the human can disagree.
+
+- **Within-plan unit.** The work fits the approved intent (no change to goal, users, success criteria, non-goals, constraints, or quality bar) AND the approved design (no change to architecture, boundaries, dependencies, deployment, security, or UX commitments). Examples: implementing the next anticipated unit; fixing a bug in code under the approved unit; adding tests for already-approved behavior; refining a UI detail that doesn't change a UX commitment. Route: skip intent and design re-entry; the agent proposes the unit in `plan.md`.
+- **Feature addition or revision (re-enter at `intent`).** The work expands or changes intent: new users, new success criteria, new constraints, weakened non-goals, or a goal that grows beyond what `intent.md` says.
+- **Design revision (re-enter at `design`).** The work doesn't change goal but does change architecture, boundaries, ownership, dependencies, deployment, security, or UX commitments. Often the agent reaches this conclusion *after* the intent round runs and converges with stance `stop`.
+
+When in doubt, re-enter at `intent`. Fast convergence is cheap; missing a real intent shift is not.
 
 ### Recovery — `repair`, `redo`, `replan`
 

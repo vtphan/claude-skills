@@ -91,6 +91,10 @@ Review mode:
 
 `Review mode` is `same-session-ok` by default. Use `fresh-required` for high-risk, architecture-touching, security-sensitive, broad-scope, or surprising units. `review-update` must honor `fresh-required`.
 
+## Later Work
+
+Each `Later Work` entry should include `id`, `summary`, and at least one diff-checkable acceptance criterion. `review-update` may advance a `Later Work` entry to the current unit only when its acceptance is already written; if acceptance is unknown at planning time, mark it `Acceptance: TBD by plan` so `review-update` knows to route back to `plan` when the unit becomes current. Inferring or extending acceptance is `plan`'s job, not `review-update`'s.
+
 ## Review And Update Log
 
 `review-update` records completed-unit outcomes here. Keep entries compact and reference report/tags rather than duplicating execution report content.
