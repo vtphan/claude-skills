@@ -5,7 +5,7 @@ description: Use this skill at the end of every wave, after `wave-execute` has p
 
 # Wave Update
 
-Close the current wave, absorb its learnings, and expand the next wave's sketch into full detail. This is the per-cycle hub of VADER. It runs an internal review subagent (fresh context, reads only artifacts) to produce findings, presents them interactively to the human for approval, applies any architectural changes, and saves everything atomically.
+Close the current wave, absorb its learnings, and expand the next wave's sketch into full detail. This is the per-cycle hub of VADER. It runs an independent review (fresh context, reads only committed artifacts) to produce findings, presents them interactively to the human for approval, applies any architectural changes, and saves all artifacts under a checked precondition contract (§I): no file is written until every approval and content piece is ready.
 
 There is no separate review report — findings live in the change-log entry of the wave plan. The execution report is the only artifact carried over from the wave; the review's verdict, findings, and absorbed decisions all flow into the wave plan's change log.
 
@@ -23,7 +23,7 @@ Before doing anything else, read `references/wave-schema.md` and `references/arc
 - The repo and (when git is in use) the wave's diff via the execution report's `wave_start_ref` / `wave_end_ref` frontmatter.
 
 **Outputs:**
-- The wave plan, updated in place. Frontmatter bumped (`wave_plan_version`, `current_wave`, `last_updated`); change log appended; current wave closed; next wave expanded.
+- The wave plan, updated in place. Frontmatter bumped (`wave_plan_version`, `current_wave`, `last_updated`); change log appended; current wave closed; next wave expanded. **`wave-update` is the sole skill that mutates the wave plan after the initial `wave-plan` write** — task status from the execution report is verified and absorbed into the closeout summary here, not flipped into checkboxes mid-wave by `wave-execute`.
 - The architecture doc, updated where mid-cycle changes were proposed and approved. New Decision Log entries added (status `Accepted` after human approval), superseded entries' `Status` lines updated.
 - No separate review report.
 
@@ -53,7 +53,7 @@ If the file is absent, run Full VADER's wave-update workflow as written.
 Before entering Stage 1, if git is in use, run `git status --porcelain`. **The working tree must be clean.** Two reasons it must be fully clean — not just "no dirty artifact files":
 
 1. The review subagent re-runs the wave's repro and verification checks. A dirty working tree means it would verify code that isn't in `wave_end_ref`, polluting the audit. The whole point of the fresh-context subagent is independence; running it against a tree that doesn't match the committed state defeats that.
-2. `wave-update` writes the wave plan (and possibly the architecture doc and vision frontmatter) atomically. Mixing those writes with pre-existing manual edits to *any* file corrupts the precondition contract (§I).
+2. `wave-update` writes the wave plan (and possibly the architecture doc and vision frontmatter) together under a checked precondition contract (§I) — all approvals and content must be ready before any file is written. Mixing those writes with pre-existing manual edits to *any* file corrupts that contract.
 
 If the tree is dirty, stop and surface the state to the user. Three resolutions, in order of preference:
 1. Commit the changes first under their own commit prefix (e.g., `wave: manual edit to W3 sketch before review` for artifact edits, or `chore: WIP scratch` for unrelated code), then re-invoke `wave-update`.
@@ -66,14 +66,13 @@ If git is not in use, this preflight is skipped and the human is responsible for
 
 Spawn a subagent (Task tool, isolated context). If the current agent environment lacks subagent spawning, the human runs a fresh agent session manually with the same briefing inputs, returns the findings document, and resumes — independence comes from the fresh context, not the spawn mechanism.
 
-Brief the subagent (or the fresh manual session) with:
+Brief the subagent (or the fresh manual session) with the inputs below, **and prescribe the read-order: schema → architecture → wave plan → diff → execution report (last)**. The order matters: the review must re-derive the wave's intent and shape from the schemas, architecture, and wave plan *before* being colored by the executor's narrative. The execution report is one input, not the truth — placing it last reduces the chance the review anchors on the executor's framing.
 
-- The wave plan path.
-- The execution report path.
-- The architecture doc path.
-- The architecture schema (`references/architecture-schema.md`) and wave schema (`references/wave-schema.md`) — required reading so any proposed ADR bodies and finding entries match format.
-- The wave's diff baseline and head (from execution report frontmatter, or fallback tags).
-- The wave's `Expected touched modules` declaration (from the current wave's section in the wave plan), for the scope-drift check.
+- The architecture schema (`references/architecture-schema.md`) and wave schema (`references/wave-schema.md`) — read first; required reading so any proposed ADR bodies and finding entries match format.
+- The architecture doc path — read second.
+- The wave plan path — read third (with the wave's `Expected touched modules` declaration noted explicitly for the scope-drift check).
+- The wave's diff baseline and head (from execution report frontmatter, or fallback tags) — read fourth.
+- The execution report path — read last.
 - If CI is configured for the project (e.g., GitHub Actions, GitLab CI), the CI status for the wave's commit. Treat CI as supplemental evidence, not a replacement for the local repro: if CI fails on something the local repro passed, that's itself a finding worth surfacing. If CI is not configured, note in the verdict that the review is local-only.
 - Instructions to produce a findings document covering the categories below.
 
@@ -82,7 +81,7 @@ The subagent's findings document (in-conversation, not saved as a file):
 1. **Audit verdict:** `pass` / `pass-with-findings` / `fail`. One paragraph justifying. Note explicitly whether CI was consulted.
 2. **Exit criteria verification:** for each criterion, pass / fail / unverifiable, with evidence (e.g., "ran `scripts/demo-w2.sh`, all three checks printed PASS").
 3. **Verification matrix verification:** confirm the executor's Verification matrix (execution report §Verification) — spot-check that pass-marked checks actually pass on the diff baseline. Flag rows that should not have been marked `n/a`.
-4. **Task verification:** cross-reference the executor's claimed task status against the wave plan's checkboxes and the diff. Flag discrepancies.
+4. **Task verification:** cross-reference the executor's claimed task status (from the execution report's Task status section) against the diff. Flag discrepancies — e.g., a task marked `[x]` whose acceptance criteria the diff doesn't satisfy, or a task marked `[~]` partial without naming the gap. The wave plan's task list is *not* a status source: `wave-execute` does not modify it; closeout (step C) will replace it entirely.
 5. **Assumption verification:** for each assumption the report claims to have resolved, check the evidence.
 6. **ADR adherence (architectural):** for each cited ADR, independently confirm adherence. Flag violations. *Propose new ADRs or supersessions if the diff or discoveries imply structural change.* Each proposed ADR includes a full body (Context, Decision, Consequences with at least one negative, Supersedes if applicable). Each proposed body edit to architecture.md sections is named explicitly.
 7. **Scope findings:** changes in the diff that don't map to planned tasks, declared discoveries, or the wave's `Expected touched modules` declaration. Surface any module touched but not declared (drift outward) and any expected module untouched (drift inward — possibly an unmet exit criterion).
@@ -168,6 +167,11 @@ For each architecture-doc body edit the human approved:
 1. Apply the edit to the architecture doc.
 2. If the edit is material (modules, boundaries, interfaces, data, dependencies, deployment, guardrails, or a Decision Log change), bump `architecture_version` and `last_updated`. For non-material edits, bump only `last_updated`.
 
+**Architecture `status` flip (vision-pivot-update only):** when this update is a `vision-pivot-update` AND it applies any architecture changes (new ADR, supersession, body edit) caused by the vision pivot:
+- If the architectural reconciliation is *complete* in this update (all approved supersessions and body edits applied; no architecture work deferred), leave `status: active` (or flip back to `active` if a previous partial reconciliation left it `pivoted`). This parallels the vision-status flip-back rule.
+- If the architectural reconciliation is *partial* (some approved supersessions or edits deferred to a later update), set `status: pivoted`. A subsequent wave-update completing the deferred work flips it back to `active`.
+- On non-pivot updates, `architecture.status` is not touched by this skill.
+
 ### E. Update registers
 
 **Assumptions:**
@@ -246,6 +250,7 @@ This is a *checked* atomicity, not a filesystem-atomic write. Before any file is
 - The change-log entry is written with both the Findings list (with evidence) and the Decisions Absorbed list, plus audit verdict and Type.
 - If the architecture doc was edited materially (Section 2 boundaries, modules, interfaces, data, deps, deployment, guardrails, or a Decision Log change), its frontmatter is bumped too (architecture_version, last_updated). Non-material edits bump only `last_updated`.
 - If this is a vision-pivot-update completing a clean reconciliation, the vision doc's frontmatter `status` field is set to `active` (the only edit to the vision allowed by this skill — see Vision-pivot reconciliation below).
+- If this is a vision-pivot-update that applied architecture changes, the architecture doc's frontmatter `status` field reflects the reconciliation state: `active` if architectural reconciliation is complete in this update (or if a prior partial reconciliation is now complete); `pivoted` if architectural changes are still partial. See step D.
 
 If any precondition fails, do not write any file. Report what's wrong to the user and either fix it inline (with their approval) or hand back.
 
@@ -276,7 +281,8 @@ If the vision doc's frontmatter shows `status: pivoted` and the wave plan's most
 3. Walk the wave ladder. For each wave, ask: is the goal still consistent with the new vision? If not, retire (Status: pivoted or deferred); introduce new wave IDs as needed (never reuse retired numbers).
 4. The review subagent's architecture-adherence check should specifically flag ADRs that conflict with the new vision; supersede them as part of this same update.
 5. Wave plan frontmatter `status: pivoted` until the next successful execute → update cycle.
-6. Don't expand the next wave in this update if the wave being closed isn't the same one whose execution triggered the pivot. The cycle resets: a vision-pivot-update produces a reconciled wave ladder; the next normal cycle expands the next wave.
+6. Architecture doc frontmatter `status` follows the rule in step D: `active` when architectural reconciliation is complete in this update; `pivoted` when partial.
+7. Don't expand the next wave in this update if the wave being closed isn't the same one whose execution triggered the pivot. The cycle resets: a vision-pivot-update produces a reconciled wave ladder; the next normal cycle expands the next wave.
 
 **Narrow exception: vision frontmatter `status` field.** When this update completes the vision-pivot reconciliation cleanly (all approved findings absorbed, wave plan reconciled, architecture supersessions applied), wave-update flips the vision doc's frontmatter `status` field from `pivoted` back to `active`. This is the *only* edit to the vision doc that wave-update is permitted to make — body sections, Open Questions, and any other vision content remain untouchable except by the `vision pivot` mode. The justification for the narrow exception: the `status: pivoted` field's whole purpose is to track the cross-skill reconciliation cycle, so the skill that completes the reconciliation is the natural owner of the flip. The precondition contract (§I) verifies this flip happened (when applicable) before save.
 
@@ -291,7 +297,7 @@ For vision-pivot-updates whose reconciliation is *partial* (e.g., the user wants
 5. **Never silently add or remove scope.** Every change is an explicit change-log bullet.
 6. **Never close a wave whose exit criteria aren't met** — unless they're being explicitly renegotiated, in which case it's a scope-renegotiation and called out in the change log.
 7. **Never reuse retired wave IDs or superseded ADR IDs.**
-8. **Never skip the review subagent.** The fresh-context review is the audit-independence mechanism. If you find yourself thinking "I'll just do the review myself this time," stop — that's the failure mode the subagent prevents.
+8. **Never skip the independent fresh-context review.** It is the audit-independence mechanism — the default implementation is a spawned subagent, the named fallback is an equivalent fresh manual session. If you find yourself thinking "I'll just do the review myself this time, in this same context," stop — that's the failure mode the fresh-context review prevents.
 9. **Never apply changes without explicit human approval.** Findings → present → approve → save. Always.
 10. **Never edit the vision doc body.** Only `vision pivot` mode does that. The narrow exception is the vision frontmatter `status` field, which wave-update flips back to `active` when a vision-pivot-update completes a clean reconciliation. If the update requires any other vision change (body, sections, Open Questions), hand back and ask the user to invoke `vision pivot` first.
 
@@ -299,11 +305,11 @@ For vision-pivot-updates whose reconciliation is *partial* (e.g., the user wants
 
 If the report doesn't conform to the schema (sections missing, no task status), stop. Don't guess. Ask the user to have the executor produce a conformant report.
 
-If the report says "task complete" but the wave plan's checkbox is still `[ ]`, cross-check via the diff. If the executor forgot to flip but the work is clearly done, go ahead — note the discrepancy in the change log.
+If the report's Task status conflicts with the diff (e.g., a task marked `[x]` whose acceptance the diff doesn't satisfy, or a task marked `[ ]` whose work the diff clearly contains), the diff wins for the closeout summary; surface the discrepancy as a finding with evidence and record it in the change-log entry.
 
 ## Worked mini-example
 
-Inputs: wave plan with `current_wave: W2` and 4 tasks all `[x]`. Execution report claims pass; A2 broken; ADR-004 violated; recommends supersession.
+Inputs: wave plan with `current_wave: W2` and 4 tasks (still `[ ]` in the wave plan — `wave-execute` does not modify them). Execution report's Task status section claims all four `[x]`, claims pass overall; A2 broken; ADR-004 violated; recommends supersession.
 
 Stage 1 — Review subagent:
 - Verdict: pass-with-findings.

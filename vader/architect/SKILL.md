@@ -105,10 +105,10 @@ After draft mode, tell the user to review the proposed architecture and entries,
 - **Full VADER** or **VADER with notes** → `wave-plan`.
 - **Bail-down** or **bail-up** → no further VADER skills; the recommended alternative.
 
-**Git.** Check whether git is in use (`git rev-parse --is-inside-work-tree`). If yes, after the user approves the artifact, commit yourself:
+**Git.** If git is in use, after the user approves the artifact, commit yourself:
 - Draft mode: `git commit -m "arch: initial draft, ADR-001 through ADR-NNN (proposed)" -m "Co-authored-by: Claude <noreply@anthropic.com>"`. No tag yet — the architecture is not yet ratified.
 - Ratify mode (Full VADER): `git commit -m "arch: ratify initial architecture, ADR-001 through ADR-NNN" -m "Co-authored-by: Claude <noreply@anthropic.com>"` then `git tag arch-v1`.
 - Ratify mode (VADER with notes): same commit, but `git add` also includes the new `docs/<project-slug>-process-notes.md`. Commit message: `git commit -m "arch: ratify initial architecture + process notes (VADER-with-notes)" -m "<details: which simplifications/additions and why>" -m "Co-authored-by: Claude <noreply@anthropic.com>"` then `git tag arch-v1`.
 - Ratify mode (bail): commit the architecture as in Full VADER (the architecture artifact is still ratified), but note in the body that the project will not run VADER's wave cycle and which alternative was recommended.
 
-Tell the user about each commit (sha, tag if any). Override with `git reset --soft HEAD~1` if amending is needed. If git is not in use, save normally and note no commit was made. See `../references/git-conventions.md`.
+Tell the user the sha and tag (if any). Override: `git reset --soft HEAD~1`. If git is not in use, save normally and note no commit was made. See `../references/git-conventions.md` for full conventions and detection.

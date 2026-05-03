@@ -174,8 +174,8 @@ applies_to: bookclub
 **Don't:**
 - Skip the code-quality lens default-trigger.
   Justification: this project's logic is conventional CRUD; lens findings would be low-signal.
-- Audit findings: one-line summaries; skip Evidence blocks.
-  Justification: solo project, no external audit consumer.
+- Audit findings: compress Evidence to a single sentence unless the finding is consequential (high severity, supersession, or scope change); consequential findings keep the full Evidence block.
+  Justification: solo project; routine findings don't need multi-sentence evidence, but consequential ones still anchor the audit trail.
 ```
 
 A reader can see at a glance how this project's process differs from Full VADER: lighter on wave-plan structure, slightly tighter on wave-execute regression discipline, lighter on wave-update audit depth. The cycle's spine — propose-then-ratify, walking-skeleton, audit independence — remains intact.

@@ -8,7 +8,7 @@ This schema is the contract for three skills:
 - `wave-execute` — implements the current wave's tasks and produces an execution report.
 - `wave-update` — closes the current wave, ratifies any architectural changes proposed by its review subagent, expands the next wave, and writes a change-log entry that captures both findings and decisions.
 
-`wave-update` is the per-cycle hub. It runs an internal review subagent (fresh context, reads only artifacts) to produce findings, presents them interactively to the human for approval, applies any architectural changes, expands the next wave, and saves everything atomically. There is no separate review report — findings live in the change-log entry.
+`wave-update` is the per-cycle hub. It runs an independent review (fresh context, reads only committed artifacts) to produce findings, presents them interactively to the human for approval, applies any architectural changes, expands the next wave, and saves the resulting artifacts under a checked precondition contract (no file is written until every approval and content piece is ready). There is no separate review report — findings live in the change-log entry.
 
 ## Contents
 
@@ -198,7 +198,7 @@ Story, feature, and task guidelines:
 - **Tasks cite what they serve and touch.** Story or feature ID; module name(s); ADR ID(s).
 - **Order matters.** Within a wave, the task that most reduces uncertainty comes first — usually the end-to-end integration task.
 
-Checkbox state (`[ ]` / `[x]`) is the single source of truth for task status. The executor flips them as it finishes each task; no other skill touches them.
+During the wave, the wave plan's task list checkboxes stay as written by `wave-plan` (or by the prior `wave-update` that expanded the wave) — `wave-execute` does not modify them. The execution report's Task status section is the executor's authoritative claim about which tasks landed; `wave-update` verifies that claim against the diff and absorbs it during wave closeout (Section 4: Past waves), at which point the wave's task list is replaced by the closeout summary anyway.
 
 ### Past waves (closeout)
 
@@ -274,8 +274,8 @@ Review findings (from subagent):
 - F3 (low, accepted as plumbing): tests/perf/ added without a planned task.
   Evidence: 4 perf tests under tests/perf/voting/ — diff scope leakage but
   benign; treat as undeclared-but-aligned plumbing.
-- F4 (medium, deferred to W3): T2.4 marked [x] but admits partial coverage.
-  Evidence: report admits tie-break E2E missing; checkbox should have been [~].
+- F4 (medium, deferred to W3): T2.4 marked [x] in the execution report's Task status, but admits partial coverage.
+  Evidence: report admits tie-break E2E missing; the report's Task status should have been [~].
   Coverage gap doesn't block W2 exit criteria but should be picked up in W3.
 
 Decisions absorbed:
@@ -401,11 +401,11 @@ The `vision pivot` mode does *not* edit the wave plan directly. It only edits th
 3. **Future waves never get task-level detail, per-story acceptance, or feature definitions.** Only titles, themes, sketches, and sketched criteria.
 4. **Every current-wave task has acceptance criteria.** No exceptions.
 5. **Every current-wave story has acceptance criteria.**
-6. **Every wave has exit criteria and a repro path.** A wave without them cannot be reviewed.
+6. **Every current or in-progress wave has exit criteria and a repro path.** A wave without them cannot be reviewed. Future-wave sketches carry sketched exit criteria only; repro paths are defined when the wave is expanded into the current wave.
 7. **Registers are append-only.** Assumptions, risks, and the Decision Log references table are never shrunk; broken or superseded entries are kept with new IDs replacing them.
 8. **The change log is append-only.** Entries are never rewritten.
-9. **Execution reports do not modify the wave plan.** Only `wave-update` modifies the plan.
-10. **`wave-update`'s review subagent runs in fresh context.** It reads only committed artifacts (wave plan, execution report, architecture doc, code, repro). The subagent's output is presented to the human for approval before any plan or architecture edits are applied.
+9. **`wave-execute` does not modify the wave plan.** Only `wave-update` modifies the plan after the initial `wave-plan` write. Task status during a wave lives in the execution report's Task status section; `wave-update` verifies it against the diff and absorbs it into the closeout summary.
+10. **`wave-update`'s review runs as an independent fresh-context review of committed artifacts.** It reads only the wave plan, execution report, architecture doc, code, and repro — not the executor's reasoning or the wave-update conversation. The default implementation is a spawned subagent; when the agent environment lacks subagent spawning, an equivalent fresh manual session is the named fallback. The review's output is presented to the human for approval before any plan or architecture edits are applied. Independence comes from the fresh context, not the spawn mechanism.
 11. **Scope expansion requires an explicit change-log entry.** No silent absorption.
 12. **Walking-skeleton default for W1.** Vertical slice exercising every architecture-module marked `W1: required`. Modules marked `deferred (W<N>)` in the architecture's Section 2 are skipped by the walking-skeleton check. Horizontal-foundation W1 (no vertical slice at all) requires explicit justification in the Goal section.
 13. **One expansion per update.** Exactly one future wave is expanded per update cycle.

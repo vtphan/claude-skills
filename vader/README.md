@@ -66,10 +66,10 @@ Most attempts to use LLMs for software development trip on the same step: the ag
 - One-time. Produces the wave plan from the vision and architecture. W1 defaults to a walking skeleton that exercises every architecture module marked `W1: required`; modules marked `deferred (W<N>)` come online in their named wave. Future waves are sketched as themes; no premature detail. Refuses to run if any cited Decision Log entry is still Proposed.
 
 **`wave-execute`**
-- Per wave. Implements the current wave's tasks, flips checkboxes, runs the repro, produces an execution report. Does not modify the wave plan structurally; does not build future-wave work; does not silently violate Decision Log entries. Captures `wave_start_ref` and `wave_end_ref` (when git is in use) for the review subagent's diff scoping.
+- Per wave. Implements the current wave's tasks, runs the repro, produces an execution report. Does not modify the wave plan at all — task status lives in the execution report's Task status section, which `wave-update` verifies and absorbs at closeout. Does not build future-wave work; does not silently violate Decision Log entries. Captures `wave_start_ref` and `wave_end_ref` (when git is in use) for the review's diff scoping.
 
 **`wave-update`**
-- Per wave. The cycle's hub. Spawns a fresh-context review subagent that re-derives findings from the artifacts (wave plan, execution report, architecture, code, repro). Presents findings interactively to the human for approval. Applies approved changes: closes the current wave, ratifies any new/superseded Decision Log entries inline, applies architecture body edits, expands the next wave's sketch into full detail. Saves wave plan and architecture atomically. Findings live in the change-log entry of the wave plan — no separate review report.
+- Per wave. The cycle's hub. Spawns a fresh-context review subagent that re-derives findings from the artifacts (wave plan, execution report, architecture, code, repro). Presents findings interactively to the human for approval. Applies approved changes: closes the current wave, ratifies any new/superseded Decision Log entries inline, applies architecture body edits, expands the next wave's sketch into full detail. Saves wave plan and architecture under a checked precondition contract: no file is written until all approvals and content are ready. Findings live in the change-log entry of the wave plan — no separate review report.
 
 ## The artifacts
 
@@ -102,9 +102,9 @@ Initial Decision Log entries from `architect draft` start as `Proposed`. They be
 
 W1 defaults to a vertical slice through the architecture needed for the first real integration path, with trivial functional content. It must exercise every module marked `W1: required`; deferred modules are preserved in the architecture but not forced into W1. This forces the scariest active handoffs (auth, persistence, deployment) into the first wave, when the plan is still flexible.
 
-### Independent review by fresh-context subagent
+### Independent review with fresh context
 
-`wave-update` spawns a fresh subagent to do the review, with isolated context — it reads only the committed artifacts, not the executor's reasoning or `wave-update`'s own conversation. The subagent re-derives findings; the executor's report is one input, not the truth. This preserves audit independence within a single skill, without requiring a separate review skill.
+`wave-update` runs an independent review with isolated context — reading only the committed artifacts, not the executor's reasoning or `wave-update`'s own conversation. The default implementation is a spawned subagent; when the agent environment lacks subagent spawning, an equivalent fresh manual session is the named fallback. Independence comes from the fresh context, not the spawn mechanism. The review re-derives findings; the executor's report is one input, not the truth. This preserves audit independence within a single skill, without requiring a separate review skill.
 
 ### Findings absorb into the change log, not a separate report
 
@@ -154,7 +154,7 @@ Beyond process discipline, VADER's skills enforce concrete engineering practices
 ### Running each wave cycle
 
 6. Invoke **`wave-execute`** to build the current wave. Produces an execution report.
-7. Invoke **`wave-update`**. The skill spawns a review subagent, presents findings to you, applies your approved changes, closes the current wave, and expands the next wave. The wave plan (and architecture, if applicable) are saved atomically.
+7. Invoke **`wave-update`**. The skill spawns a review subagent, presents findings to you, applies your approved changes, closes the current wave, and expands the next wave. The wave plan (and architecture, if applicable) are saved under a checked precondition contract — no file is written until all approvals and content are ready.
 8. Repeat from step 6 for each wave.
 
 ### When the vision was wrong

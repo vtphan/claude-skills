@@ -17,7 +17,7 @@ The default. Used at project start — or when applying VADER to an existing cod
 
 **Workflow:**
 
-0. **Detect brownfield.** Before opening the conversation, check whether the working directory contains existing source code (look for `package.json`, `Cargo.toml`, `pyproject.toml`, `go.mod`, `Makefile`, a `src/` or `lib/` directory, or any non-trivial code outside `docs/`). If yes, this is a *brownfield* vision: there is already a system, and you're documenting intent in retrospect. Tell the user you noticed existing code and offer two paths: (a) you read the top-level structure and a few key files briefly to ground the conversation in what already exists, or (b) the user prefers a clean greenfield-style conversation, treating the existing code as a starting point only. Default to (a). Brownfield visions tend to need more attention to *why this project exists distinct from what was already built* — the value hypothesis often gets sharper when there's existing code to compare against.
+0. **Detect brownfield and orient.** Before opening the conversation, check whether the working directory contains existing source code (look for `package.json`, `Cargo.toml`, `pyproject.toml`, `go.mod`, `Makefile`, a `src/` or `lib/` directory, or any non-trivial code outside `docs/`). If yes, this is a *brownfield* vision: there is already a system, and you're documenting intent in retrospect. Read the top-level structure: directory layout, build/test entry points, primary dependencies, and a representative file or two — the same orientation `architect` will perform later, done now so the vision conversation is grounded in what actually exists. Goal is not exhaustive reverse-engineering — it's enough orientation that the value hypothesis, target users, and in-scope/non-goals can be tested against the system the user has, not the one they imagine. Briefly tell the user what you observed before drafting starts; they may correct or contextualize. Brownfield visions tend to need extra attention to *why this project exists distinct from what was already built* — the value hypothesis often gets sharper when there's an existing system to compare against. On greenfield projects (no existing code), skip this step and proceed to step 1.
 
 1. **Listen first, ask second.** Open by inviting the user to describe what they're thinking, in their own words. Let them ramble. Note what they emphasize and what they skip — those gaps are usually the most fruitful conversation territory.
 
@@ -80,10 +80,8 @@ Used when later-wave learning invalidates a core part of the vision. Pivots are 
 
 After draft mode, tell the user the next step is `architect draft`. After pivot mode, tell the user the next step is `wave-update` (which will produce a `vision-pivot-update` reconciling the wave plan to the new vision).
 
-**Git.** Check whether git is in use (`git rev-parse --is-inside-work-tree`). If yes, after the user approves the vision, commit and tag yourself:
+**Git.** If git is in use, after the user approves the vision, commit and tag yourself:
 - Draft mode: `git commit -m "vision: initial draft for <project>" -m "Co-authored-by: Claude <noreply@anthropic.com>"` then `git tag vision-v1`.
-- Pivot mode: `git commit -m "vision: pivot v<N> — <short description>" -m "..." -m "Co-authored-by: Claude <noreply@anthropic.com>"` then `git tag vision-v<N>`.
+- Pivot mode: `git commit -m "vision: pivot v<N> — <short description>" -m "..." -m "Co-authored-by: Claude <noreply@anthropic.com>"` then `git tag vision-v<N>`. For high-stakes pivots, the user may have created a `pivot/v<N>-<short-name>` branch beforehand — commit on that branch; merging to main is the user's call.
 
-For high-stakes pivots, before invoking pivot mode the user may have created a `pivot/v<N>-<short-name>` branch — commit on that branch; the merge back to main is the user's call.
-
-Tell the user about the commit (sha, tag) so they can override (`git reset --soft HEAD~1`) if they want to amend before the next step. If git is not in use, save the file normally and note that no commit was made. See `../references/git-conventions.md`.
+Tell the user the sha and tag. Override: `git reset --soft HEAD~1`. If git is not in use, save normally and note no commit was made. See `../references/git-conventions.md` for full conventions and the `git rev-parse --is-inside-work-tree` detection.

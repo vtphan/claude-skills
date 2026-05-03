@@ -127,6 +127,6 @@ Given a vision and architecture for `filetagger` with modules `walker`, `tagger`
 
 After the wave plan is saved, tell the user the next step is `wave-execute` to build W1.
 
-**Git.** Check whether git is in use (`git rev-parse --is-inside-work-tree`). If yes, after the user approves the wave plan, commit yourself: `git commit -m "wave: initial wave plan, W1 <name>, W2+ sketched" -m "..." -m "Co-authored-by: Claude <noreply@anthropic.com>"`. Then tag both `wave-plan-v1` and `W1-start` on the same commit — it's the baseline for `wave-execute`'s diff scoping.
+**Git.** If git is in use, after the user approves the wave plan, commit yourself: `git commit -m "wave: initial wave plan, W1 <name>, W2+ sketched" -m "..." -m "Co-authored-by: Claude <noreply@anthropic.com>"`. Then tag both `wave-plan-v1` and `W1-start` on the same commit — it's the baseline for `wave-execute`'s diff scoping.
 
-Tell the user about the commit (sha, tags). Override with `git reset --soft HEAD~1` if amending is needed. If git is not in use, save normally and note no commit was made; warn that without git, `wave-update`'s review subagent will have a fuzzier diff baseline. See `../references/git-conventions.md`.
+Tell the user the sha and tags. Override: `git reset --soft HEAD~1`. If git is not in use, save normally and note no commit was made; warn that the review's diff baseline will be fuzzier without git. See `../references/git-conventions.md` for full conventions and detection.

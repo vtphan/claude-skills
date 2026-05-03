@@ -1,6 +1,6 @@
 ---
 name: wave-execute
-description: Use this skill when a wave plan exists, the current wave is fully planned (in_progress), and the user wants the wave actually built — code written, tests run, task checkboxes ticked, and an execution report produced. Triggers include phrases like "execute the current wave", "build W<N>", "implement the current wave's tasks", "let's do the current wave", "run the wave", or whenever a wave plan is provided and the user wants the tasks in its current wave carried out. Also trigger when the user gestures at next steps ("now build it", "go ahead") *after a successful wave-plan or wave-update* — i.e., the most recent change-log entry's audit verdict was `pass` or `pass-with-findings` and `current_wave` reflects an in-progress, fully-planned wave. Do NOT trigger on "go ahead" after a `blocked-update` (audit verdict `fail`) — re-attempt requires the human to either re-run `wave-execute` for the same current_wave with the explicit recovery path or first run `wave-update` to renegotiate. Do NOT use when no wave plan exists yet (run wave-plan first). Do NOT use to modify the wave plan structurally — only checkbox flips are allowed. Do NOT use when the user wants the wave reviewed and the plan updated — that's wave-update.
+description: Use this skill when a wave plan exists, the current wave is fully planned (in_progress), and the user wants the wave actually built — code written, tests run, and an execution report produced. Triggers include phrases like "execute the current wave", "build W<N>", "implement the current wave's tasks", "let's do the current wave", "run the wave", or whenever a wave plan is provided and the user wants the tasks in its current wave carried out. Also trigger when the user gestures at next steps ("now build it", "go ahead") *after a successful wave-plan or wave-update* — i.e., the most recent change-log entry's audit verdict was `pass` or `pass-with-findings` and `current_wave` reflects an in-progress, fully-planned wave. Do NOT trigger on "go ahead" after a `blocked-update` (audit verdict `fail`) — re-attempt requires the human to either re-run `wave-execute` for the same current_wave with the explicit recovery path or first run `wave-update` to renegotiate. Do NOT use when no wave plan exists yet (run wave-plan first). Do NOT modify the wave plan — task status lives in the execution report only; wave-update is the sole skill that mutates the wave plan after initial wave-plan. Do NOT use when the user wants the wave reviewed and the plan updated — that's wave-update.
 ---
 
 # Wave Execute
@@ -18,8 +18,9 @@ Before doing anything else, read `references/wave-schema.md` in full — particu
 
 **Outputs:**
 - Code changes: whatever the wave's tasks require. Real files in the real project.
-- The wave plan, with completed task checkboxes flipped from `[ ]` to `[x]`. This is the *only* structural change to the wave plan allowed by this skill.
-- An execution report: `<project-slug>-wave-plan.reports/wave-W<N>-execution.md`, conforming to schema Section 9 (with YAML frontmatter including `wave_start_ref` and `wave_end_ref` if git is in use).
+- An execution report: `<project-slug>-wave-plan.reports/wave-W<N>-execution.md`, conforming to schema Section 9 (with YAML frontmatter including `wave_start_ref` and `wave_end_ref` if git is in use). The report's Task status section is the executor's authoritative claim about which tasks landed.
+
+This skill **does not modify the wave plan** — `wave-update` is the sole skill that mutates the wave plan after initial `wave-plan`, and it does so based on the verified status from the execution report.
 
 ## What this skill protects against
 
@@ -37,7 +38,7 @@ This skill's job is to hold the line against all of those.
 
 1. **Current wave only, current wave in full.** Do every task in the current wave. Do nothing outside it. Future-wave work, refactors of past-wave code, opportunistic improvements — all go in the report under *Discoveries* or *Proposed scope changes*, not into code.
 
-2. **Acceptance is the definition of done.** A `[ ]` becomes `[x]` only when its acceptance criteria pass. Not when the code compiles. Not when it looks right. When the test is green.
+2. **Acceptance is the definition of done.** A task is recorded `[x]` in the execution report only when its acceptance criteria pass. Not when the code compiles. Not when it looks right. When the test is green.
 
 3. **Respect the cited Decision Log entries.** Before writing code for a task, read the ADRs it cites. The implementation must respect them. If you can't, stop and report — don't silently violate.
 
@@ -93,11 +94,11 @@ For each task:
 2. Read the ADRs the task cites. Confirm you understand the constraints.
 3. Do the work — write/edit code, add tests, run what needs running.
 4. Verify acceptance criteria pass. Run the tests; don't assume.
-5. Flip the checkbox `[ ]` → `[x]` in the wave plan.
+5. Record the task as `[x]` (complete), `[~]` (partial — name the gap), or `[ ]` (not attempted) in the execution report's Task status section. Do not edit the wave plan's task list.
 6. Note anything worth keeping for the report.
 7. Move to the next task.
 
-If a task blocks — you hit a stop-and-report trigger — leave its checkbox `[ ]`, stop, and write the report.
+If a task blocks — you hit a stop-and-report trigger — record it as `[ ]` (or `[~]` if partial) in the execution report, stop, and write the report.
 
 ### 5. Run the repro and assemble the Verification matrix
 
@@ -171,7 +172,7 @@ What is *not* a stop-and-report trigger:
 1. **Never build future-wave work.** Even one line.
 2. **Never silently violate a Decision Log entry.** Either respect it, or stop-and-report.
 3. **Never mark a task `[x]` without verifying acceptance.**
-4. **Never edit the wave plan beyond flipping checkboxes.** All other plan changes are wave-update's job.
+4. **Never edit the wave plan.** All wave-plan changes — including absorbing task status from the execution report — are `wave-update`'s job.
 5. **Never silently resolve an ambiguity.** Document in discoveries.
 6. **Never skip tests to finish faster.**
 7. **Never fabricate a report.** If you didn't build a thing, don't claim you did.
