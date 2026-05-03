@@ -33,7 +33,7 @@ Drafts are never overwritten. A draft after `plan.md` is a proposed plan revisio
 ## Review and Update Log
 ```
 
-`plan.md` must be self-sufficient for cross-LLM handoff (principle 9). A reviewing agent in a fresh conversation reads `plan.md`, `design.md`, `intent.md`, the relevant execution report, and the diff to verify a unit. The acceptance criteria in `Current Approved Unit` must be literally checkable against a diff.
+`plan.md` must satisfy principle 9 (cross-LLM handoff). The acceptance criteria in `Current Approved Unit` must be literally checkable against a diff.
 
 ## Plan Shape
 
@@ -87,7 +87,7 @@ Verification:
 Review mode:
 ```
 
-`Acceptance` must be diff-checkable. A reviewer reading this section in fresh context should be able to verify the diff against it without needing the executor's report.
+`Acceptance` must be diff-checkable — a reviewer should verify the diff against it without needing the executor's report.
 
 `Review mode` is `same-session-ok` by default. Use `fresh-required` for high-risk, architecture-touching, security-sensitive, broad-scope, or surprising units. `review-update` must honor `fresh-required`.
 

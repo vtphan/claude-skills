@@ -1,6 +1,6 @@
 # ACCORD Execution Report Contract
 
-`execute` writes an execution report for the approved unit. The report is the executor's only narrative to a reviewing agent that may be running in a fresh conversation, possibly with a different LLM (per principle 9). It must be self-sufficient for that handoff.
+`execute` writes an execution report for the approved unit. The report is the executor's only narrative to the reviewing agent and must satisfy principle 9 (cross-LLM handoff).
 
 Reports live at:
 
@@ -30,7 +30,7 @@ Summary:
 
 ### Acceptance Evidence
 
-For each acceptance criterion in the unit, name where in the diff the criterion is satisfied — file paths, function names, behavior surfaced in tests. The reviewer reads this against the diff and `plan.md`'s `Current Approved Unit / Acceptance`. Vague claims ("auth flow now works") are insufficient for fresh-context review; concrete pointers ("`auth/login.ts:handleSubmit`; test in `auth/login.test.ts:happy_path`") are.
+For each acceptance criterion in the unit, name where in the diff the criterion is satisfied — file paths, function names, behavior surfaced in tests. The reviewer reads this against the diff and `plan.md`'s `Current Approved Unit / Acceptance`. Vague claims ("auth flow now works") are insufficient; concrete pointers ("`auth/login.ts:handleSubmit`; test in `auth/login.test.ts:happy_path`") are.
 
 ### Verification Evidence
 

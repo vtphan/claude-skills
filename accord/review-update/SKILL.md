@@ -44,12 +44,13 @@ The order of reads matters. Read the *requirements* (what should have happened) 
 
 1. Read `docs/accord/accord-state.md` to identify the unit being reviewed.
 2. Read canonical `intent.md`, `design.md`, and `plan.md` — the requirements.
-3. Inspect the relevant diff or committed range — the evidence. Form an independent assessment of whether the diff satisfies the unit's acceptance criteria and respects design decisions, before loading the executor's narrative.
-4. Read the execution report. Cross-check: does the report's account match the diff? Are there discrepancies in scope, evidence, or claimed verification?
-5. Synthesize the final verdict from your independent assessment plus the report's information.
-6. Present findings, verdict, and any recovery path; advise consequential vs procedural.
-7. After approval, update `plan.md` and `accord-state.md`.
-8. Commit explicit paths and tag `accord-review-<unit-id>`.
+3. Read `docs/accord/commands.md` if it exists. The reviewer needs to know the project's verification commands to assess what the executor reports.
+4. Inspect the relevant diff or committed range — the evidence. Form an independent assessment of whether the diff satisfies the unit's acceptance criteria and respects design decisions, before loading the executor's narrative.
+5. Read the execution report. Cross-check: does the report's account match the diff? Are there discrepancies in scope, evidence, or claimed verification?
+6. Synthesize the final verdict from your independent assessment plus the report's information.
+7. Present findings, verdict, and any recovery path; advise consequential vs procedural.
+8. After approval, update `plan.md` and `accord-state.md`.
+9. Commit explicit paths and tag `accord-review-<unit-id>`.
 
 ## Verdicts
 

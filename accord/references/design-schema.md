@@ -48,7 +48,7 @@ Drafts are never overwritten. Re-invoking `design` mid-project should seed the n
 
 `Project Commands` may be a short pointer to `docs/accord/commands.md`. Prefer `commands.md` for concrete commands so routine drift does not force a new `design.md` version.
 
-`design.md` must be self-sufficient for cross-LLM handoff (principle 9). A future agent reviewing or extending the design without conversational context should be able to verify implementation against this artifact alone.
+`design.md` must satisfy principle 9 (cross-LLM handoff): a reviewing agent verifies implementation against this artifact alone.
 
 ## Decision Entries
 

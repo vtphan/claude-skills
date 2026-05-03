@@ -4,7 +4,7 @@
 
 This file prevents routine command drift from forcing a new `design.md` version. `design.md` should reference `commands.md` for operational commands. Bump `design.md` only when command changes reflect a material architecture or verification-strategy change.
 
-`commands.md` must be self-sufficient for cross-LLM handoff (principle 9). A reviewing agent in fresh context should be able to re-run verification from this file alone.
+`commands.md` must satisfy principle 9 (cross-LLM handoff): a reviewing agent re-runs verification from this file alone.
 
 ## Minimum Contract
 

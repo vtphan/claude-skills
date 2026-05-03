@@ -39,7 +39,7 @@ Drafts are never overwritten. A draft after `intent.md` is a proposed revision. 
 
 Optional when useful: `## Context`, `## Risks`, `## Prior Art`, `## Glossary`.
 
-`intent.md` must be self-sufficient for cross-LLM handoff (principle 9). A future agent reading it cold should understand the project's direction without conversational context from the codesign session.
+`intent.md` must satisfy principle 9 (cross-LLM handoff): the artifact alone conveys project direction.
 
 ## Scale Up When
 

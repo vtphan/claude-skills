@@ -51,7 +51,7 @@ At each approval gate, advise whether consequential or procedural. Design gates 
 
 ## Canonical Artifact
 
-On approval, promote into `docs/accord/design/design.md` per the schema in `references/design-schema.md`. The canonical artifact must be self-sufficient for cross-LLM handoff (principle 9): an unfamiliar reviewing agent should verify implementation against this file without conversational context.
+On approval, promote into `docs/accord/design/design.md` per the schema in `references/design-schema.md`. The canonical artifact must satisfy principle 9 (cross-LLM handoff): an unfamiliar reviewing agent verifies implementation against this file alone.
 
 Use `docs/accord/commands.md` for concrete project commands. `design.md` may summarize verification strategy and reference `commands.md`. Routine command changes should not force a new design version.
 

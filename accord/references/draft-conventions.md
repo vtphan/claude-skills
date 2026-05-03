@@ -48,11 +48,12 @@ Each round produces a new file. Never overwrite a prior draft. The user may edit
 
 ## Plan Drafts
 
-`plan` uses the numbered-draft mechanism but a lighter discipline:
+`plan` uses the numbered-draft mechanism for consistency with intent and design, but with a much lighter discipline:
 
-- The default is one round; multiple rounds happen only when the human pushes back via `Consider This` items.
-- The Round Stance block is still useful — it carries the agent's recommendation and rationale.
-- The convergence rule does not apply; plan drafts are normally accepted in one round.
+- **Default is one round.** Multiple rounds happen only when the human pushes back.
+- **Round Stance and `Consider This` are optional.** A 1-round plan draft may be the planning content alone (Plan Shape, Rationale for Shape, Current Approved Unit, Later Work, Assumptions / Risks). The agent's posture and rationale are already carried by `Planning Stance` and `Rationale for Shape` in the canonical contract; a separate Round Stance block adds ceremony without paying for itself in the typical case.
+- **Use Round Stance and `Consider This` when iterating.** If the human pushes back and the agent produces a second round, the Round Stance block is the right place to declare what changed, and `Consider This` is the right place to capture the human's items.
+- **The convergence rule does not apply.** Plan drafts are normally accepted in one round.
 
 See `plan-schema.md`.
 

@@ -50,7 +50,7 @@ At each approval gate, advise whether the moment is consequential (real choice f
 
 ## Cross-LLM Handoff
 
-`intent.md` must be self-sufficient (principle 9). A future agent reading it cold — in a fresh conversation, possibly with a different LLM — should understand the project's direction without conversational context. The promotion step is where this gets enforced: the canonical artifact is a clean rewrite, not draft scaffolding.
+The promotion step enforces principle 9: the canonical `intent.md` is a clean rewrite, not draft scaffolding.
 
 ## Scale Up
 

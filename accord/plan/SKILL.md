@@ -38,15 +38,11 @@ The plan's `Rationale for Shape` must explicitly reference the approved `design.
 
 ## Acceptance Must Be Diff-Checkable
 
-Acceptance criteria in `Current Approved Unit` must be checkable against a diff. A reviewing agent in fresh context (per principle 9) reads the criteria and the diff to verify the unit. Vague criteria fail this test.
+Acceptance criteria in `Current Approved Unit` must be checkable against a diff (principle 9). Vague criteria fail this test — a reviewing agent reads the criteria and the diff to verify the unit, without needing the executor's report.
 
 ## Approval Advisory
 
 At each plan gate, advise whether consequential or procedural. Plan approvals are often procedural (the agent has chosen and the human waves it through), but unit approvals with subtle acceptance criteria, broad scope, or `fresh-required` review mode are consequential — say so directly.
-
-## Cross-LLM Handoff
-
-`plan.md` must be self-sufficient for fresh-context review. The reviewing agent reads `plan.md`, `design.md`, `intent.md`, the execution report, and the diff — together they must be enough.
 
 ## Scale Up
 
