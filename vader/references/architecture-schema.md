@@ -131,7 +131,7 @@ When project-specific commands are not obvious from manifest files (`package.jso
 - Lint / format: `<command>`
 ```
 
-Skip the subsection entirely when commands are derivable from a standard manifest the executor will read anyway (`npm test`, `cargo test`, `make test` — universal enough that documenting them is duplication). Add the subsection when commands are non-standard, multi-step, or wave-relevant in a way the executor would otherwise have to guess. Keep it command-only — the *strategy* (when to run integration vs unit, performance budgets, etc.) belongs in the prose above, not in the cheat-sheet.
+Skip a row only when the command is **literally conventional and unambiguous** in this project's stack — e.g., a single-package Node project where `npm test` is the obvious test command and there is no second interpretation. Include the row whenever an LLM agent might otherwise have to guess: monorepos where `npm test` needs a workspace argument, multi-step builds, custom scripts, dialect-specific typecheck commands (`tsc --noEmit` vs `mypy src/` vs none-applicable), browser-check workflows, integration suites with their own runner, or any command that exists only because of this project's local conventions. When unsure, include the row — an unnecessary line is cheaper than a guessed command in the Verification matrix. Keep the subsection command-only: the *strategy* (when to run integration vs unit, performance budgets, etc.) belongs in the prose above, not in the cheat-sheet.
 
 ### 7. Open technical questions
 
