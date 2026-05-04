@@ -52,22 +52,42 @@ Content after `## Notes` is the user's space and can take any form, including ad
 
 Within `## Decisions`, `**Taken:**` and `**Set aside:**` are part of the schema, not user-customizable labels. If either subsection is missing, recreate it empty during the round. If the user renames or reorders them, restore the canonical labels and place entries under their canonical subsection — Decisions is load-bearing state Claude reads programmatically, so the labels stay fixed. The user can freely edit entries within either subsection, including deleting them.
 
-Keep the suggestion sections (Clarifying Questions, Incremental Improvements, Transformative Improvements) short and use numbered lists, not paragraphs — the user scans them quickly and responds inline. **Cap each suggestion section at 3 items.** Write fewer if fewer are real — never pad. Within each section, rank in descending order of leverage: the item most worth engaging with goes first. Decisions uses bullets; Notes is free-form. Idea is whatever shape the user wrote.
+Keep the suggestion sections (Clarifying Questions, Incremental Improvements, Transformative Improvements) short and use numbered lists, not paragraphs — the user scans them quickly and responds in Lead response blocks. **Cap each suggestion section at 3 items.** Write fewer if fewer are real — never pad. Within each section, rank in descending order of leverage: the item most worth engaging with goes first. Decisions uses bullets; Notes is free-form. Idea is whatever shape the user wrote.
 
-## Inline responses
+## Lead response blocks
 
-After round 0, the user's primary channel for engagement is writing responses directly under the numbered items in Clarifying Questions, Incremental Improvements, and Transformative Improvements — answering a question, accepting, pushing back, or adding a constraint. Inline responses use explicit markers placed between item N and item N+1: prefer a `> blockquote` (default), a `**Lead:**` prefix, or an indented `Response:` line. Unmarked continuation text, line-wrapping inside an item, or edits to the item text itself are not responses. When a chunk is ambiguous (could be a response, could be an edit to the item), treat it conservatively — do not move anything to Decisions on weak evidence; surface the ambiguity in next round's Clarifying Questions instead.
+After round 0, the user's primary channel for engaging with Clarifying Questions, Incremental Improvements, and Transformative Improvements is a **Lead response block**: a blockquote slot directly under each numbered item. Claude must insert a blank line followed by an empty `>` line under every numbered question or suggestion:
 
-The user will not respond to every item. **Silence is not rejection.** An item without an inline response is still open — carry it forward, drop it for staleness, or replace it with a sharper variant, but do not move it to `Set aside`. Only mark something `Set aside` on explicit rejection (e.g. "no", "skip", "drop this", "set aside").
+```
+1. **[constraint]** What budget or time limit would make this proposal unrealistic?
 
-When the user does write inline:
+>
+```
+
+The human lead responds inside that blockquote:
+
+```
+1. **[constraint]** What budget or time limit would make this proposal unrealistic?
+
+> Must be doable in a weekend with no paid services.
+>
+> I am also assuming no custom backend unless there is a strong reason.
+```
+
+Multi-paragraph responses are allowed; each paragraph should remain quoted with `>`. The response block belongs to the numbered item immediately above it. Empty `>` means no response yet, not rejection.
+
+Unquoted text, line-wrapping inside an item, and edits to the item text itself are not response blocks. Treat direct edits to AI-authored item text as item edits, not as answers. When a chunk is ambiguous, treat it conservatively — do not move anything to Decisions on weak evidence; surface the ambiguity in next round's Clarifying Questions instead.
+
+The user will not respond to every item. **Silence is not rejection.** An item with an empty response block is still open — carry it forward with its empty `>` slot, drop it for staleness, or replace it with a sharper variant, but do not move it to `Set aside`. If the item is dropped, its empty response block disappears with it. Only mark something `Set aside` on explicit rejection (e.g. "no", "skip", "drop this", "set aside") written in the response block or elsewhere.
+
+When the user writes a non-empty response block:
 - An answer or elaboration informs the next round's suggestions; it does not necessarily need a Decisions entry.
 - An answer that introduces a constraint, scope change, or other shape signal that materially changes the proposal → fold into Current Proposal and surface in Rationale this round (see "Current Proposal" trigger (d)). No explicit Decision required — the proposal update *is* the durable capture.
 - Explicit acceptance ("yes, fold this in", "take this") → Decisions → Taken (and fold into Current Proposal).
 - Explicit rejection → Decisions → Set aside, with the user's reason if given.
 - A response that reframes the question or pivots the idea may warrant a Clarifying Question or a new direction in the next round's suggestions.
 
-**No substantive user signal disappears.** Before rewriting a section, every substantive user signal in the suggestion sections — inline responses, item additions, item rewrites, item deletions — that conveys new context, a constraint, an answer, an acceptance, or a rejection must be captured somewhere durable. In strict preference order:
+**No substantive user signal disappears.** Before rewriting a section, every substantive user signal in the suggestion sections — non-empty response blocks, item additions, item rewrites, item deletions — that conveys new context, a constraint, an answer, an acceptance, or a rejection must be captured somewhere durable. In strict preference order:
 
 1. **Fold it into Current Proposal and surface it in Rationale** when the response materially changes the proposal's shape, scope, or constraints. This is the most durable destination — Rationale carries the audit trail. If the response is also an explicit acceptance, pair this with a Decisions → Taken entry.
 2. **Fold it into the next round's question or suggestion** so the signal is visibly carried forward — for responses that sharpen, pivot, or elaborate but don't yet reshape the proposal.
@@ -78,15 +98,15 @@ Pure throwaway acknowledgments ("ok", "sure", "noted") don't need preservation. 
 
 For structural edits specifically: a user rewrite of an item is a sharpened framing (carry it forward); an addition is a direction the user is contributing (preserve as theirs in the next round, or fold into Current Proposal / Decisions if it's clearly a constraint or accepted move); a deletion is ambiguous — handle it like silence (don't move to Set aside without explicit rejection text).
 
-Inline responses are consumed when you rewrite the section — they do not persist verbatim into the next round's draft. The "no signal disappears" rule is what makes this safe: by the time a response is consumed, its content lives somewhere durable.
+Non-empty response blocks are consumed when you rewrite the section — they do not persist verbatim into the next round's draft. The "no signal disappears" rule is what makes this safe: by the time a response is consumed, its content lives somewhere durable. Empty response blocks are preserved under carried-forward items and regenerated under new or revised items.
 
 On round 0, include a one-line hint immediately above `## Clarifying Questions`:
 
 ```
-_Respond inline under any item. Skipping is fine — silence is not rejection._
+_Respond in the `>` block under any item. Empty `>` means no response yet._
 ```
 
-On subsequent rounds, the hint is **sticky-once-dropped**, decided from the file alone (no lifetime memory required): if the hint is present in `draft.md` at round start AND inline responses appeared this round, omit it from the rewrite. If the hint is already absent, leave it absent — never re-add it, including when the user deleted it before engaging inline. Manual deletion is treated as the user signaling they've absorbed the convention; the hint is a one-shot teaching aid, not a persistent banner. The hint is not part of the canonical schema; its presence or absence is not a validation error.
+On subsequent rounds, the hint is **sticky-once-dropped**, decided from the file alone (no lifetime memory required): if the hint is present in `draft.md` at round start AND any non-empty response block appeared this round, omit it from the rewrite. If the hint is already absent, leave it absent — never re-add it, including when the user deleted it before engaging. Manual deletion is treated as the user signaling they've absorbed the convention; the hint is a one-shot teaching aid, not a persistent banner. The hint is not part of the canonical schema; its presence or absence is not a validation error.
 
 ## How to write each section
 
@@ -113,7 +133,7 @@ The codesigned answer to the Idea — the concrete, structural shape of the solu
 - (a) A Decision was Taken — fold the accepted move into the proposal.
 - (b) The user edited Idea — re-derive the proposal to fit the new framing.
 - (c) The user directly edited Current Proposal — read their edit as the new baseline.
-- (d) A substantive inline response introduced a constraint, scope change, or shape signal that materially changes the proposal — fold the implication in even without an explicit Decision.
+- (d) A substantive Lead response block introduced a constraint, scope change, or shape signal that materially changes the proposal — fold the implication in even without an explicit Decision.
 
 When (d) fires, the matching Rationale update must explicitly surface the new constraint or shape signal — that is the audit trail. Never edit cosmetically; wording-only changes don't count.
 
@@ -176,7 +196,7 @@ A persistent log Claude maintains across rounds, with two subsections:
 - {one-line summary, plus a brief reason if the user gave one}
 ```
 
-Use Decisions to avoid re-litigating settled ground. Each round, before drafting Clarifying Questions, Incremental Improvements, and Transformative Improvements, scan Decisions and skip anything already there. Update Decisions before rewriting the suggestion sections, based on what the user signaled this round: inline responses, edits to Idea, direct edits to Current Proposal or Rationale that clearly accept or reject a previously-proposed move, statements in Notes, or explicit acceptance/rejection.
+Use Decisions to avoid re-litigating settled ground. Each round, before drafting Clarifying Questions, Incremental Improvements, and Transformative Improvements, scan Decisions and skip anything already there. Update Decisions before rewriting the suggestion sections, based on what the user signaled this round: non-empty Lead response blocks, edits to Idea, direct edits to Current Proposal or Rationale that clearly accept or reject a previously-proposed move, statements in Notes, or explicit acceptance/rejection.
 
 **Silence is not rejection.** If the user did not respond to a prior suggestion, leave it out of Decisions — items without engagement remain open. Only `Set aside` on explicit rejection. If the acceptance/rejection signal is ambiguous, leave Decisions alone and ask in Clarifying Questions. Don't guess — wrongly logging something as "Set aside" silently kills a direction the user wanted to keep open.
 
@@ -184,16 +204,16 @@ Decisions accumulates over the life of the brainstorm. Don't aggressively prune 
 
 ### Notes
 
-The user's space, not yours. Read it carefully each round — it's where longer-form thoughts, decisions context, and scratch live. (Item-level responses go inline under the suggestion items, not here — see "Inline responses".) Treat Notes as **append-preserve**: never delete, rewrite, reorder, or "tidy" existing content. If you genuinely need to add something here (rare — most of the time, the right place for Claude's content is a different section), append a clearly-marked block at the end, e.g. `**[Claude]:** ...`. The user will move or delete it if they want.
+The user's space, not yours. Read it carefully each round — it's where longer-form thoughts, decisions context, and scratch live. (Item-level responses go in Lead response blocks under the suggestion items, not here — see "Lead response blocks".) Treat Notes as **append-preserve**: never delete, rewrite, reorder, or "tidy" existing content. If you genuinely need to add something here (rare — most of the time, the right place for Claude's content is a different section), append a clearly-marked block at the end, e.g. `**[Claude]:** ...`. The user will move or delete it if they want.
 
 ## The iteration loop
 
 Each round:
 
 1. Read the current `draft.md`. The Decisions section is your record of what's been accepted and rejected across prior rounds — rely on it instead of trying to reconstruct history from prose alone.
-2. Identify user signals not yet reflected in Decisions, in this priority order: **inline responses under suggestion items (the primary channel after round 0)**, edits to Idea, edits to Current Proposal or Rationale, new content in Notes, additions or deletions in the suggestion sections, explicit acceptance or rejection. If `draft.md` is tracked in git *and* the user has been committing rounds, `git diff draft.md` and `git log -1 -p draft.md` can show what changed since the last commit — useful evidence when available, but not authoritative (uncommitted state, missing prior commits, or a mismatched baseline can all mislead). Treat git output as a hint, not a record of truth. Without git, or when the diff baseline is unclear, treat anything in Notes or in the suggestion sections that doesn't yet appear in Decisions as potentially new and read it carefully.
+2. Identify user signals not yet reflected in Decisions, in this priority order: **non-empty Lead response blocks under suggestion items (the primary channel after round 0)**, edits to Idea, edits to Current Proposal or Rationale, new content in Notes, additions or deletions in the suggestion sections, explicit acceptance or rejection. If `draft.md` is tracked in git *and* the user has been committing rounds, `git diff draft.md` and `git log -1 -p draft.md` can show what changed since the last commit — useful evidence when available, but not authoritative (uncommitted state, missing prior commits, or a mismatched baseline can all mislead). Treat git output as a hint, not a record of truth. Without git, or when the diff baseline is unclear, treat anything in Notes or in the suggestion sections that doesn't yet appear in Decisions as potentially new and read it carefully.
 3. Update Decisions first: log any newly-accepted moves and any newly-rejected ones based on user signal. If Decisions is missing the `**Taken:**` or `**Set aside:**` subsection, recreate it empty before adding entries.
-4. Update Current Proposal and Rationale only if one of these triggers fires: (a) a Decision was Taken this round, (b) the user edited Idea, (c) the user directly edited Current Proposal or Rationale, or (d) a substantive inline response introduced a constraint, scope change, or shape signal that materially changes the proposal. Otherwise copy them forward unchanged. When (d) fires, Rationale must explicitly surface the new constraint or shape signal — that is the audit trail. Wording-only rewrites are noise — leave them alone. See the "Current Proposal" and "Rationale" section guidance for trigger-by-trigger handling.
+4. Update Current Proposal and Rationale only if one of these triggers fires: (a) a Decision was Taken this round, (b) the user edited Idea, (c) the user directly edited Current Proposal or Rationale, or (d) a substantive Lead response block introduced a constraint, scope change, or shape signal that materially changes the proposal. Otherwise copy them forward unchanged. When (d) fires, Rationale must explicitly surface the new constraint or shape signal — that is the audit trail. Wording-only rewrites are noise — leave them alone. See the "Current Proposal" and "Rationale" section guidance for trigger-by-trigger handling.
 5. Rewrite Clarifying Questions, Incremental Improvements, and Transformative Improvements end-to-end, anchoring against the (now-updated) Current Proposal. Skip anything already in Decisions. Drop stale questions and unattractive suggestions rather than reprinting them.
 6. Copy the title and Idea forward unchanged. Preserve Notes append-only — never delete or rewrite user content there.
 7. Lean toward challenge over agreement. The user is here to pressure the idea, not have it validated.
@@ -215,7 +235,7 @@ Keep the briefing under ~6 bullets. Don't restate the file — point at it. If n
 - **Padding.** Each suggestion section caps at 3, but writing fewer is fine — even zero. Don't fabricate items to fill the section.
 - **Sycophancy.** Default to challenging the idea, not endorsing it.
 - **Editing the user's Idea section.** Use Clarifying Questions instead. The user owns the Idea.
-- **Cosmetic Proposal or Rationale rewrites.** Update Current Proposal or Rationale only on a defined trigger: a Decision was Taken, the user edited Idea, the user edited those sections directly, or a substantive inline response materially changes the proposal's shape or constraints (trigger (d) in the section guidance). Wording-only edits are noise — copy forward unchanged instead.
+- **Cosmetic Proposal or Rationale rewrites.** Update Current Proposal or Rationale only on a defined trigger: a Decision was Taken, the user edited Idea, the user edited those sections directly, or a substantive Lead response block materially changes the proposal's shape or constraints (trigger (d) in the section guidance). Wording-only edits are noise — copy forward unchanged instead.
 - **Repeating yourself.** If a move is already in Decisions (Taken or Set aside), don't propose it again. If it's not in Decisions but you proposed it last round and the user didn't engage, either drop it or reframe it — don't reprint verbatim.
 - **Collapsing transformative into incremental.** Transformative items should feel like a different idea, not a stronger version of the same one. If everything you wrote in the transformative section could fit in the incremental section, you haven't pushed hard enough.
 - **Treating silence as rejection.** If the user didn't respond to an item, it's open, not killed. Do not move it to `Set aside` without an explicit rejection.
