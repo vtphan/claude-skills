@@ -4,6 +4,30 @@ ACCORD is a lightweight process for a human lead and a capable LLM to develop a 
 
 ACCORD pays its cost up front to prevent debt that compounds downstream: intent drift, architectural contradiction, acceptance creep, sycophantic refinement, and the same-session blindness that lets a model feel confident about code that doesn't do what was intended. Every principle below targets a specific class of debt. The bet is that catching these during `intent`, in `design`'s critique pass, or at a fresh-context review is cheaper than catching them in the fourth feature — when the cost shows up as rework, not as a bug you can point to.
 
+## Quick Start For Human Leads
+
+Use ACCORD in a new git-backed project. Invoke each skill manually; the skills do not auto-run the next phase.
+
+1. Start with `accord intent` and describe the project you want to build.
+2. Review the intent draft, push back where needed, then approve promotion to `docs/accord/intent.md`.
+3. Invoke `accord design`, review the architecture and UX decisions, then approve promotion to `docs/accord/design.md`.
+4. Invoke `accord plan`; the agent will choose a plan shape, explain why it fits the design, and define the next approved unit.
+5. Invoke `accord execute` to implement the approved unit.
+6. Invoke `accord review-update` after execution. Use a fresh conversation when the plan says `Review mode: fresh-required`.
+7. At each gate, approve, reject, or ask for changes. The agent will say whether the approval is consequential or procedural.
+
+The human lead's job is to supply direction, answer consequential questions, push back on drafts or plans that do not match the project, and approve phase boundaries. The agent's job is to maintain the ACCORD artifacts, make routine process choices, implement approved work, verify it, and preserve handoff through git commits and tags.
+
+| Invoke | What It Produces | Human Action |
+| --- | --- | --- |
+| `accord intent` | `intent-draft.md`, then `intent.md` | Decide whether the project goal, users, success criteria, non-goals, and constraints are right. |
+| `accord design` | `design-draft.md`, `design.md`, usually `commands.md` | Decide whether architecture, boundaries, UX, dependencies, and verification strategy are acceptable. |
+| `accord plan` | `plan-draft.md`, then `plan.md` with a current approved unit | Approve the unit scope, acceptance criteria, verification, and review mode. |
+| `accord execute` | Code changes and `reports/exec-<unit-id>.md` | Approve the implementation result or request revisions before commit/tag. |
+| `accord review-update` | Review log updates in `plan.md`, state updates, next unit or recovery | Accept the verdict, approve recovery if needed, or route back to plan/design/intent. |
+
+The detailed artifact contracts live in `references/`. A human lead normally does not need to read them unless debugging the process or changing ACCORD itself.
+
 ## Principles
 
 1. **Five ACCORD skills.** The framework comprises exactly five skills: `intent`, `design`, `plan`, `execute`, `review-update`. ACCORD itself does not grow additional skills, and depends on nothing outside this directory. Users remain free to invoke unrelated tools alongside ACCORD; the principle bounds ACCORD's surface, not the user's toolkit.
