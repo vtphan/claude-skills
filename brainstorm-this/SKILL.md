@@ -1,217 +1,144 @@
 ---
 name: brainstorm-this
-description: 'Collaborate with the user on developing an idea through structured, iterative brainstorming captured in shared versioned markdown drafts. Use this skill whenever the user invokes `/brainstorm-this` (with or without arguments), asks to "brainstorm this," "iterate on this idea," "do another round of brainstorming," or "advance the draft," references similarly numbered draft files such as `draft_00.md` and `draft_01.md` in a brainstorming context, or shares a markdown draft that already uses this exact section structure: `Round Stance`, `Idea`, `Proposed Solution`, `Rationale`, `Consider This`, `Perspective I''m Contributing From`, and `Notes`. This is a brainstorming and ideation aid — the goal is to help the user develop better ideas through revision, critique, and dialogue, not to produce polished prose.'
+description: 'Collaborate with the user on developing an idea through a single shared file, `draft.md`. Use this skill whenever the user invokes `/brainstorm-this` (with or without arguments), asks to "brainstorm this," "iterate on this idea," or "do another round of brainstorming." The goal is to help the user develop better ideas through clarification, incremental refinement, and transformative reframing — not to produce polished prose.'
 ---
 
 # Brainstorm This
 
-A workflow for developing an idea collaboratively with the user across multiple rounds. The user and Claude communicate through a structured markdown file. Each round, Claude reads the current draft, considers what the user has changed or added, and produces a revised next draft. Over many rounds, ideas get sharper, weaker arguments fall away, and gaps surface.
+Iterate on an idea collaboratively through a single shared file, `draft.md`. Each round, the user writes or edits the draft, and Claude rewrites it with: clarifying questions to sharpen the idea, incremental improvements that strengthen the existing direction, and transformative improvements that reframe it. The goal is to pressure-test and stretch the idea, not to polish prose.
 
-This skill is for **ideation and reasoning**, not document polishing. Treat the work as thinking-out-loud that needs to be tested, challenged, and developed — not prose to be smoothed.
+## Invocation
 
-## Invocation modes
+- `/brainstorm-this {free text}` — start a new brainstorm. Creates `draft.md` from the user's free-text idea. If `draft.md` already exists, refuse: "`draft.md` already exists. Delete or rename it first, or run `/brainstorm-this` to continue from it."
+- `/brainstorm-this` — read existing `draft.md` and rewrite it in place. If no `draft.md` exists, refuse and tell the user to start with `/brainstorm-this {your idea}`.
 
-The skill supports three ways to invoke it.
+The user owns the file between rounds — they may edit any section, including the Idea, before invoking again.
 
-**Mode 1 — Start a new brainstorm:** `/brainstorm-this {free text description of an idea}`
+## Draft format
 
-The free text is the user's raw idea. Claude:
-1. Summarizes it into a concise statement and places it in the **Idea** section. (The user can edit this before the next round; from round 1 onward the Idea is immutable to Claude.)
-2. Produces a first-pass Proposed Solution, Rationale, and an initial round stance.
-3. Saves the result as `draft_00.md` in the current working directory.
-
-**Mode 2 — Work on a specific draft:** `/brainstorm-this draft_07.md`
-
-Claude reads the named file, reads up to 2 prior drafts if they exist for context, and produces the next numbered draft. If the next-numbered file already exists, refuse and surface the conflict — do not overwrite, do not skip ahead. Tell the user: "`draft_<next>.md` already exists. Delete it first if you want to redo this round."
-
-**Mode 3 — Continue from the latest draft:** `/brainstorm-this`
-
-Claude finds the highest-numbered `draft_<number>.md` in the working directory and proceeds as in Mode 2. If no draft files exist, refuse with: "No draft files found. To start a new brainstorm, run `/brainstorm-this {your idea}`. To work on an existing draft, name it: `/brainstorm-this draft_03.md`."
-
-## File naming
-
-Drafts are named `draft_<number>.md` with **at least two digits of zero padding** (`draft_00.md`, `draft_01.md`, ... `draft_99.md`, `draft_100.md`). Keep two digits for rounds 0-99 so files sort cleanly in directory listings. After round 99, continue with natural-width integers; do not wrap, truncate, or reset numbering.
-
-Each round produces a new file. Never overwrite a prior draft. The user may edit any draft between rounds.
-
-## Draft structure
-
-Every draft has these sections, in this order:
+`draft.md` has exactly these sections, in this order:
 
 ```
-## Round Stance
-[short markdown block — Claude writes this each round]
+# {short title for the idea — optional, see "Title" below}
 
 ## Idea
-[the user's idea — Claude must NOT modify this after round 0]
+{the user's idea — Claude writes this from free text on round 0; user owns it after}
 
-## Proposed Solution
-[collaborative — Claude revises, user can edit]
+## Clarifying Questions
+{numbered list — Claude asks questions that would sharpen the idea if answered}
 
-## Rationale
-[collaborative — Claude revises, user can edit]
+## Incremental Improvements
+{numbered list — Claude suggests dimensions that would strengthen the existing idea}
 
-## Consider This
-[bidirectional — user surfaces gaps; Claude asks questions]
+## Transformative Improvements
+{numbered list — Claude suggests reframings that fundamentally change the idea}
 
-## Perspective I'm Contributing From
-[user only — declares their stance for the round]
+## Decisions
+{persistent log — Claude maintains "Taken" and "Set aside" lists across rounds}
 
 ## Notes
-[free-form — either party, persistent commentary]
+{free-form — user answers questions, records thoughts, leaves scratch. Append-preserve.}
 ```
 
-If an existing draft is missing any of these sections, or the sections appear in a different order, refuse and tell the user exactly which sections are missing or misplaced. Do not silently normalize or rewrite a malformed existing draft.
+The six canonical `##` sections — Idea, Clarifying Questions, Incremental Improvements, Transformative Improvements, Decisions, Notes — must appear in this order. If they're missing or out of order, refuse and tell the user exactly what's wrong. Do not silently normalize. The H1 title is optional — its presence, absence, or content is not a validation error.
 
-## Round 0: seeding from free text
+Content after `## Notes` is the user's space and can take any form, including additional `##` or `###` headings the user wants to add (e.g., `## Open Questions`, `## References`). Do not treat extra headings *after* the Notes section as a validation error. Inside Notes, prefer `###` subheadings if you ever need to add structure, but the user is free to do as they like.
 
-When invoked in Mode 1, the file does not yet exist. Build `draft_00.md` as follows:
+Within `## Decisions`, `**Taken:**` and `**Set aside:**` are part of the schema, not user-customizable labels. If either subsection is missing, recreate it empty during the round. If the user renames or reorders them, restore the canonical labels and place entries under their canonical subsection — Decisions is load-bearing state Claude reads programmatically, so the labels stay fixed. The user can freely edit entries within either subsection, including deleting them.
 
-1. **Idea:** Take the user's free-text description and summarize it into a clear, concise statement. Capture what they actually said — the goal, the problem, the scope as they expressed it — without adding interpretation or "improving" the framing. Aim for a few sentences to a short paragraph. The user will review and edit this before the next round if needed; after that, it becomes immutable.
+Keep the suggestion sections (Clarifying Questions, Incremental Improvements, Transformative Improvements) short and use numbered lists, not paragraphs — the user scans them quickly and responds inline. Decisions uses bullets; Notes is free-form. Idea is whatever shape the user wrote.
 
-2. **Proposed Solution:** Produce a genuine first-pass solution. This is not a placeholder — engage with the idea substantively. Pick a stance (most often `expand` or `refine`) and put real thinking on the page.
+## How to write each section
 
-3. **Rationale:** Explain why your Proposed Solution serves the Idea. Surface the assumptions you're making.
+### Title (H1)
 
-4. **Consider This:** Leave this empty, or seed it with 1-3 `[Q from LLM]` items if there are genuine ambiguities in the user's free text that materially affect the Proposed Solution. Do not invent questions for the sake of populating the section.
-
-5. **Perspective I'm Contributing From:** Leave empty with a placeholder line: `_(user fills in next round)_`. The user did not declare a perspective in their initial invocation.
-
-6. **Notes:** Empty.
-
-7. **Round Stance:** Fill in normally (see "Round Stance" below). For round 0, stance is typically `expand` or `refine` and recommendation is `continue`.
-
-## Round 1+: workflow
-
-When invoked in Mode 2 or Mode 3 on an existing draft:
-
-1. **Find the source draft.** In Mode 2, the user named it. In Mode 3, find the highest-numbered `draft_<number>.md` in the working directory.
-
-2. **Read the source draft and 1-2 prior drafts** if they exist. Seeing trajectory matters — without it, you risk drifting from earlier intent or repeating moves you already made. Do not load more than the most recent 2 prior drafts; older history dilutes attention.
-
-3. **Read carefully before writing.** Specifically:
-   - The **Idea** — fixed ground. Everything else serves it.
-   - **Consider This** — the user's high-priority inputs for this round, plus any open `[Q from LLM]` questions you asked previously that the user has now answered.
-   - **Perspective I'm Contributing From** — the lens the user is reasoning through this round. Use it to interpret their edits and to calibrate your response.
-   - The **diff** between the source draft and the prior one — what did the user change? Their edits are signal about what they think is right or wrong with the current direction.
-
-4. **Decide what kind of round this should be.** You have several options and should pick deliberately, not default to "refine":
-   - **Refine** — tighten the existing Proposed Solution and Rationale
-   - **Expand** — add a dimension, alternative, or consideration that's missing
-   - **Critique** — adopt a skeptical perspective and surface weaknesses, gaps, failure modes
-   - **Subtract** — remove weak arguments, redundant points, or scope creep
-   - **Restructure** — reorganize the logic when the current shape isn't serving the Idea
-   - **Ask** — if a Consider This item or part of the Idea is genuinely ambiguous and would meaningfully change your revision, prefer asking a question over guessing
-   - **Stop** — declare convergence (see "Stopping" below)
-
-5. **Write the next-numbered draft** as a new file. Do not overwrite. If the target filename already exists, refuse and ask the user to resolve the conflict.
-
-## How to handle each section
-
-### Round Stance
-
-Write a short markdown block at the top of the new draft. Use ordinary markdown text and bullets, not a code fence. This is your one-paragraph declaration of what you did this round and why. Structure:
-
-```
-**Round N**
-- Stance: [refine | expand | critique | subtract | restructure | ask | stop]
-- Perspective I'm adopting: [one phrase]
-- Substantive changes: [1-2 sentences naming what actually changed in argument, structure, or recommendations — not phrasing]
-- Recommendation: [continue | small diff, consider stopping | converged, recommend stopping]
-```
-
-The "substantive changes" line is a forcing function. If you cannot name a substantive change in 1-2 sentences, you didn't make one — that's a small-diff round.
+On the first round, generate a short title (3–8 words) summarizing the idea. On subsequent rounds, copy the title forward unchanged. The user may edit or remove it freely; if they remove it, leave it removed.
 
 ### Idea
 
-After round 0, copy unchanged. Do not modify, "clarify," or "improve" this section. If the Idea seems unclear or contradictory, surface that as a `[Q from LLM]` item in Consider This — never edit the Idea itself.
+On the first round, take the user's free-text invocation and condense it into a clear, concise statement — a few sentences to a short paragraph. Capture what they said: the goal, the problem, the scope. Do not add interpretation or "improve" their framing.
 
-### Proposed Solution
+On every subsequent round, copy the Idea forward unchanged. The user owns it. If something in the Idea seems unclear, contradictory, or wrong, surface it as a Clarifying Question — never edit the Idea itself.
 
-Revise according to your chosen stance. Be willing to make substantial changes when the round calls for it (especially in critique, expand, or restructure rounds). Avoid cosmetic editing — if you find yourself rewording sentences without changing meaning, stop and reconsider whether this round should be `stop` instead.
+### Clarifying Questions
 
-### Rationale
+Ask 3–7 questions that, if answered, would meaningfully sharpen the idea or change which improvements are worth proposing. Each question should probe a specific dimension — name it in brackets, e.g. `[audience]`, `[success metric]`, `[constraint]`, `[failure mode]`, `[scope]`, `[mechanism]`.
 
-Update to reflect any changes you made to Proposed Solution. Also: for each Consider This item the user added since the last round, note briefly here how you incorporated it (or why you judged it not relevant this round). This creates a visible trail of how user inputs shape the work.
+Skip questions you can answer yourself from context. Skip questions the user has already answered in Notes or by editing the Idea. Drop answered questions on the next round (don't reprint them) and fold the answer into the next round's improvements.
 
-### Consider This
+If you have fewer than 3 genuine questions, write fewer. Don't pad.
 
-Two kinds of items live here:
-- **`[from user]`** — the user's contributions. Treat these as high-priority signal. They are things the user thinks you may have missed: directions, constraints, concerns, corrections, references.
-- **`[Q from LLM]`** — questions you raise when something is genuinely ambiguous and a revision based on guessing would be unproductive. Tag every question this way so the user can find them at a glance.
+### Incremental Improvements
 
-Carry forward unaddressed user items unchanged. The user manages the lifecycle of their items — do not delete them on their behalf. You may delete your own `[Q from LLM]` items once they have been answered (note the answer briefly in Rationale).
+Suggest 3–5 moves that would strengthen the existing idea without changing its core. Each item names a **dimension** and proposes a **concrete move** along it. Techniques for finding dimensions:
 
-When you ask a question, prefer making a minimal revision (or none) that round. Asking *and* guessing *and* revising defeats the purpose of asking.
+- A stakeholder, audience, or context the idea hasn't accounted for
+- A quality that could be lifted (cost, accessibility, durability, speed, clarity, UX)
+- A failure mode worth hardening against
+- A scope adjustment (tighter or wider) that preserves the core
+- A measurement or feedback loop the idea is missing
+- A sequencing or staging change (what to do first vs. later)
 
-### Perspective I'm Contributing From
+Format each item as: `**{dimension}** — {concrete move and why it helps}`. Be specific. "Improve UX" is not a move; "add a single-keystroke way to dismiss the prompt because users hit it constantly" is.
 
-Copy unchanged. This is the user's voice, not yours. If the user has not yet filled it in, leave the placeholder line.
+### Transformative Improvements
+
+Suggest 3–5 reframings that fundamentally change the idea. These should be uncomfortable on purpose — the user is unlikely to take all of them, and that's fine. The job here is to widen the option space, not to converge. Techniques:
+
+- **Invert the core assumption.** What is the idea silently assuming? What if the opposite were true?
+- **Reframe the problem.** Maybe this is solving the wrong problem, or the right problem at the wrong altitude.
+- **Swap the metaphor.** Treat it as a service instead of a product, a habit instead of an event, a marketplace instead of a tool, infrastructure instead of an app.
+- **Port an adjacent-domain structure.** How would this work if it were structured like {open-source project / a subscription / a game / a school / a protocol}?
+- **10x extreme.** What does this look like 10x bigger, 10x smaller, 10x faster, 10x cheaper, 10x narrower? Extremes expose what's actually load-bearing.
+- **Drop a "fixed" constraint.** Pick something the user is treating as immovable. What does the idea become if it moves?
+- **Combine with something unrelated.** What does this look like crossed with {a domain that has nothing to do with it}?
+
+Format each item as: `**{technique or reframe label}** — {the move, stated as a concrete alternative idea}`. Don't hedge. State each as if you were proposing it for real.
+
+If the user keeps rejecting transformative moves on a particular axis, drop that axis on subsequent rounds and try different ones.
+
+### Decisions
+
+A persistent log Claude maintains across rounds, with two subsections:
+
+```
+**Taken:**
+- {one-line summary of what was folded into Idea or accepted}
+
+**Set aside:**
+- {one-line summary, plus a brief reason if the user gave one}
+```
+
+Use Decisions to avoid re-litigating settled ground. Each round, before drafting Clarifying Questions, Incremental Improvements, and Transformative Improvements, scan Decisions and skip anything already there. Update Decisions before rewriting the suggestion sections, based on what the user signaled this round (edits to Idea, statements in Notes, or explicit acceptance/rejection).
+
+If you can't tell whether the user accepted or rejected a prior suggestion, leave Decisions alone and ask in Clarifying Questions. Don't guess — wrongly logging something as "Set aside" silently kills a direction the user wanted to keep open.
+
+Decisions accumulates over the life of the brainstorm. Don't aggressively prune — staleness here is much cheaper than re-proposing rejected directions. The user may edit Decisions freely; respect their edits.
 
 ### Notes
 
-Free-form. You may add observations or meta-commentary here. Keep it sparse — Notes is for things that don't fit elsewhere, not a dumping ground.
+The user's space, not yours. Read it carefully each round — it's where the user's responses, decisions signal, and scratch live. Treat Notes as **append-preserve**: never delete, rewrite, reorder, or "tidy" existing content. If you genuinely need to add something here (rare — most of the time, the right place for Claude's content is a different section), append a clearly-marked block at the end, e.g. `**[Claude]:** ...`. The user will move or delete it if they want.
 
-## Stopping
+## The iteration loop
 
-You can declare convergence and recommend stopping. The criterion is **two consecutive small-diff rounds**, where "small-diff" means you cannot articulate substantive changes — only phrasing, ordering, or polish.
+Each round:
 
-Only recommend `stop` if you can verify from the source draft and the prior drafts you loaded for context that at least one visible round adopted a genuinely skeptical or stress-testing perspective (`critique` or equivalent). If you cannot verify that from the drafts you read, do not recommend stopping on this pass; prefer `continue` or run a critique round instead.
+1. Read the current `draft.md`. The Decisions section is your record of what's been accepted and rejected across prior rounds — rely on it instead of trying to reconstruct history from prose alone.
+2. Identify user signals not yet reflected in Decisions: new content in Notes, edits to the Idea, additions or deletions in the suggestion sections, explicit acceptance or rejection. If `draft.md` is tracked in git *and* the user has been committing rounds, `git diff draft.md` and `git log -1 -p draft.md` can show what changed since the last commit — useful evidence when available, but not authoritative (uncommitted state, missing prior commits, or a mismatched baseline can all mislead). Treat git output as a hint, not a record of truth. Without git, or when the diff baseline is unclear, treat anything in Notes or in the suggestion sections that doesn't yet appear in Decisions as potentially new and read it carefully.
+3. Update Decisions first: log any newly-accepted moves and any newly-rejected ones based on user signal. If Decisions is missing the `**Taken:**` or `**Set aside:**` subsection, recreate it empty before adding entries.
+4. Rewrite Clarifying Questions, Incremental Improvements, and Transformative Improvements end-to-end. Skip anything already in Decisions. Drop stale questions and unattractive suggestions rather than reprinting them.
+5. Copy the title and Idea forward unchanged. Preserve Notes append-only — never delete or rewrite user content there.
+6. Lean toward challenge over agreement. The user is here to pressure the idea, not have it validated.
 
-How this works in practice:
+## Things to avoid
 
-- Round N: you make a small revision and write in your Round Stance: `Recommendation: small diff, consider stopping`.
-- Round N+1: the user may have edited Consider This or other sections in between. You revise again. If this round is *also* small-diff, write: `Recommendation: converged, recommend stopping. Make no further revisions this round.` In this case, copy the prior draft forward unchanged except for your Round Stance block.
-- If round N+1 has substantive changes (often because the user added new Consider This items), the convergence clock resets — continue normally.
+- **Cosmetic edits.** If your only changes are wording, the round is empty. Say so and recommend stopping.
+- **Padding.** If you have 3 strong items, write 3. Don't fabricate a 5th to fill the section.
+- **Sycophancy.** Default to challenging the idea, not endorsing it.
+- **Editing the user's Idea section.** Use Clarifying Questions instead. The user owns the Idea.
+- **Repeating yourself.** If a move is already in Decisions (Taken or Set aside), don't propose it again. If it's not in Decisions but you proposed it last round and the user didn't engage, either drop it or reframe it — don't reprint verbatim.
+- **Collapsing transformative into incremental.** Transformative items should feel like a different idea, not a stronger version of the same one. If everything you wrote in the transformative section could fit in the incremental section, you haven't pushed hard enough.
 
-**Stopping is a valid and valuable outcome.** Do not revise for the sake of revising. A small cosmetic edit when the work is done is worse than declaring convergence. The user explicitly wants you to stop when the iteration is no longer productive.
+## Convergence
 
-The user can override your stop recommendation by editing the draft and asking for another round. That's expected.
-
-## Failure modes to avoid
-
-- **Premature convergence.** Do not declare convergence unless the loaded draft history shows at least one round that adopted a critical perspective and looked for weaknesses. If you cannot verify that from the drafts you read, the work is not ready to stop.
-- **Cosmetic revision.** If your only changes are word choice and sentence order, the round is small-diff. Say so honestly in the Round Stance rather than dressing up a small edit as a substantive one.
-- **Editing the Idea.** Never (after round 0). Use `[Q from LLM]` in Consider This instead.
-- **Drift across rounds.** If you find yourself re-introducing an argument the user removed two rounds ago, or undoing a structural change from a prior round, stop and reconsider. Either the user's edit was wrong (in which case raise it via Consider This) or yours was — don't silently fight it across rounds.
-- **Sycophantic refinement.** It is tempting to treat the current draft as mostly right and just polish. Resist this. The user is using this skill *because* they want pressure on the idea, not validation of it. When in doubt, lean toward critique or expand over refine.
-- **Defaulting to refine.** Before revising, explicitly consider whether expand, critique, or subtract would serve the Idea better. Refine is the right move sometimes — but it should be a chosen move, not a default.
-- **Overwriting drafts.** Never. Each round produces a new file. If the target filename exists, refuse and surface the conflict.
-
-## Example Round Stance blocks
-
-**A round-0 first pass:**
-```
-**Round 0**
-- Stance: expand
-- Perspective I'm adopting: collaborative ideator
-- Substantive changes: Seeded the Idea from the user's free-text invocation. Drafted an initial Proposed Solution covering scope, mechanics, and one open question about timeline. Surfaced two [Q from LLM] items in Consider This.
-- Recommendation: continue
-```
-
-**A critique round:**
-```
-**Round 4**
-- Stance: critique
-- Perspective I'm adopting: skeptical IRB reviewer
-- Substantive changes: Surfaced two assumptions in the recruitment plan that aren't justified by the Rationale, and added a failure-mode analysis for the consent flow. Did not change the high-level Proposed Solution.
-- Recommendation: continue
-```
-
-**A small-diff round leaning toward stopping:**
-```
-**Round 6**
-- Stance: refine
-- Perspective I'm adopting: clarifier
-- Substantive changes: Tightened the wording of step 3; merged two redundant points in Rationale. No changes to argument, structure, or recommendations.
-- Recommendation: small diff, consider stopping
-```
-
-**An ask round:**
-```
-**Round 2**
-- Stance: ask
-- Perspective I'm adopting: implementer
-- Substantive changes: None. Added one [Q from LLM] item to Consider This about the timeline constraint. The answer materially changes whether the current Proposed Solution is feasible.
-- Recommendation: continue (after question is answered)
-```
+Brainstorming is done when the user says it is, or when you cannot offer a substantive new question, incremental move, or transformative reframe that wasn't already in Decisions or last round's draft. State it plainly by appending a block at the end of Notes: `**[Claude]:** No substantive new moves this round — consider stopping, or seed a new direction in Idea.` Then write a minimal pass (skip empty suggestion sections rather than padding them) and let the user decide.
