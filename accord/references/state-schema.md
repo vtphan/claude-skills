@@ -13,11 +13,8 @@ status:
 
 ## Approved Artifacts
 intent:
-intent_source_draft:
 design:
-design_source_draft:
 plan:
-plan_source_draft:
 
 ## Current Unit
 id:
@@ -59,7 +56,6 @@ Use `paused` when the human lead explicitly stops ACCORD work. Use `blocked` whe
 
 - Update after every approved ACCORD phase.
 - Record latest canonical artifact paths and latest tags.
-- Record source draft paths when promoting `intent`, `design`, or `plan`.
 - Record the latest execution report path when `execute` completes.
 - Record `Current Unit.review_mode` for every approved unit. Default is `same-session-ok`; set `fresh-required` per the criteria in `plan-schema.md`. The field is always populated when a current unit exists, not only when `fresh-required` applies.
 - Record the next recommended skill.
@@ -87,8 +83,8 @@ When `complete`, re-invoking any skill (typically `intent` for new features or r
 - Re-entry: status `intent_drafting`, or resuming from `paused`/`blocked`/`complete`.
 
 **Post-state on approval:**
-- New `intent.md` promoted: set `intent_tag = accord-intent-v<N>`, set `intent_source_draft`, status → `design_drafting`, `recommended_skill: design`.
-- Round converged with no change to canonical (stance `stop`): leave `intent_tag` unchanged, status → `design_drafting`, `recommended_skill: design`.
+- New `intent.md` promoted: set `intent_tag = accord-intent-v<N>`, status → `design_drafting`, `recommended_skill: design`.
+- Re-invocation closed with stance `ready` and no change to canonical: leave `intent_tag` unchanged, status → `design_drafting`, `recommended_skill: design`.
 
 ### design
 
@@ -97,8 +93,8 @@ When `complete`, re-invoking any skill (typically `intent` for new features or r
 - `intent.md` exists and `intent_tag` is set.
 
 **Post-state on approval:**
-- New `design.md` promoted: set `design_tag = accord-design-v<N>`, set `design_source_draft`, status → `planning`, `recommended_skill: plan`.
-- Round converged with no change: leave `design_tag` unchanged, status → `planning`, `recommended_skill: plan`.
+- New `design.md` promoted: set `design_tag = accord-design-v<N>`, status → `planning`, `recommended_skill: plan`.
+- Re-invocation closed with stance `ready` and no change: leave `design_tag` unchanged, status → `planning`, `recommended_skill: plan`.
 
 ### plan
 
@@ -107,7 +103,7 @@ When `complete`, re-invoking any skill (typically `intent` for new features or r
 - `intent.md` and `design.md` with tags exist.
 
 **Post-state on approval:**
-- Set `plan_tag = accord-plan-v<N>`, set `plan_source_draft` if a draft was used, populate `Current Unit` with `id` / `summary` / `status: approved` / `review_mode`, status → `executing`, `recommended_skill: execute`.
+- Set `plan_tag = accord-plan-v<N>`, populate `Current Unit` with `id` / `summary` / `status: approved` / `review_mode`, status → `executing`, `recommended_skill: execute`.
 
 ### execute
 

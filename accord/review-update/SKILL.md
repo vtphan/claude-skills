@@ -1,6 +1,6 @@
 ---
 name: review-update
-description: Use this ACCORD skill after execute has produced an execution report. Typically invoked in a fresh conversation, possibly with a different LLM, so the review reads cold against artifacts. Triggers include "accord review-update", "review the executed unit", "update the plan after execution", "close this unit", or "what comes next after execute". This skill verifies execution, writes review/update entries into docs/accord/plan/plan.md by default, updates accord-state.md, then commits and tags after human approval.
+description: Use this ACCORD skill after execute has produced an execution report. Typically invoked in a fresh conversation, possibly with a different LLM, so the review reads cold against artifacts. Triggers include "accord review-update", "review the executed unit", "update the plan after execution", "close this unit", or "what comes next after execute". This skill verifies execution, writes review/update entries into docs/accord/plan.md by default, updates accord-state.md, then commits and tags after human approval.
 ---
 
 # ACCORD Review Update
@@ -18,7 +18,7 @@ The skill has four real functions:
 3. **Recovery decision-making** — if something is off, declare repair / redo / replan and propose a recovery path.
 4. **Plan/state advance** — record the verdict in `plan.md`'s Review and Update Log, update `accord-state.md`, define the next unit if continuation, tag the review.
 
-The default output is an update to `docs/accord/plan/plan.md`, not a separate review report. Create `docs/accord/reports/review-<unit-id>.md` only when findings are too complex to fit cleanly in the plan log.
+The default output is an update to `docs/accord/plan.md`, not a separate review report. Create `docs/accord/reports/review-<unit-id>.md` only when findings are too complex to fit cleanly in the plan log.
 
 ## Review Mode
 
@@ -54,54 +54,56 @@ The order of reads matters. Read the *requirements* (what should have happened) 
 
 ## Review Diff Baseline
 
-The review diff is `<base>..accord-exec-<unit-id>` where `<base>` is resolved by the algorithm below. Chained repairs and retries make plain-language rules ambiguous (which "previous unit"? which "original"?), so the agent should follow the algorithm directly.
+The review diff is `<base>..accord-exec-<unit-id>` where `<base>` is the nearest prior ACCORD approved boundary in the unit's history. "Nearest" is topological, not timestamp-based: choose the boundary tag closest to `<exec>` on the current branch's first-parent ancestry. This rule is uniform across plain, repair, and retry units and covers replans that introduce a new `accord-plan-v<N>` between units.
 
 ### Resolution Algorithm
 
 Given a unit being reviewed with id `<unit-id>`:
 
-1. **Parse the unit id.** It has one of three shapes:
-   - **Plain**: `u-NNN-slug` (no suffix)
-   - **Repair**: `u-NNN-slug-repair-MM`
-   - **Retry**: `u-NNN-slug-rMM`
+1. **Set `<exec>` = `accord-exec-<unit-id>`** matching the full id (with repair/retry suffix if any).
 
-2. **Identify the unit family.** For repair and retry units, the family root is `u-NNN-slug` (strip the suffix). For plain units, the family is just the unit itself.
+2. **Collect candidate boundary tags reachable from `<exec>`.** Boundary tags are any of:
+   - `accord-review-*`
+   - `accord-plan-v<N>`
+   - `accord-design-v<N>`
+   - `accord-intent-v<N>`
 
-3. **Find `<base>`** by case:
+   Enumerate candidates with `git tag --merged <exec> --list 'accord-review-*'`, `git tag --merged <exec> --list 'accord-plan-*'`, `git tag --merged <exec> --list 'accord-design-*'`, and `git tag --merged <exec> --list 'accord-intent-*'`.
 
-   - **Plain unit**: most recent `accord-review-*` tag in the project (any prior unit). If none exists, `<base>` is the most recent `accord-plan-v<N>` tag.
-   - **Repair unit**: most recent `accord-review-*` tag for the family root (`u-NNN-slug`) or any prior repair in the same family (`u-NNN-slug-repair-<smaller-number>`). The diff shows only this repair's work.
-   - **Retry unit**: most recent `accord-review-*` tag for the family root or any prior retry in the same family (`u-NNN-slug-r<smaller-number>`). The diff shows any revert commit plus this retry's work.
+3. **Set `<base>` = the nearest candidate boundary on the first-parent path to `<exec>`.** A robust way to find it is to inspect `git log --first-parent --decorate <exec>` and choose the first ACCORD boundary tag encountered before `<exec>`. This is the approved boundary closest to the unit attempt, whether it was a prior review, a plan revision, a design revision, or an intent revision.
 
-4. **Set `<exec>`** = `accord-exec-<unit-id>` matching the full id of the unit being reviewed (with its suffix if any).
+4. **The review diff is `<base>..<exec>`.**
 
-5. **The review diff is `<base>..<exec>`.**
+This rule naturally handles every case:
+- First unit, no prior review: `<base>` is the nearest `accord-plan-v<N>` ancestor (the plan that approved the unit).
+- Subsequent unit, no replan since last review: `<base>` is the prior `accord-review-*`.
+- Subsequent unit after a replan: `<base>` is `accord-plan-v<N+1>` (the replan tag, which is nearer to the exec tag than the prior review).
+- Repair or retry: `<base>` is the prior review of the same family (or a nearer boundary if one was created between).
 
 ### Verification
 
-Inspect `git log <base>..<exec>` — the commit list should be exactly the work attributable to this unit's attempt. If you see commits from another unit or another unit-family, the resolution is wrong; recompute.
-
-If a plan-revision tag (`accord-plan-v<N+1>`) sits inside the range, include those commits in the diff but treat them as state changes, not implementation evidence.
+Inspect `git log <base>..<exec>` — the commit list should be exactly the work attributable to this unit's attempt: the implementation commit(s), the execution report, and the state-file update. If you see commits from another unit or another unit-family, the resolution is wrong; recompute. If you see plan/design/intent-revision commits inside the range, the boundary algorithm picked the wrong tag — re-run step 2 and confirm you used the nearest first-parent ancestor.
 
 ### Source of Tag Information
 
-Read `accord-state.md`'s `Latest Boundaries` for the latest `review_tag` and `plan_tag`. For chained recovery cases, list `git tag --list "accord-review-u-NNN-slug*"` (replacing `u-NNN-slug` with the family root) to find all prior reviews in the family.
+Read `accord-state.md`'s `Latest Boundaries` for `review_tag`, `plan_tag`, `design_tag`, and `intent_tag`. These are useful hints, but `<base>` is still the nearest reachable ACCORD boundary on the first-parent path to `<exec>`. For chained recovery cases, list `git tag --list "accord-review-u-NNN-slug*"` (replacing `u-NNN-slug` with the family root) to find all prior reviews in the family.
 
 ### Mechanical Examples
 
 These examples show tag mechanics only; they are not content guidance.
 
-- Plain unit: reviewing `u-002-example` after prior review tag `accord-review-u-001-example` means the diff is `accord-review-u-001-example..accord-exec-u-002-example`.
-- First unit: reviewing `u-001-example` with no prior review tag means the diff is the most recent plan tag, such as `accord-plan-v1..accord-exec-u-001-example`.
-- Repair unit: reviewing `u-002-example-repair-01` after the original unit was reviewed at `accord-review-u-002-example` means the diff is `accord-review-u-002-example..accord-exec-u-002-example-repair-01`.
-- Retry unit: reviewing `u-002-example-r02` after the original unit was reviewed at `accord-review-u-002-example` means the diff is `accord-review-u-002-example..accord-exec-u-002-example-r02`.
+- Plain unit, no replan: reviewing `u-002-example` after prior review tag `accord-review-u-001-example` and no boundary tag in between means `<base>` is `accord-review-u-001-example`. Diff: `accord-review-u-001-example..accord-exec-u-002-example`.
+- Plain unit, replan since last review: reviewing `u-002-example` after prior review `accord-review-u-001-example` followed by a replan that produced `accord-plan-v2` means `<base>` is `accord-plan-v2`. Diff: `accord-plan-v2..accord-exec-u-002-example`. The plan-revision commit is not in the diff.
+- First unit: reviewing `u-001-example` with no prior review tag means `<base>` is the nearest `accord-plan-v<N>` ancestor. Diff: `accord-plan-v1..accord-exec-u-001-example`.
+- Repair unit: reviewing `u-002-example-repair-01` after the original unit was reviewed at `accord-review-u-002-example` and no boundary tag has been created since means `<base>` is `accord-review-u-002-example`. Diff: `accord-review-u-002-example..accord-exec-u-002-example-repair-01`.
+- Retry unit: reviewing `u-002-example-r02` after the original review means `<base>` is `accord-review-u-002-example`. If the bad original changes needed removal, that revert was committed by `review-update` before `accord-review-u-002-example` was tagged, so the retry diff contains only the retry unit's work.
 
 ## Verdicts
 
 - `pass` — acceptance met, no findings.
 - `pass-with-findings` — acceptance met; watch items or accepted debt recorded. Distinguish accepted residual findings from required follow-up.
 - `repair` — implementation is mostly valid; targeted follow-up needed. Approve a repair unit `u-NNN-slug-repair-01`.
-- `redo` — implementation should not stand. Identify the rejected exec tag; if the bad changes should not remain on the branch, use a new revert commit. Approve a retry unit `u-NNN-slug-r02`.
+- `redo` — implementation should not stand. Identify the rejected exec tag. If the bad changes should not remain on the branch, `review-update` creates a new targeted revert commit after human approval of the redo direction and before tagging `accord-review-<unit-id>`. Approve a retry unit `u-NNN-slug-r02`.
 - `replan` — execution shows the plan shape or next units are wrong. Update `plan.md` shape or route through `design`. If implementation has invalidated intent itself (rare), route through `intent`.
 
 ## Authority Over plan.md
@@ -176,9 +178,10 @@ If embedding findings would make `plan.md` hard to use, create `docs/accord/repo
 
 After approval, commit:
 
-- `docs/accord/plan/plan.md`
+- `docs/accord/plan.md`
 - `docs/accord/accord-state.md`
 - `docs/accord/commands.md` when changed
 - optional `docs/accord/reports/review-<unit-id>.md`
+- reverted implementation paths when verdict is `redo` and the approved recovery direction removes the rejected changes before retry
 
 Use a `review:` prefix and tag `accord-review-<unit-id>`.

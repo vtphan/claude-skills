@@ -36,12 +36,16 @@ Increment version tags when canonical `intent.md`, `design.md`, or `plan.md` is 
 - Do not create or move tags silently if a target tag already exists.
 - Prefer new commits over history rewriting after an approved ACCORD tag exists.
 
+## Codesign and Plan Commits
+
+The framework requires a commit only at promotion (the approved phase boundary). Drafts are overwritten freely as work progresses; mid-iteration commits are operator-discretion (e.g., end-of-day backup) and carry no special framework metadata.
+
 ## Suggested Messages
 
 ```
 intent: approve project intent
 
-Promotes docs/accord/intent/draft_02.md to docs/accord/intent/intent.md.
+Promotes docs/accord/intent-draft.md to docs/accord/intent.md.
 Updates docs/accord/accord-state.md.
 Tag: accord-intent-v1
 ```
@@ -49,7 +53,7 @@ Tag: accord-intent-v1
 ```
 design: approve architecture and decisions
 
-Promotes docs/accord/design/draft_04.md to docs/accord/design/design.md.
+Promotes docs/accord/design-draft.md to docs/accord/design.md.
 Key decisions: D-001 persistence, D-002 deployment, D-003 UX model.
 Tag: accord-design-v1
 ```
@@ -83,11 +87,12 @@ Do not revert the original exec commit unless the faulty code must be removed be
 Use when the implementation approach should not stand.
 
 1. `review-update` records verdict `redo` and names the rejected exec tag.
-2. Revert the bad exec commit with a new revert commit if its changes should be removed from the branch.
-3. Approve a retry unit using a suffix in the unit ID: `u-001-auth-login-r02`.
-4. `execute` implements the redo in a new commit.
-5. Tag the retry execution: `accord-exec-u-001-auth-login-r02`.
-6. `review-update` verifies and tags the retry review.
+2. If the bad changes should be removed from the branch, `review-update` creates a new targeted revert commit after the human approves the redo direction and before tagging `accord-review-<unit-id>`.
+3. The targeted revert commit uses a `review:` prefix, names the rejected exec tag, and includes only the reverted paths plus `plan.md` / `accord-state.md` / optional review report updates needed to record the redo.
+4. Approve a retry unit using a suffix in the unit ID: `u-001-auth-login-r02`.
+5. `execute` implements the redo in a new commit from the post-review baseline.
+6. Tag the retry execution: `accord-exec-u-001-auth-login-r02`.
+7. `review-update` verifies and tags the retry review.
 
 If the human lead chooses to keep the original commit for reference but supersede its behavior, record that explicitly in `plan.md`.
 

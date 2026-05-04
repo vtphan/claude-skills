@@ -1,25 +1,23 @@
 # ACCORD Intent Contract
 
-`intent` codesigns project intent with the human lead. Draft rounds support thinking; canonical `intent.md` supports downstream design and planning.
+`intent` codesigns project intent with the human lead. The single draft supports thinking; canonical `intent.md` supports downstream design and planning.
 
 ## Posture
 
 The agent's posture is **elicitive and generative**: drawing out aspects of the project the human hasn't articulated yet (stakeholders, success states, implicit non-goals, domain constraints), and proposing transformative alternatives the human can absorb, redirect, or reject. Sycophantic refinement is the failure mode to avoid.
 
-The codesign discipline (round stances, immutable Idea after round 0, two-small-diff convergence with at least one verified critique pass, strict draft non-overwrite) protects against premature consensus. See `draft-conventions.md`.
+The codesign discipline (Draft Stance block, default away from `refine`, critique pass before declaring `ready`, framing changes named explicitly, self-contained drafts) protects against premature consensus. See `draft-conventions.md`.
 
-## Draft Rounds
+## Draft
 
-Use one monotonic draft sequence in `docs/accord/intent/`:
+Use a single draft file:
 
 ```
-draft_00.md
-draft_01.md
-intent.md
-draft_02.md
+docs/accord/intent-draft.md
+docs/accord/intent.md
 ```
 
-Drafts are never overwritten. A draft after `intent.md` is a proposed revision. It becomes accepted only when promoted, committed, and tagged.
+`intent-draft.md` is overwritten freely as work progresses. The draft moves forward only — it always holds the current best thinking. After `intent.md` is promoted, opening a fresh `intent-draft.md` later is a proposed revision; it becomes accepted only when promoted, committed, and tagged.
 
 `Consider This` uses three-tag convention: `[from user]`, `[Q from LLM]`, `[suggestion from LLM]`. See `draft-conventions.md`.
 
@@ -71,8 +69,8 @@ Optional when useful: `## Context`, `## Risks`, `## Prior Art`, `## Glossary`.
 
 On approval:
 
-- promote the approved draft into `docs/accord/intent/intent.md`
-- update `docs/accord/accord-state.md` with source draft and tag
+- strip the Draft Stance block and any `Consider This` scaffolding from `docs/accord/intent-draft.md`; write the cleaned content as `docs/accord/intent.md`
+- update `docs/accord/accord-state.md`
 - commit explicit paths
 - tag `accord-intent-v<N>`
 

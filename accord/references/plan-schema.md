@@ -4,20 +4,18 @@
 
 ## Posture
 
-`plan` is agent-led, not codesigned. Drafts use the same numbered-draft mechanism as intent and design for consistency, but with a lighter discipline: the **default is one round**. The agent produces `draft_00.md`, the human approves, it becomes `plan.md`. Multiple rounds happen only when the human pushes back via `Consider This` items.
+`plan` is agent-led, not codesigned. Drafts use the same single-draft-file mechanism as intent and design but with a lighter discipline: the **default is one iteration**. The agent produces `plan-draft.md`, the human approves, it becomes `plan.md`. Iteration happens only when the human pushes back via `Consider This` items.
 
-## Draft Rounds
+## Draft
 
-Use one monotonic draft sequence in `docs/accord/plan/`:
+Use a single draft file:
 
 ```
-draft_00.md
-draft_01.md
-plan.md
-draft_02.md
+docs/accord/plan-draft.md
+docs/accord/plan.md
 ```
 
-Drafts are never overwritten. A draft after `plan.md` is a proposed plan revision. `review-update` may also update canonical `plan.md` directly because it owns the review/update log and next approved unit.
+`plan-draft.md` is overwritten freely. Default is a single iteration. After `plan.md` is promoted, opening a fresh `plan-draft.md` later is a proposed plan revision. `review-update` may also update canonical `plan.md` directly because it owns the review/update log and next approved unit.
 
 ## Minimum Canonical Contract
 
@@ -142,7 +140,7 @@ For `repair`, `redo`, and `replan`, include `Recovery:` naming whether the next 
 
 On initial approval:
 
-- promote the approved draft into `docs/accord/plan/plan.md`
+- strip the Draft Stance block (if present) and any `Consider This` scaffolding from `docs/accord/plan-draft.md`; write the cleaned content as `docs/accord/plan.md`
 - update `docs/accord/accord-state.md`
 - commit explicit paths
 - tag `accord-plan-v<N>`

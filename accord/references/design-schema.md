@@ -1,6 +1,6 @@
 # ACCORD Design Contract
 
-`design` codesigns architecture, UI/UX, and consequential decisions with the human lead. Draft rounds carry proposed thinking. Canonical `design.md` is accepted by human approval.
+`design` codesigns architecture, UI/UX, and consequential decisions with the human lead. The single draft carries proposed thinking. Canonical `design.md` is accepted by human approval.
 
 ## Posture
 
@@ -13,18 +13,16 @@ The agent's posture is **elicitive and generative** (same as intent). For design
 
 Codesign discipline applies. See `draft-conventions.md`.
 
-## Draft Rounds
+## Draft
 
-Use one monotonic draft sequence in `docs/accord/design/`:
+Use a single draft file:
 
 ```
-draft_00.md
-draft_01.md
-design.md
-draft_02.md
+docs/accord/design-draft.md
+docs/accord/design.md
 ```
 
-Drafts are never overwritten. Re-invoking `design` mid-project should seed the next draft from the current canonical `design.md`, `accord-state.md`, recent plan/review history, execution reports, and current implementation.
+`design-draft.md` is overwritten freely as work progresses. The draft moves forward only — it always holds the current best thinking. Re-invoking `design` mid-project should seed a fresh `design-draft.md` from the current canonical `design.md`, `accord-state.md`, recent plan/review history, execution reports, and current implementation.
 
 `Consider This` uses three-tag convention: `[from user]`, `[Q from LLM]`, `[suggestion from LLM]`.
 
@@ -101,8 +99,8 @@ Use decision entries only for choices that constrain planning or execution. Do n
 
 On approval:
 
-- promote the approved draft into `docs/accord/design/design.md`
-- update `docs/accord/accord-state.md` with source draft and tag
+- strip the Draft Stance block and any `Consider This` scaffolding from `docs/accord/design-draft.md`; write the cleaned content as `docs/accord/design.md`
+- update `docs/accord/accord-state.md`
 - create or update `docs/accord/commands.md` when concrete commands are known
 - commit explicit paths
 - tag `accord-design-v<N>`
