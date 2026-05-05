@@ -7,74 +7,80 @@ Build a macOS markdown app tailored for communicating with AI via markdown docum
 ## Current Proposal
 
 - **Viewer is the default; editor is contextual.** Two distinct modes, never side-by-side. Reading position is preserved across edit round-trips.
-- **Workspace = a chosen folder.** All `.md`/`.yaml` files within are addressable. File-watch and `Cmd+P` fuzzy-find are scoped to the workspace.
-- **Home screen is a typographic full-screen index** of recent docs from the workspace. Appears when no doc is open (launch with no restored state, or after closing the last doc). Click to open; close all docs to return.
+- **No workspace concept.** Files are opened directly via `File -> Open...`, drag/drop, Finder, or recent files. The app does not ask the user to choose a folder and does not crawl a project directory.
+- **Home screen is a typographic full-screen recent-files index.** Appears when no doc is open (launch with no restored state, or after closing the last doc). Click to open; close all docs to return.
 - **Edit gesture: select-then-confirm.** After a text selection in viewer, a small contextual popover offers two actions: **highlight** (keep selection for native `Cmd+C`) or **edit** (enter edit mode at the selection start). The toolbar "edit" icon enters edit mode at the start of the file.
 - **Editor opens the whole file** with cursor at the chosen position. iA Writer–style focused writing: minimal chrome, generous typography, no preview, no toolbar-driven markdown insertion. `Esc` saves and returns to viewer.
-- **No visible tab bar.** Multi-doc switching via `Cmd+P` fuzzy-find. Merge All Windows still consolidates separate single-doc windows into one. A subtle, hideable bottom status bar shows: **open-tab count, word count, character count**.
-- **Viewer navigation:** continuous scroll. `PgDn`/`PgUp` jump to next/previous heading. `Cmd+F` opens find scoped to the current doc, matching against rendered text.
-- **Silent persistence + state restore.** Autosave on `Esc`, tab switch, and quit. No save dialog or unsaved indicator. On launch, restore open tabs and per-tab scroll positions. If a file changed on disk since close, reopen at top. If a file is missing, show a dismissable "missing" placeholder tab. File-watch auto-refreshes on external changes if no local edits; one-key reload prompt otherwise.
+- **No visible tab bar.** Multi-doc switching via `Cmd+P` fuzzy-find over open and recent files. Merge All Windows still consolidates separate single-doc windows into one. A subtle, hideable bottom status bar shows: **open-tab count, word count, character count**.
+- **Viewer navigation:** continuous scroll. `PgDn`/`PgUp` jump to next/previous heading. A transient outline palette jumps within the current doc. `Cmd+F` opens find scoped to the current doc, matching against rendered text.
+- **Silent persistence + state restore.** Autosave on `Esc`, tab switch, and quit. No save dialog or unsaved indicator. On launch, restore open tabs and per-tab scroll positions. If a file changed on disk since close, reopen at top. If a file is missing, show a dismissable "missing" placeholder tab. File-watch auto-refreshes open files on external changes if no local edits; one-key reload prompt otherwise.
 - **Content rendering.** Markdown flavor is **GFM**. Lang-aware syntax highlighting in code blocks (tokenizer choice deferred). Images render at natural size capped to content width, lazy-load below fold, click → macOS Quick Look.
+- **Frontmatter is rendered as document metadata, not body prose.** Markdown frontmatter appears in a visually distinct treatment at the top of the rendered doc.
 - **Typography is a primary feature.** Tasteful, opinionated defaults — Steve Jobs aesthetic. Font and size controls minimal, not configurable.
 - **No AI integration.** Content-source-agnostic.
-- **YAML is a peer format** with the same viewer/editor split. Viewer affordances: tree-collapse on object/array nodes, subtle type hints.
+- **YAML is a sibling experience, not markdown stretched sideways.** YAML viewer is a polished structural tree with collapse and subtle type hints; YAML editor is raw text in v1.
 
 ## Rationale
 
 - Reading and writing are different cognitive tasks; split-view is noise when only one is active.
-- Workspace-as-folder simplifies file flow: no "where is my file" friction, file-watch is naturally scoped, fuzzy-find runs over a bounded set. Trade-off: opening files outside the workspace becomes a separate flow — see Q2.
-- Home-screen-as-index treats "which doc to read" as a designed surface, not an afterthought — the user lands somewhere intentional.
+- Removing workspace cuts product ceremony: no folder picker, no project boundary, no argument about files "inside" or "outside" the app. Trade-off: fuzzy-find becomes recent/open-file based, not a complete filesystem index.
+- Home-screen-as-recent-index treats "what was I reading?" as the designed empty state, not a project dashboard.
 - Select-then-confirm sidesteps the click-vs-edit gesture conflict: text selection is the canonical first move (familiar macOS gesture), and the popover lets the user choose what they actually want. Avoids forcing one default that breaks the other use.
 - Edit mode opens the whole file with cursor at click — single rule, since positional click-to-source mapping is computationally cheap (markdown ASTs carry source byte offsets natively, O(1) per click).
 - Writing affordance is contextual (click-to-edit), not GUI-driven. Keeps editor focused.
-- `Cmd+P` fuzzy-find replaces the tab bar; bottom status bar earns its space by surfacing the small set of stats the user named.
-- Continuous scroll with `PgDn`/`PgUp` heading-jump preserves natural reading flow and adds outline-aware skipping for AI docs.
+- `Cmd+P` fuzzy-find replaces the tab bar; limiting it to open and recent files keeps the no-workspace model simple.
+- Continuous scroll with `PgDn`/`PgUp` heading-jump plus a transient outline palette preserves natural reading flow while making long AI docs navigable.
 - The differentiator vs. existing free apps is *taste*, not features — opinionated defaults over configurability (Steve Jobs aesthetic).
-- File-watch scoped to the workspace folder directly serves the AI-writes-the-doc workflow.
+- File-watch should attach to open files, not a folder tree; this preserves external-edit awareness without reintroducing workspace machinery.
 - No AI integration keeps the surface small and durable.
-- YAML kept as its own pipeline because rendering it as markdown would strip its structural affordances.
+- YAML kept as its own sibling pipeline because structural inspection is the value; v1 keeps YAML editing raw to avoid building a second full editor.
 - Click-to-copy features intentionally omitted as overengineering. Native macOS text-select + `Cmd+C` remains the way to copy any rendered text.
-- Assumes: the popover's "highlight" means "keep selection for native copy," not persistent annotations. Persistent highlights would be a new feature with their own state surface — see Q1.
-- Assumes: opening files outside the workspace is rare; switching workspace suffices when needed. If users frequently want one-off external files, the flow needs a transient-open path — see Q2.
-- Assumes: a single workspace at a time is enough. Multi-workspace via separate windows is plausible but not yet specified — see Q3.
+- Assumes: the popover's "highlight" means "keep selection for native copy," not persistent annotations. Persistent highlights would be a new feature with their own state surface.
+- Assumes: recent/open-file discovery is enough for a viewer-first app. If users need to browse hundreds of unopened docs, the no-workspace model will need a separate file-discovery surface.
 
 ## Clarifying Questions
 
-1. **[highlight semantic]** In the select-then-confirm popover, what does "highlight" do? Read it conservatively: dismiss the popover, leave the selection intact, user can `Cmd+C` natively. The other reading is "save a persistent highlight" (annotation that lives on the doc across sessions), which would need a state surface. Which did you mean — (a) keep-selection-only or (b) persistent annotation?
-2. **[opening files outside the workspace]** What happens when the user wants to open a file outside the current workspace folder? (a) only workspace files are addressable, "switch workspace to read elsewhere"; (b) `File → Open…` is still available for a transient one-off, opening as a tab without joining the workspace; (c) opening a file outside auto-switches the workspace to its containing folder. (a) is purest; (b) most flexible; (c) most automatic.
-3. **[multi-workspace]** Single workspace at a time, with explicit switch action? Or multiple workspaces openable in separate windows (one per window)? Affects whether "switch workspace" is destructive or window-multiplying.
+1. **[file discovery]** Without a workspace, what should `Cmd+P` search: only currently open tabs, open + recent files, or open + recent + files from standard macOS recent-document APIs? This is now the main discovery boundary.
+>Remove Cmd+P.  Cmd+F is searching for things in the current file.
+>
+2. **[recent index]** How should the home screen decide which recent files to show: last opened by this app only, Finder/system recents, or pinned + recent? The choice determines whether the home screen feels private and app-specific or more ambient.
+
+3. **[YAML structure]** In the YAML viewer, are arrays/objects enough, or should scalar values also get light type treatment such as string/number/bool/null badges? This is the thin line between tasteful structural view and noisy inspector.
 
 ## Incremental Improvements
 
-1. **YAML frontmatter handling in markdown viewer.** Many .md files start with `---\n…\n---` frontmatter. Decide a default: render as a subtle metadata strip above the doc (collapsed by default), hide entirely, or show as a code block. AI-generated docs often include frontmatter; getting this wrong looks unpolished.
-2. **First-launch workspace picker.** First launch needs a designed welcome flow: invite the user to choose a folder, suggest a sensible default (e.g., `~/Documents/Markdown`), offer to create it if missing. Without this, the very first session is "where do I even start?"
-3. **Theme model.** Three modes: light, dark (auto-follow macOS appearance by default), plus an optional sepia for long reads. No per-knob configuration. Aligns with the no-config Steve Jobs principle while still supporting the modes long-form readers actually want.
+1. **Open-flow polish** — Make drag/drop, Finder "Open With", and `File -> Open...` first-class routes that all land in the same viewer state. Removing workspaces raises the bar for ordinary file opening to feel excellent.
+2. **Recent-file pinning** — Add a small pin affordance on the home index so repeatedly used AI/codesign docs do not churn out of view. This preserves a light organizing primitive without becoming a workspace.
+3. **Frontmatter treatment** — Render frontmatter as a compact metadata band with a disclosure control: key names visible, values hidden until expanded. This honors "format differently" without turning metadata into body content.
 
 ## Transformative Improvements
 
-1. **Workspace = git repo (or git-friendly).** Reframe the workspace as a git-aware folder. Auto-stage and commit doc changes (or surface git status if the user is doing it themselves); offer "view history" on a doc to see how it evolved. Pulls in the "what's new since last read" benefit (which you rejected as a feature) via a known mechanism — diffing commits — rather than an app-specific state surface. Tests whether the workspace concept has more shape than just "a folder."
-2. **Drop YAML peer support; markdown only for v1.** Re-question YAML as peer-class. YAML viewing/editing as a separate pipeline is real scope (separate viewer, separate editor, separate affordances). If AI communication is mostly markdown — which most chat UIs emit — YAML could ship in v2 or be delegated to other tools. Tests whether YAML earns its way into v1, or whether scope-cutting it would let the markdown experience get more attention.
-3. **No tabs — browser-style history navigation.** Replace the open-tabs concept entirely with a doc-visit history: `Cmd+P` jumps to a doc, `Cmd+[` / `Cmd+]` go back/forward through visit history, no "currently open set." Tests whether multi-tab is actually load-bearing — you read one doc at a time, and `Cmd+P` already gets you anywhere. Tabs may be cargo-culted from web browsers.
+1. **Document set as manual collection** — Instead of workspaces, let users create named lightweight collections of file aliases. A collection is not a folder crawl; it is a curated reading set. This tests whether organization is needed, but only after rejecting implicit workspace complexity.
+2. **Single-document purist mode** — Drop hidden tabs entirely: one window equals one document, recent files handle return, and `Cmd+P` becomes "open recent." This tests whether even hidden multi-doc state is unnecessary for a viewer-first app.
+3. **Zero-library app** — Drop the home index entirely. Launch restores prior docs if any; otherwise it shows a native open panel. This tests whether even recent-file curation is more app surface than the viewer-first premise needs.
 
 ## Decisions
 
 **Taken:**
 - No AI integration; the app is content-source-agnostic.
-- **Workspace = a chosen folder.** All `.md`/`.yaml` files within are addressable; `Cmd+P` fuzzy-find and file-watch are scoped to the workspace.
-- **Home screen is a typographic full-screen index** of recent workspace docs; appears when no doc is open.
+- **No workspace concept.** Files open directly; the no-doc home screen shows recent files instead of asking for or indexing a folder.
+- **Home screen is a typographic full-screen index** of recent files; appears when no doc is open.
 - Edit mode opens the whole file with cursor at the click/selection point (single rule).
 - **Edit gesture is select-then-confirm:** after a text selection in viewer, a popover offers **highlight** (keep selection for native `Cmd+C`) or **edit** (enter edit mode at selection start). Toolbar "edit" icon enters at the start of the file. (Replaces the earlier "double-click or click-then-`⏎`" formulation.)
 - Editor mode is iA Writer–style focused writing; `Esc` saves and returns to viewer.
 - No toolbar-driven markdown insertion; writing affordance is contextual (click-to-edit).
 - No visible tab bar; multi-doc switching via `Cmd+P` fuzzy-find. Merge All Windows consolidates separate windows. **Bottom status bar shows: open-tab count, word count, character count.**
 - Viewer navigation: continuous scroll; `PgDn`/`PgUp` jump to next/previous heading; `Cmd+F` find scoped to current doc, matching rendered text.
+- Add a transient document outline palette for jumping within long markdown docs.
 - Reading typography is a primary feature; font/size controls minimal but tasteful (Steve Jobs aesthetic — opinionated defaults, not configurability).
 - Reading place is preserved across edit round-trips.
 - Autosave on `Esc`, tab switch, and quit; no save dialog or unsaved indicator.
 - State restore on launch: open tabs and scroll positions. If a file changed on disk, reopen at top. If a file is missing, show a dismissable "missing" placeholder tab.
-- File-watch over the workspace folder: auto-refresh on external changes if no local edits; one-key reload prompt otherwise.
+- File-watch open files: auto-refresh on external changes if no local edits; one-key reload prompt otherwise.
 - **Markdown flavor: GFM.** Lang-aware code-block syntax highlighting (tokenizer deferred). Images render at natural size capped to content width, lazy-load below fold, click → macOS Quick Look.
-- YAML is a peer format with the same viewer/editor split; viewer affordances include tree-collapse and subtle type hints.
+- YAML is a sibling experience with the same viewer/editor split; viewer affordances include tree-collapse and subtle type hints.
+- YAML v1 scope is a polished structural viewer plus raw text editor, not YAML-aware editing.
+- Treat markdown frontmatter as visually distinct metadata at the top of the rendered doc.
 - Click-to-copy as a feature class is dropped; native macOS text-select + `Cmd+C` is the way to copy.
 
 **Set aside:**
@@ -86,6 +92,11 @@ Build a macOS markdown app tailored for communicating with AI via markdown docum
 - **Doc as a revision stream / "what's new since last read"** — rejected.
 - **No app-side state** (state in markdown HTML comments) — rejected.
 - **One-mode live preview** — user prefers a refined, dedicated viewer mode over always-rendered editing.
+- **Workspace as organizing concept** — unnecessary complexity; recent files are enough when no file is open.
+- **Workspace-scoped fuzzy-find and file-watch** — removed with the workspace concept; discovery shifts to open/recent files and file-watch shifts to open files.
+- **First-launch workspace picker** — deferred because workspace itself is removed from the core model.
+- **Folder browser as permanent primary surface** — rejected.
+- **Inbox-to-library workflow** — rejected.
 
 ## Notes
 
