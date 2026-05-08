@@ -32,7 +32,7 @@ Avoid:
 - Looping more than 3 iterations without checking whether the conversation is converging.
 - Manufacturing opportunities. If a story is already well-calibrated, say so.
 
-**Brainstorm-style outside, authoring-quality inside.** The teacher sees a short, focused conversation about concrete moves on their story. Underneath, the skill orchestrates the same sub-agents and quality checks that produced the story in the first place.
+**Brainstorm-style outside, authoring-quality inside.** The teacher sees a short, focused conversation about concrete moves on their story. Underneath, the skill orchestrates the same pipeline stages and quality checks that produced the story in the first place.
 
 ## Teacher's Job
 
@@ -93,6 +93,14 @@ No rounds folder. The brainstorm phase fits in `revision-session.md`; the apply 
 
 If the teacher invokes a different command but clearly asks for this workflow ("help me adjust this story for my class"), use the skill.
 
+## The three pipeline stages
+
+The skill orchestrates three pipeline stages that mirror those in `design-polylogue-story`. Each stage has a prompt spec bundled in `agents/`. When phase steps below name a stage, read the corresponding spec and apply its instructions in your current context — these are not registered subagents in the standalone skill, just specs you load on demand.
+
+- **Creative Writer** (`agents/creative-writer.md`) — drafts replacement language at full creative quality. Used in Phase 1 to produce before/after examples; not run in Phase 2 (calibration-only).
+- **Instructional Designer** (`agents/instructional-designer.md`) — runs the diagnostic scan, adapts to grade level, runs the elimination check on every adjusted decision.
+- **Reviewer/Editor** (`agents/reviewer-editor.md`) — polishes for grade-level voice, runs sync-checks across chapter files, runs the Phase 3 quality-review pass.
+
 ## Phase Flow
 
 The conversation has three phases. The first is a loop; the second and third are one-shot.
@@ -126,7 +134,7 @@ For *skill visibility*, identify:
 - The fork's debrief — almost always a high-headroom moment because it's the capstone
 - Decisions already pedagogically tight (no headroom; mention as a no-op)
 
-The Instructional Designer sub-agent does this scan. Dispatch with the full story context and the named axis; receive an opportunity list with chapter-level locations and brief rationales.
+The Instructional Designer does this scan. Dispatch with the full story context and the named axis; receive an opportunity list with chapter-level locations and brief rationales.
 
 The diagnostic produces both opportunities and explicit *no-ops* at chapter-level granularity. A no-op is a chapter, decision, or surface where the story is already at the requested calibration — a misconception pull already at strong intensity, a passage already comfortable at the new reading band, a debrief lens already naming the cognitive move. Surface no-ops in the structured output alongside opportunities; do not bury or omit them. Honest no-ops prevent the operator from assuming revision is wholesale, make the work visibly targeted, and tell the operator where the story is already strong (which is also useful information for the teacher's run).
 
@@ -204,7 +212,7 @@ When the teacher approves a plan, the skill executes it. This phase is one-shot 
 **Step 3 — Walk the story, applying approved themes chapter by chapter.** For each chapter file, in order:
 
 For *reading-level shifts*:
-- The Instructional Designer sub-agent rewrites narration and dialogue at the new grade level
+- The Instructional Designer rewrites narration and dialogue at the new grade level
 - Decision prompts and hints are adjusted to grade-level-appropriate language
 - The targeted skill at the chapter gate is unchanged
 - Image prompts may need staging-line adjustments only if narration changes alter what's depicted; usually they do not
@@ -226,13 +234,13 @@ For *visibility shifts (less visible)*:
 
 **Step 5 — Update the master.** Adjust `revised-polylogue.md`'s reading-level field if changed; recompute the runtime estimate with appropriate coefficients (35 s/page for grade 5, 30 s/page for grade 6, 25 s/page for grade 7); update the per-chapter debrief lens summaries if visibility shifted. Character bible and locked art style are not modified by either calibration axis.
 
-**Step 6 — Run bible-sync.** Even though the bible itself did not change, every chapter's inline character descriptions in image prompts must remain consistent with the bible. The Reviewer/Editor sub-agent runs a sync-check across all chapters and flags any drift.
+**Step 6 — Run bible-sync.** Even though the bible itself did not change, every chapter's inline character descriptions in image prompts must remain consistent with the bible. The Reviewer/Editor runs a sync-check across all chapters and flags any drift.
 
-The Creative Writer is *not* dispatched in Phase 2 of the MVP. Creative drafting at revision time is out of scope; Phase 2 only edits existing creative content.
+The Creative Writer is *not* run in Phase 2 of the MVP. Creative drafting at revision time is out of scope; Phase 2 only edits existing creative content.
 
 ### Phase 3: Verify and Deliver
 
-**Step 1 — Run the quality-review pass.** The Reviewer/Editor sub-agent runs the same checks the authoring skill runs at Round 7, adjusted for the revision context:
+**Step 1 — Run the quality-review pass.** The Reviewer/Editor runs the same checks the authoring skill runs at Round 7, adjusted for the revision context:
 
 - *Elimination check* — every gate decision still passes, including chapters where visibility was softened
 - *Fork legitimacy* — the perspective fork's branches still represent genuinely distinct, defensible perspectives
@@ -265,70 +273,15 @@ This is the substantive teacher-prep deliverable. It is not boilerplate; it is s
 
 ## The Two Calibration Axes — Detail
 
-### Reading-level shift
-
-**What changes:** narration prose, dialogue word choice, decision prompt language, hint text, debrief lens prose.
-
-**What stays:** characters, locked art style, perspective fork, chapter structure, targeted skills, misconception annotations, decision *meanings* (a wrong choice still targets the same misconception; only its language adjusts).
-
-**Mechanics:** the Instructional Designer sub-agent runs at the new grade level on every page. The runtime estimator recomputes with the new coefficient (35/30/25 s/page for grades 5/6/7). The bible and art style are not affected.
-
-**Asymmetric notes:** shifting *up* (e.g., grade 5 → grade 7) is generally safer than shifting *down*. Shifting down may require simplifying perspective tradeoffs themselves — not just words — and at sufficient distance becomes re-authoring. The skill should refuse a grade-7 → grade-5 shift if the targeted skill's complexity would not survive the simplification, and surface this to the teacher: "This story's perspective tradeoffs are calibrated to grade 7. Shifting to grade 5 would require simplifying the perspectives themselves, which is closer to re-authoring than calibration. Want me to shift to grade 6 instead, or do you want me to flag this and try anyway?"
-
-### Skill visibility shift
-
-**What changes:** misconception-targeted wrong choice language, hint specificity, per-chapter debrief lens phrasing, fork debrief lens phrasing, narrative cues for skill-relevant moments.
-
-**What stays:** the targeted skill at every gate, the fork's structure and skill-target, the elimination check passing on every decision (hard floor), the fork legitimacy on every fork branch, the misconception annotations themselves (the names; the language realizing them shifts).
-
-**Hint-naming tension.** Making a hint name the cognitive operation explicitly ("*Reading between the lines* means letting the off-topic evidence count…") increases pedagogical clarity but risks doing the work students should be doing for themselves at the moment of attempt-2. When the diagnostic proposes hint-naming as a visibility-up move, surface the tradeoff in the example presentation so the operator (and through them the teacher) decides — do not default the skill toward naming.
-
-**Asymmetric constraints:**
-
-- *More visible* has a soft ceiling: heavy-handedness. The skill should self-flag when amplification crosses into stories that narrate their own pedagogy at students. Pull back if so.
-- *Less visible* has a hard floor: the elimination check. If softening a wrong choice makes the decision guessable, the skill must not commit the change for that chapter. Partial application is acceptable; chapter-by-chapter floor enforcement is mandatory.
-
-**Mechanics:** the Instructional Designer adjusts decision-related language; the Reviewer/Editor runs the elimination check on every adjusted decision before commit; the fork uses the fork-legitimacy check instead.
+Phase 2 above describes the operational mechanics of each axis inline with the chapter walk. For the deeper rationale — what changes vs. what stays per axis, the asymmetric constraints (less-visible's hard elimination floor; more-visible's soft heavy-handedness ceiling), and the hint-naming tension — read `references/calibration-axes.md`.
 
 ## Customization Policy
 
-The MVP allows revisions only along the two calibration axes. The following table specifies what is touchable through those axes:
-
-| Field type | Policy |
-|---|---|
-| Page narration prose | Editable (reading level shifts language; visibility may foreground/background cues) |
-| Dialogue text | Editable (reading level shifts language; visibility may sharpen/soften skill-relevant lines) |
-| Decision prompt language | Editable (both axes) |
-| Decision choice labels | Editable (visibility shifts pull strength); `is_correct` and `misconception_targeted` are **locked** |
-| Hint text | Editable (both axes) |
-| Per-chapter debrief lens | Editable (both axes) |
-| Fork debrief lenses | Editable (visibility only); structural roles **locked** |
-| Image-prompt staging | Adjusted only if narration changes alter what's depicted |
-| Locked art style | **Not modified** by either axis |
-| Character bible | **Not modified** by either axis |
-| Schema structure | **Locked** — chapter count, fork existence, ending count |
-| Targeted skill at gate | **Locked in MVP** (Phase 2 of the skill's roadmap may relax) |
-| Targeted skill at fork | **Locked** |
-
-When the teacher requests something outside this policy, refuse warmly and offer alternatives within scope.
+The MVP allows revisions only along the two calibration axes. The full table of editable vs. locked fields is in `references/customization-policy.md` — read it when the teacher requests something near the edge of scope. When the request falls outside the policy, refuse warmly and offer alternatives within scope.
 
 ## Refusal Patterns
 
-The skill will refuse some teacher requests. Tone matters: refusals must land as helpful, not as scolding. The pattern is *acknowledge → explain briefly → offer alternative*.
-
-**Example: "Make the right answer more obvious."**
-> I can't do that without breaking what the chapter is teaching — if students can pick the right answer without using the targeted thinking skill, the chapter stops doing its work. What I *can* do: sharpen the hint after the first attempt so students get a stronger nudge toward the cognitive move, or shift the reading level down so the question is easier to parse. Want either of those?
-
-**Example: "Change the targeted skill of chapter 3."**
-> Re-targeting a chapter's skill is out of scope for this revision tool — the chapter content was authored to teach this specific skill, and changing the target usually requires rewriting pages. What I can do: adjust how visible the skill is at chapter 3 (sharper or softer), shift the reading level, or both. If you genuinely need a different skill at chapter 3, that's a request for the authoring team, not a revision.
-
-**Example: "Add a chapter."**
-> Adding chapters is also out of scope. The story arc, perspective fork placement, and runtime estimate all depend on the chapter count being fixed. If you're looking for more content on the same skill, the library may have other stories that target it — would you like me to point you at the source folder so you can browse?
-
-**Example: "Make the perspective fork have a 'best' answer."**
-> The fork is designed so that all branches are correct — that's the point of the perspective-taking lesson. Picking one as 'best' would collapse the lesson into 'guess the right perspective,' which isn't perspective-taking. What I can do: make the *tradeoffs* between branches more visible, so students see what each path costs. Want me to do that?
-
-The pattern across all refusals: name the constraint specifically, explain why briefly, propose what *can* be done. Do not lecture; do not apologize repeatedly; do not list every locked field. One acknowledgment, one explanation, one or two alternatives.
+When refusing, follow the pattern: **acknowledge → explain briefly → offer alternative**. Worked examples for the four most common out-of-scope requests (more-obvious answer, re-target a chapter's skill, add a chapter, give the fork a "best" answer) are in `references/refusal-patterns.md`.
 
 ## Bundled Assets
 
@@ -337,6 +290,8 @@ The skill loads:
 - `schema.json` — JSON Schema for `story.json`. Used by the Reviewer/Editor in the verify phase and by the Apply phase for re-validation.
 - `thinking-skills.md` — canonical list of skill names. Used to resolve any skill-related vocabulary the teacher uses to canonical names.
 - `sample-revision-session.md` — a fully-worked example session showing what good Phase 1 output looks like. Provided as a few-shot reference for the Instructional Designer's diagnostic mode and the Reviewer/Editor's example-polishing.
+- `agents/` — prompt specs for the three pipeline stages (Creative Writer, Instructional Designer, Reviewer/Editor). Read on demand when phase steps name a stage.
+- `references/` — progressive-disclosure docs (customization-policy, refusal-patterns, calibration-axes). Read on demand when the relevant section above links to them.
 
 The skill loads nothing from outside its own folder and the source story folder.
 
@@ -357,7 +312,7 @@ After each turn, respond to the teacher with:
 - What's on the table now (current opportunity set, refined examples, or proposed plan).
 - The 1–3 things the teacher should react to or decide.
 
-Keep chat short. The opportunity examples are where the substance lives. Avoid meta-commentary about the skill's process; the teacher does not need to know about phase boundaries, sub-agent dispatch, or quality checks unless something fails and the teacher needs to decide how to handle it.
+Keep chat short. The opportunity examples are where the substance lives. Avoid meta-commentary about the skill's process; the teacher does not need to know about phase boundaries, pipeline stages, or quality checks unless something fails and the teacher needs to decide how to handle it.
 
 When the teacher's reaction is rich (specific, multi-faceted), respond with a refined plan and the next examples. When the reaction is thin ("not quite," "I don't know"), offer alternatives at different intensities or ask one direct clarifying question — do not loop on weak signal indefinitely.
 
