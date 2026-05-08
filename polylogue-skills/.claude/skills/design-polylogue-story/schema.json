@@ -1,0 +1,319 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://teaching-critical-thinking/schemas/polylogue-story-v1.json",
+  "title": "Polylogue Story Package (v1)",
+  "description": "Schema for a complete graphic-novel-CYOA story package produced by the design-polylogue-story skill and consumed by the student-facing app. The story is a Y-shaped DAG: linear gated chapters followed by exactly one perspective-fork chapter, then divergent post-fork chapters ending in different endings. Cross-cutting invariants not enforceable by JSON Schema (must be checked at Round 7 Quality Review and Round 8 Export): (1) exactly one chapter's decision has kind='perspective_fork'; (2) endings.length equals the number of correct choices in the perspective_fork decision; (3) every next_chapter_id resolves to an existing chapter.id; (4) total estimated runtime fits the metadata.estimated_duration_minutes budget; (5) hint_after_attempt_1 is required iff any choice in the decision has is_correct=false; (6) abrupt_end is required iff any choice in the decision has is_correct=false.",
+  "type": "object",
+  "required": ["version", "metadata", "art_style", "characters", "chapters", "endings", "debrief"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema/format version, semver-style (e.g., '1.0.0')."
+    },
+    "metadata": { "$ref": "#/definitions/metadata" },
+    "art_style": { "$ref": "#/definitions/art_style" },
+    "characters": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Cast of recurring characters with locked physical descriptions for image-prompt consistency.",
+      "items": { "$ref": "#/definitions/character" }
+    },
+    "chapters": {
+      "type": "array",
+      "minItems": 2,
+      "description": "Story chapters in story order. Includes pre-fork chapters, the fork chapter, and all post-fork branch chapters.",
+      "items": { "$ref": "#/definitions/chapter" }
+    },
+    "endings": {
+      "type": "array",
+      "minItems": 2,
+      "description": "Terminal chapter summaries, one per perspective-fork branch.",
+      "items": { "$ref": "#/definitions/ending" }
+    },
+    "debrief": { "$ref": "#/definitions/debrief" }
+  },
+  "definitions": {
+    "metadata": {
+      "type": "object",
+      "required": ["title", "theme", "grade_level", "primary_skill", "estimated_duration_minutes"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "description": "Story title shown to students." },
+        "theme": {
+          "type": "string",
+          "description": "Project-Based Learning theme. Conventional values include 'genetics', 'sports', 'friendship', 'mystery', 'arts', 'music' — open-ended for future themes."
+        },
+        "grade_level": {
+          "type": "integer",
+          "enum": [5, 6, 7],
+          "description": "Reading grade level the story is authored at. The instructional designer adapts language to this level."
+        },
+        "primary_skill": {
+          "type": "string",
+          "description": "Primary thinking skill targeted across the story's chapter-end gates. Drawn from thinking-skills.md."
+        },
+        "secondary_skills": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Other thinking skills exercised by gate decisions in this story."
+        },
+        "perspective_taking_topic": {
+          "type": "string",
+          "description": "Brief description of what the perspective fork explores (e.g., 'whether to confront a friend or empathize with their reasoning')."
+        },
+        "estimated_duration_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Authored time budget. Default is 15 minutes."
+        },
+        "author_overrides": {
+          "type": "array",
+          "description": "Quality-gate warnings the author chose to accept rather than fix, with one-line justifications. Used by warn-and-allow enforcement.",
+          "items": {
+            "type": "object",
+            "required": ["gate", "justification"],
+            "additionalProperties": false,
+            "properties": {
+              "gate": {
+                "type": "string",
+                "description": "Which quality gate was overridden (e.g., 'elimination_check_chapter_2', 'ending_diff', 'runtime_fit', 'image_consistency')."
+              },
+              "justification": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "art_style": {
+      "type": "object",
+      "required": ["rendering_style", "palette", "lighting", "aspect_ratio"],
+      "additionalProperties": false,
+      "description": "Locked art style applied to every page's image prompt. Drives visual consistency across the story.",
+      "properties": {
+        "rendering_style": {
+          "type": "string",
+          "description": "E.g., 'semi-realistic comic', 'Pixar-influenced 2.5D', 'watercolor manga'."
+        },
+        "palette": { "type": "string" },
+        "lighting": { "type": "string" },
+        "line_treatment": { "type": "string", "description": "Optional: how lines/edges are rendered (e.g., 'clean inked outlines on characters, painted backgrounds')." },
+        "aspect_ratio": {
+          "type": "string",
+          "pattern": "^[0-9]+:[0-9]+$",
+          "default": "2:3",
+          "description": "Aspect ratio applied to every image_prompt. Inlined verbatim as the first line of each prompt so the renderer reads it before any other instruction. Default '2:3' (portrait, fits a two-column tablet/Chromebook reader and matches comic-page proportions). Common alternatives: '9:16' (vertical-scroll/Webtoons), '3:4', '1:1'."
+        }
+      }
+    },
+    "character": {
+      "type": "object",
+      "required": ["name", "role", "physical_description"],
+      "additionalProperties": false,
+      "description": "Recurring character with a locked visual identity. The physical_description is used verbatim in every image_prompt where this character appears.",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string", "description": "E.g., 'protagonist', 'mentor', 'antagonist', 'sidekick'." },
+        "age": { "type": "string", "description": "E.g., '12', '40s', 'elderly'." },
+        "physical_description": {
+          "type": "string",
+          "description": "Skin/hair/eyes/build/features. The verbatim text inlined into every image prompt where this character appears."
+        },
+        "clothing": { "type": "string" },
+        "distinctive_features": { "type": "string", "description": "Items, scars, accessories — anything visually identifying." },
+        "expression_baseline": { "type": "string", "description": "Default emotional/expressive register." }
+      }
+    },
+    "chapter": {
+      "type": "object",
+      "required": ["id", "purpose", "pages", "decision"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identifier (e.g., 'ch01', 'ch04a' for fork branches). Referenced by next_chapter_id in decisions."
+        },
+        "purpose": {
+          "type": "string",
+          "description": "One-line summary of what this chapter accomplishes in the arc."
+        },
+        "skill_targeted_at_end": {
+          "type": "string",
+          "description": "The thinking skill the chapter-end decision targets. Should match decision.skill_targeted."
+        },
+        "pages": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/page" }
+        },
+        "decision": { "$ref": "#/definitions/decision" }
+      }
+    },
+    "page": {
+      "type": "object",
+      "required": ["page_number", "narration", "image_prompt"],
+      "additionalProperties": false,
+      "properties": {
+        "page_number": { "type": "integer", "minimum": 1 },
+        "narration": {
+          "type": "string",
+          "description": "Short narration paragraph at the chosen grade level."
+        },
+        "dialogues": {
+          "type": "array",
+          "description": "Character dialogues on this page; 0+ entries (a page may be narration-only).",
+          "items": {
+            "type": "object",
+            "required": ["speaker", "line"],
+            "additionalProperties": false,
+            "properties": {
+              "speaker": { "type": "string", "description": "Character name; should match a character.name in the cast." },
+              "line": { "type": "string" }
+            }
+          }
+        },
+        "image_prompt": {
+          "type": "string",
+          "description": "COMPLETE renderer-facing image prompt. Self-contained — the LLM image renderer has no access to the story, the bible, or any other page. Structure: aspect-ratio line (verbatim from art_style.aspect_ratio) + locked style block + verbatim character descriptions for everyone in the panel + page staging in absolute visual instructions. Composed by the Reviewer/Editor in Round 4 per the renderer-facing rules; copied verbatim into story.json at Round 8."
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": ["prompt", "skill_targeted", "kind", "choices", "attempts_allowed", "coin_schedule"],
+      "additionalProperties": false,
+      "description": "Chapter-end teaching moment. Always 3 multiple-choice options, 2 attempts. Wrong twice on a 'gate' triggers abrupt_end and the story is over.",
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "description": "The question or scenario put to the group, framed in-fiction."
+        },
+        "skill_targeted": {
+          "type": "string",
+          "description": "Thinking skill the decision exercises (drawn from thinking-skills.md)."
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["gate", "perspective_fork"],
+          "description": "'gate' = single correct answer (must answer correctly to proceed). 'perspective_fork' = multiple correct answers, each routing to a different post-fork chapter. Each story has exactly ONE perspective_fork (cross-cutting invariant)."
+        },
+        "choices": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/definitions/choice" },
+          "description": "Exactly 3 multiple-choice options. For 'gate': 1 correct, 2 incorrect. For 'perspective_fork': 2 correct + 1 incorrect, OR 3 correct (no failure mode at the fork)."
+        },
+        "hint_after_attempt_1": {
+          "type": "string",
+          "description": "Authored hint shown to the group after the first wrong attempt. Should not give away the answer; should reframe or surface the relevant skill. REQUIRED iff any choice in this decision has is_correct=false."
+        },
+        "attempts_allowed": {
+          "type": "integer",
+          "const": 2,
+          "description": "Locked at 2."
+        },
+        "coin_schedule": {
+          "type": "object",
+          "required": ["first_attempt", "second_attempt", "failed"],
+          "additionalProperties": false,
+          "description": "Coin awards. Locked at 3/1/0.",
+          "properties": {
+            "first_attempt": { "type": "integer", "const": 3 },
+            "second_attempt": { "type": "integer", "const": 1 },
+            "failed": { "type": "integer", "const": 0 }
+          }
+        },
+        "abrupt_end": {
+          "$ref": "#/definitions/abrupt_end",
+          "description": "REQUIRED iff any choice in this decision has is_correct=false. Omitted only when ALL 3 choices are correct (perspective_fork variant with no failure mode)."
+        }
+      }
+    },
+    "choice": {
+      "type": "object",
+      "required": ["label", "is_correct"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Choice text shown to the student group."
+        },
+        "is_correct": { "type": "boolean" },
+        "next_chapter_id": {
+          "type": "string",
+          "description": "REQUIRED when is_correct=true: the chapter the story advances to if this choice is selected. For 'gate' decisions all correct choices share one next_chapter_id. For 'perspective_fork' decisions each correct choice routes to a different next_chapter_id."
+        },
+        "misconception_targeted": {
+          "type": "string",
+          "description": "REQUIRED when is_correct=false: name of the surface-level reading, fallacy, bias, or other misconception this wrong choice encodes (e.g., 'surface reading', 'over-inferring', 'false dichotomy', 'recency bias'). Drives the elimination check at Round 7 Quality Review."
+        },
+        "debrief_lens": {
+          "type": "string",
+          "description": "How this choice plays in the debrief (e.g., 'this perspective prioritizes loyalty over honesty'; 'this is the surface reading that ignores the calendar evidence')."
+        }
+      }
+    },
+    "abrupt_end": {
+      "type": "object",
+      "required": ["pages", "skill_debrief_panel"],
+      "additionalProperties": false,
+      "description": "Shown when the group answers wrong on both attempts at a decision with at least one incorrect choice. Story ends here — no further chapters.",
+      "properties": {
+        "pages": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": { "$ref": "#/definitions/page" },
+          "description": "1-2 short consequence pages, in-fiction."
+        },
+        "skill_debrief_panel": {
+          "type": "string",
+          "description": "Brief explanation of what skill was missed and why the correct answer was correct."
+        }
+      }
+    },
+    "ending": {
+      "type": "object",
+      "required": ["chapter_id", "summary"],
+      "additionalProperties": false,
+      "properties": {
+        "chapter_id": {
+          "type": "string",
+          "description": "ID of the terminal chapter for this branch."
+        },
+        "summary": {
+          "type": "string",
+          "description": "Short summary of how this branch ended."
+        },
+        "perspective_lens": {
+          "type": "string",
+          "description": "Names the perspective this branch represented. Used by the debrief to contrast with the path(s) the group did not take."
+        }
+      }
+    },
+    "debrief": {
+      "type": "object",
+      "required": ["skills_practiced", "perspective_contrast", "reflection_question"],
+      "additionalProperties": false,
+      "properties": {
+        "skills_practiced": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Thinking skills the group practiced across the story (deduped from chapter decisions)."
+        },
+        "perspective_contrast": {
+          "type": "string",
+          "description": "Explicit contrast across all perspective-fork branches. Names what the group lived AND what they did not. Surfaces alternative perspectives as legitimate."
+        },
+        "per_chapter_lens": {
+          "type": "object",
+          "description": "Optional per-chapter expert-lens commentary, keyed by chapter id.",
+          "additionalProperties": { "type": "string" }
+        },
+        "reflection_question": { "type": "string" }
+      }
+    }
+  }
+}
