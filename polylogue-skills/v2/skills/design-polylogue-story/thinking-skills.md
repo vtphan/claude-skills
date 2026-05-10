@@ -1,46 +1,77 @@
-**Basic Reading Comprehension at 5th-grade, 6th-grade, or 7th-grade level**
-- Knowing basic vocabularies
-- Identifying main theme
-- Reading fluency
-- Connecting the dots
-- Thinking for themselves
+# Thinking skills taxonomy
 
-**Comprehension & Analysis**
-- Reading between the lines (inferencing)
-- Identifying main idea vs. supporting details
-- Summarizing
-- Paraphrasing
-- Comparing and contrasting
-- Identifying cause and effect
+Three categories. Each entry has a `[slot]` tag indicating where it can fill in a chapter end. Per-skill working references (definitions, mastery signs, failure modes, worked examples, authoring notes) live in `skills-reference.md`. Read the relevant reference entry before authoring a challenge that targets a skill.
 
-**Questioning**
-- Asking clarifying questions
-- Asking probing questions ("How do you know?", "Why?")
-- Wondering and hypothesizing
-- Identifying what you don't know
+Slot tags are **affordances, not rules**. A skill tagged `[gate]` *can* fit a gate slot when the chapter naturally stages it; the Instructional Designer decides per-chapter whether the staged scene supports the challenge.
 
-**Evaluating Information**
-- Distinguishing fact from opinion
-- Spotting bias
-- Detecting persuasion and propaganda techniques
-- Evaluating source credibility (lateral reading)
-- Recognizing missing information
-- Spotting logical fallacies (overgeneralization, either/or thinking, circular reasoning)
+---
 
-**Reasoning & Argument**
-- Making claims
-- Supporting claims with evidence
-- Drawing conclusions
-- Justifying reasoning
-- Counter-arguing (considering objections)
-- Recognizing assumptions
-- Detecting contradictions
+## Foundational Reading Skills
 
-**Perspective-Taking**
-- Considering multiple viewpoints
-- Empathizing
-- Identifying author's purpose
-- Recognizing point of view (whose story is being told?)
-- Separating emotion from analysis
+For `[comprehension_check]` slots. Default challenge type: **individual**.
 
+- Vocabulary in context — `[comprehension_check]`
+- Identifying main idea / gist — `[comprehension_check]`
+- Summarizing — `[comprehension_check]`
+- Sequencing of events — `[comprehension_check]`
+- Identifying explicit cause-and-effect — `[comprehension_check]`
+- Tracking character / setting — `[comprehension_check]`
+- Recognizing problem-solution structure — `[comprehension_check]`
 
+## Thinking Skills
+
+For `[gate]` slots and (for the perspective-taking subcategory) `[fork]` slots. Default challenge type: **group**.
+
+### Inference and reading-between-the-lines
+
+- Inferencing — `[gate]`
+- Predicting from textual evidence — `[gate]`
+- Synthesizing across chapters or scenes — `[gate]`
+
+### Argument and reasoning
+
+- Distinguishing claim, evidence, and reasoning — `[gate]`
+- Counter-arguing (considering objections) — `[gate]`
+- Recognizing assumptions — `[gate]`
+- Detecting contradictions — `[gate]`
+
+### Evaluating information
+
+- Distinguishing fact from opinion — `[gate]`
+- Spotting bias — `[gate]`
+- Detecting persuasion and propaganda — `[gate]`
+- Evaluating source credibility — `[gate]`
+- Recognizing missing information — `[gate]`
+
+### Logical fallacies
+
+- Spotting overgeneralization — `[gate]`
+- Spotting either/or thinking — `[gate]`
+- Spotting circular reasoning — `[gate]`
+
+### Perspective-taking (fork-eligible)
+
+- Considering multiple viewpoints — `[fork]`
+- Identifying author's purpose — `[gate]` or `[fork]`
+- Recognizing point of view — `[gate]` or `[fork]`
+- Separating emotion from analysis — `[gate]`
+- Empathizing — `[fork]`
+
+## Social-Emotional Skills (SEL-as-content)
+
+When a chapter scene depicts a social moment (interruption, dismissal, mind-change, building on another's idea), the chapter end can ask the group to identify or evaluate what happened. Default challenge type: **group always**.
+
+- Recognizing when a peer is dismissed — `[gate]`
+- Acknowledging when one has changed one's mind — `[fork]`
+- Recognizing when emotion is overriding reasoning — `[gate]`
+- Building on someone else's idea — `[gate]`
+
+**SEL-as-process skills** — active listening, disagreeing respectfully, taking turns, voicing dissent — are NOT in this taxonomy. They're performed during group discussion rather than selected on a 3-MC, and live as universal authoring guidance in `agents/instructional-designer.md` (hint-after-attempt-1 phrasing for group challenges).
+
+---
+
+## Notes on use
+
+- **Definitions, mastery signs, failure modes, and worked examples** for each skill are in `skills-reference.md`. The taxonomy here is name-and-slot only.
+- **Dispositions** (intellectual curiosity, persistence, "thinking for yourself") are NOT formal entries by design. They emerge from doing the work and can be acknowledged in the debrief without being separately targeted.
+- **Skills not yet in `skills-reference.md`** can be used in a story, but the Instructional Designer will be working without the cold-start scaffolding the reference provides; expect the wrong-choices to take more iteration with the author.

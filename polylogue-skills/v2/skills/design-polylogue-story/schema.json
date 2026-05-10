@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://teaching-critical-thinking/schemas/polylogue-story-v1.json",
   "title": "Polylogue Story Package (v1)",
-  "description": "Schema for a complete graphic-novel-CYOA story package produced by the design-polylogue-story skill and consumed by the student-facing app. The story is a Y-shaped DAG: linear gated chapters followed by exactly one perspective-fork chapter, then divergent post-fork chapters ending in different endings. Cross-cutting invariants not enforceable by JSON Schema (must be checked at Round 7 Quality Review and Round 8 Export): (1) exactly one chapter's decision has kind='perspective_fork'; (2) endings.length equals the number of correct choices in the perspective_fork decision; (3) every next_chapter_id resolves to an existing chapter.id; (4) total estimated runtime fits the metadata.estimated_duration_minutes budget; (5) hint_after_attempt_1 is required iff any choice in the decision has is_correct=false; (6) abrupt_end is required iff any choice in the decision has is_correct=false.",
+  "description": "Schema for a complete graphic-novel-CYOA story package produced by the design-polylogue-story skill and consumed by the student-facing app. The story is a Y-shaped DAG: linear chapters (each optionally with a comprehension check and/or a thinking-skill decision) up to exactly one perspective-fork chapter, then divergent post-fork chapters ending in different endings. Cross-cutting invariants not enforceable by JSON Schema (must be checked at Round 7 Quality Review and Round 8 Export): (1) exactly one chapter's decision has kind='perspective_fork'; (2) endings.length equals the number of correct choices in that perspective_fork decision; (3) every next_chapter_id (chapter-level or choice-level) resolves to an existing chapter.id; (4) total estimated runtime fits the metadata.estimated_duration_minutes budget; (5) decision.hint_after_attempt_1 is required iff any choice in that decision has is_correct=false; (6) decision.abrupt_end is required iff any choice in that decision has is_correct=false; (7) decision.deliberation_prompt is required iff the decision is a perspective_fork with 0 incorrect choices (otherwise optional); (8) chapter.next_chapter_id is required unless the chapter has a perspective_fork decision or is a terminal ending chapter; (9) for perspective_fork decisions, each correct choice has its own choice.next_chapter_id (the chapter-level next_chapter_id is not used); (10) for gate decisions and chapters with no decision, routing uses chapter.next_chapter_id; (11) comprehension_check has no abrupt_end and does not route; (12) every comprehension_check.skill is a Foundational Reading Skill (or occasionally an SEL-as-content skill tagged [comprehension_check]); every decision.skill is a Thinking Skill or SEL-as-content skill; (13) correct-answer position should be distributed across A/B/C across the story's challenges (target at least one of each); within a chapter that has both a comp check and a gate, the two should not share the same correct position.",
   "type": "object",
   "required": ["version", "metadata", "art_style", "characters", "chapters", "endings", "debrief"],
   "additionalProperties": false,
@@ -23,7 +23,7 @@
     "chapters": {
       "type": "array",
       "minItems": 2,
-      "description": "Story chapters in story order. Includes pre-fork chapters, the fork chapter, and all post-fork branch chapters.",
+      "description": "Story chapters in story order. Includes pre-fork chapters, the fork chapter, and all post-fork branch (terminal) chapters.",
       "items": { "$ref": "#/definitions/chapter" }
     },
     "endings": {
@@ -48,11 +48,11 @@
         "grade_level": {
           "type": "integer",
           "enum": [5, 6, 7],
-          "description": "Reading grade level the story is authored at. The instructional designer adapts language to this level."
+          "description": "Reading grade level the story is authored at. The Instructional Designer adapts language to this level."
         },
         "primary_skill": {
           "type": "string",
-          "description": "Primary thinking skill targeted across the story's chapter-end gates. Drawn from thinking-skills.md."
+          "description": "Primary thinking skill targeted across the story's gates. Drawn from thinking-skills.md (Thinking Skills category)."
         },
         "secondary_skills": {
           "type": "array",
@@ -66,7 +66,7 @@
         "estimated_duration_minutes": {
           "type": "integer",
           "minimum": 1,
-          "description": "Authored time budget. Default is 15 minutes."
+          "description": "Authored time budget. Default is 15 minutes. The runtime estimator counts: 60s setup + sum(pages * seconds_per_page_by_grade) + sum(comprehension_checks * 30) + sum(decisions * 90) + 120s debrief."
         },
         "author_overrides": {
           "type": "array",
@@ -78,7 +78,7 @@
             "properties": {
               "gate": {
                 "type": "string",
-                "description": "Which quality gate was overridden (e.g., 'elimination_check_chapter_2', 'ending_diff', 'runtime_fit', 'image_consistency')."
+                "description": "Which quality gate was overridden (e.g., 'elimination_check_chapter_2', 'ending_diff', 'runtime_fit', 'image_consistency', 'position_distribution', 'staging_pedagogy_chapter_4')."
               },
               "justification": { "type": "string" }
             }
@@ -127,27 +127,35 @@
     },
     "chapter": {
       "type": "object",
-      "required": ["id", "purpose", "pages", "decision"],
+      "required": ["id", "purpose", "pages"],
       "additionalProperties": false,
+      "description": "A chapter has pages and an optional chapter end. The chapter end may carry zero, one, or two challenges: a comprehension_check (foundational, formative, individual default), a decision (thinking skill or SEL-as-content, narrative routing, group default), both, or neither. Routing: chapter.next_chapter_id is required unless the chapter has a perspective_fork decision (which routes via choice.next_chapter_id) or is a terminal ending chapter.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "Stable identifier (e.g., 'ch01', 'ch04a' for fork branches). Referenced by next_chapter_id in decisions."
+          "description": "Stable identifier (e.g., 'ch01', 'ch04a' for fork branches). Referenced by next_chapter_id."
         },
         "purpose": {
           "type": "string",
           "description": "One-line summary of what this chapter accomplishes in the arc."
-        },
-        "skill_targeted_at_end": {
-          "type": "string",
-          "description": "The thinking skill the chapter-end decision targets. Should match decision.skill_targeted."
         },
         "pages": {
           "type": "array",
           "minItems": 1,
           "items": { "$ref": "#/definitions/page" }
         },
-        "decision": { "$ref": "#/definitions/decision" }
+        "comprehension_check": {
+          "$ref": "#/definitions/comprehension_check",
+          "description": "Optional. A formative foundational-reading challenge presented at chapter end (before the decision, if a decision is also present)."
+        },
+        "decision": {
+          "$ref": "#/definitions/decision",
+          "description": "Optional. A thinking-skill or SEL-as-content challenge presented at chapter end. Either a 'gate' (binary: continue or abrupt-end) or 'perspective_fork' (multi-branch — exactly one fork per story)."
+        },
+        "next_chapter_id": {
+          "type": "string",
+          "description": "REQUIRED unless this chapter has a perspective_fork decision (which carries its own per-branch routing) or is a terminal ending chapter. For chapters with no decision, this is the linear continuation. For chapters with a gate decision, this is where the story goes if the group answers correctly."
+        }
       }
     },
     "page": {
@@ -175,28 +183,100 @@
         },
         "image_prompt": {
           "type": "string",
-          "description": "COMPLETE renderer-facing image prompt. Self-contained — the LLM image renderer has no access to the story, the bible, or any other page. Structure: aspect-ratio line (verbatim from art_style.aspect_ratio) + locked style block + verbatim character descriptions for everyone in the panel + page staging in absolute visual instructions. Composed by the Reviewer/Editor in Round 4 per the renderer-facing rules; copied verbatim into story.json at Round 8."
+          "description": "COMPLETE renderer-facing image prompt. Self-contained — the LLM image renderer has no access to the story, the bible, or any other page. Structure: aspect-ratio line (verbatim from art_style.aspect_ratio) + locked style block + verbatim character descriptions for everyone in the panel + page staging in absolute visual instructions. Composed by the Reviewer/Editor in Round 4 per the renderer-facing rules in agents/reviewer-editor.md; copied verbatim into story.json at Round 8."
+        }
+      }
+    },
+    "comprehension_check": {
+      "type": "object",
+      "required": ["prompt", "skill", "challenge_type", "choices", "hint_after_attempt_1", "attempts_allowed", "coin_schedule"],
+      "additionalProperties": false,
+      "description": "Formative chapter-end challenge for foundational reading skills. Always 3 multiple-choice options (1 correct + 2 incorrect with misconception_targeted annotations), 2 attempts, coin schedule 1/0/0 (formative — second-attempt correct earns no coins). Does NOT route the story; failure does NOT trigger an abrupt-end. After the second attempt (whether correct or not), the answer is revealed and the story continues.",
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "description": "The question put to the student, framed against the chapter content."
+        },
+        "skill": {
+          "type": "string",
+          "description": "Foundational reading skill exercised (drawn from Foundational Reading Skills in thinking-skills.md). Occasionally an SEL-as-content skill tagged [comprehension_check]."
+        },
+        "challenge_type": {
+          "type": "string",
+          "enum": ["individual", "group"],
+          "default": "individual",
+          "description": "How the prompt and hint are framed. Default 'individual' for comp checks (each student is checking their own understanding). Author can override to 'group' when the foundational skill is genuinely worth deliberation."
+        },
+        "choices": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/definitions/comp_check_choice" },
+          "description": "Exactly 3 multiple-choice options: 1 correct + 2 incorrect (each with a misconception_targeted annotation drawn from the per-skill failure modes in skills-reference.md)."
+        },
+        "hint_after_attempt_1": {
+          "type": "string",
+          "description": "Hint shown after the first wrong attempt. For individual challenges: text-anchored, redirecting to specific evidence in the chapter. For group challenges: discussion-prompting. Should reframe; should not reveal the answer."
+        },
+        "attempts_allowed": {
+          "type": "integer",
+          "const": 2,
+          "description": "Locked at 2."
+        },
+        "coin_schedule": {
+          "type": "object",
+          "required": ["first_attempt", "second_attempt", "failed"],
+          "additionalProperties": false,
+          "description": "Coin awards. Locked at 1/0/0 — 1 coin if correct on first attempt; 0 otherwise. The zero on second attempt is the formative signal: the hint helped, the student doesn't get the reward, but the story continues unchanged.",
+          "properties": {
+            "first_attempt": { "type": "integer", "const": 1 },
+            "second_attempt": { "type": "integer", "const": 0 },
+            "failed": { "type": "integer", "const": 0 }
+          }
+        }
+      }
+    },
+    "comp_check_choice": {
+      "type": "object",
+      "required": ["label", "is_correct"],
+      "additionalProperties": false,
+      "description": "A choice in a comprehension_check. Comp check choices do NOT carry next_chapter_id (comp checks don't route the story).",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Choice text shown to the student."
+        },
+        "is_correct": { "type": "boolean" },
+        "misconception_targeted": {
+          "type": "string",
+          "description": "REQUIRED when is_correct=false: name of the failure mode this wrong choice encodes (drawn from the per-skill failure modes in skills-reference.md, e.g., for vocabulary in context: 'surface-of-the-word', 'ignoring context', 'substituting plot for word meaning')."
         }
       }
     },
     "decision": {
       "type": "object",
-      "required": ["prompt", "skill_targeted", "kind", "choices", "attempts_allowed", "coin_schedule"],
+      "required": ["prompt", "skill", "kind", "challenge_type", "choices", "attempts_allowed", "coin_schedule"],
       "additionalProperties": false,
-      "description": "Chapter-end teaching moment. Always 3 multiple-choice options, 2 attempts. Wrong twice on a 'gate' triggers abrupt_end and the story is over.",
+      "description": "Chapter-end thinking-skill or SEL-as-content challenge. Always 3 multiple-choice options, 2 attempts. For 'gate': 1 correct + 2 incorrect; wrong twice triggers abrupt_end and story ends. For 'perspective_fork': 2 correct + 1 incorrect, OR 3 correct + 0 incorrect; each correct choice routes to a different post-fork chapter.",
       "properties": {
         "prompt": {
           "type": "string",
           "description": "The question or scenario put to the group, framed in-fiction."
         },
-        "skill_targeted": {
+        "skill": {
           "type": "string",
-          "description": "Thinking skill the decision exercises (drawn from thinking-skills.md)."
+          "description": "Thinking skill or SEL-as-content skill exercised (drawn from thinking-skills.md)."
         },
         "kind": {
           "type": "string",
           "enum": ["gate", "perspective_fork"],
           "description": "'gate' = single correct answer (must answer correctly to proceed). 'perspective_fork' = multiple correct answers, each routing to a different post-fork chapter. Each story has exactly ONE perspective_fork (cross-cutting invariant)."
+        },
+        "challenge_type": {
+          "type": "string",
+          "enum": ["individual", "group"],
+          "default": "group",
+          "description": "How the prompt and hint are framed, and which elimination-check bar applies. Default 'group' for decisions. Group challenges face a harder elimination bar — wrong choices must survive a discussing group, not just one student."
         },
         "choices": {
           "type": "array",
@@ -207,12 +287,16 @@
         },
         "hint_after_attempt_1": {
           "type": "string",
-          "description": "Authored hint shown to the group after the first wrong attempt. Should not give away the answer; should reframe or surface the relevant skill. REQUIRED iff any choice in this decision has is_correct=false."
+          "description": "Hint shown after the first wrong attempt. Should reframe or surface the relevant skill; should not reveal the answer. For group challenges, can also invite SEL-as-process behaviors ('Has every member of your group shared what they noticed?'). REQUIRED iff any choice in this decision has is_correct=false (cross-cutting invariant)."
+        },
+        "deliberation_prompt": {
+          "type": "string",
+          "description": "Framing nudge presented WHEN the choice lands (before any attempt), distinct from hint_after_attempt_1 (which fires AFTER a wrong attempt). REQUIRED for perspective_fork decisions with 0 incorrect choices (where there's no wrong attempt to hint after — the deliberation_prompt invites the group to weigh paths before voting). Optional for gates and 2-correct/1-incorrect forks (where it can supplement the post-wrong hint by framing the initial choice)."
         },
         "attempts_allowed": {
           "type": "integer",
           "const": 2,
-          "description": "Locked at 2."
+          "description": "Locked at 2. For 3-correct/0-incorrect perspective_fork variants, the second attempt functions as a 'change your mind' opportunity rather than a retry-after-wrong (no wrong answer exists)."
         },
         "coin_schedule": {
           "type": "object",
@@ -227,7 +311,7 @@
         },
         "abrupt_end": {
           "$ref": "#/definitions/abrupt_end",
-          "description": "REQUIRED iff any choice in this decision has is_correct=false. Omitted only when ALL 3 choices are correct (perspective_fork variant with no failure mode)."
+          "description": "REQUIRED iff any choice in this decision has is_correct=false (cross-cutting invariant). Omitted when ALL 3 choices are correct (perspective_fork variant with no failure mode)."
         }
       }
     },
@@ -235,6 +319,7 @@
       "type": "object",
       "required": ["label", "is_correct"],
       "additionalProperties": false,
+      "description": "A choice in a decision. For perspective_fork correct choices, choice.next_chapter_id specifies the post-fork branch; for gate decisions, routing happens via the chapter's chapter.next_chapter_id (not choice.next_chapter_id).",
       "properties": {
         "label": {
           "type": "string",
@@ -243,11 +328,11 @@
         "is_correct": { "type": "boolean" },
         "next_chapter_id": {
           "type": "string",
-          "description": "REQUIRED when is_correct=true: the chapter the story advances to if this choice is selected. For 'gate' decisions all correct choices share one next_chapter_id. For 'perspective_fork' decisions each correct choice routes to a different next_chapter_id."
+          "description": "REQUIRED when is_correct=true AND the parent decision is a perspective_fork: the post-fork branch chapter this choice routes to. For gate decisions, routing uses chapter.next_chapter_id instead — choice.next_chapter_id is not used and should be omitted."
         },
         "misconception_targeted": {
           "type": "string",
-          "description": "REQUIRED when is_correct=false: name of the surface-level reading, fallacy, bias, or other misconception this wrong choice encodes (e.g., 'surface reading', 'over-inferring', 'false dichotomy', 'recency bias'). Drives the elimination check at Round 7 Quality Review."
+          "description": "REQUIRED when is_correct=false: name of the misconception this wrong choice encodes (drawn from the per-skill failure modes in skills-reference.md, e.g., for inferencing: 'surface-reading-only', 'over-inferring', 'wrong-direction inference'). Drives the elimination check."
         },
         "debrief_lens": {
           "type": "string",
@@ -266,7 +351,7 @@
           "minItems": 1,
           "maxItems": 2,
           "items": { "$ref": "#/definitions/page" },
-          "description": "1-2 short consequence pages, in-fiction."
+          "description": "1-2 short consequence pages, in-fiction. Should land as 'this is what happens next', not as punishment."
         },
         "skill_debrief_panel": {
           "type": "string",
@@ -301,7 +386,7 @@
         "skills_practiced": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "Thinking skills the group practiced across the story (deduped from chapter decisions)."
+          "description": "Thinking skills (and Foundational + SEL-as-content skills) the group practiced across the story (deduped from chapter challenges)."
         },
         "perspective_contrast": {
           "type": "string",
